@@ -16,8 +16,8 @@ import java.util.*;
 
 @SpringBootTest
 class Da2020ApplicationTests {
-    @Autowired
-    NodeRepository nodeRepository;
+//    @Autowired
+//    NodeRepository nodeRepository;
 
     @Test
     void contextLoads() {
@@ -51,11 +51,8 @@ class Da2020ApplicationTests {
             List<Node> listNode = new ArrayList<>();
 
             for (int temp = 0; temp < nList.getLength(); temp++) {
-//
                 org.w3c.dom.Node n = nList.item(temp);
-//
                 if (n.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-//
                     Element e = (Element) n;
                     String id = e.getAttribute("id");
                     double lat = Double.parseDouble(e.getAttribute("lat"));
@@ -68,7 +65,7 @@ class Da2020ApplicationTests {
 //                    listNode.clear();
 //                }
             }
-            nodeRepository.saveAll(listNode);
+//            nodeRepository.saveAll(listNode);
 //
 //                    HashSet<String> set = new HashSet<>();
 //
@@ -110,11 +107,11 @@ class Da2020ApplicationTests {
 //                    }
 //                }
 //
-//                for (String i : graph.keySet()) {
-//                    System.out.print(i + ": ");
-//                    System.out.print(graph.get(i));
-//                    System.out.println();
-//                }
+                for (String i : graph.keySet()) {
+                    System.out.print(i + ": ");
+                    System.out.print(graph.get(i));
+                    System.out.println();
+                }
 //            }
         } catch (Exception e) {
             e.printStackTrace();
