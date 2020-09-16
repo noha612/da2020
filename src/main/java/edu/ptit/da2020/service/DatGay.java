@@ -24,12 +24,15 @@ public class DatGay {
 
     private RouteFinder<Station> routeFinder;
 
+    private Map<String, String> locations;
+
     @SneakyThrows
     @PostConstruct
     public void setUp() {
         System.out.println("set up graph...");
         Set<Station> stations = new HashSet<>();
         Map<String, Set<String>> connections = new HashMap<>();
+        locations = new HashMap<>();
 
         File fXmlFile = new File("src/main/resources/map/mapPTIT.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -56,13 +59,14 @@ public class DatGay {
         nList = doc.getElementsByTagName("way");
 
         for (int temp = 0; temp < nList.getLength(); temp++) {
+
             Node n = nList.item(temp);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
                 Element e = (Element) n;
-                String id = e.getAttribute("id");
 
+                //construct graph
                 NodeList nd = e.getElementsByTagName("nd");
-                Set<String> set = new HashSet<>();
+                Set<String> set = new LinkedHashSet<>();
 
                 for (int temp2 = 0; temp2 < nd.getLength(); temp2++) {
                     Node n2 = nd.item(temp2);
@@ -84,6 +88,19 @@ public class DatGay {
                         connections.get(i).remove(i);
                     }
                 }
+
+                //construct locations
+                NodeList tag = e.getElementsByTagName("tag");
+                for (int temp2 = 0; temp2 < tag.getLength(); temp2++) {
+                    Node n2 = tag.item(temp2);
+                    if (n.getNodeType() == Node.ELEMENT_NODE) {
+                        Element e2 = (Element) n2;
+                        if ("name".equals(e2.getAttribute("k"))) {
+                            locations.put(e2.getAttribute("v"), String.valueOf(set.toArray()[0]));
+                        }
+
+                    }
+                }
             }
         }
 
@@ -94,5 +111,15 @@ public class DatGay {
 
     public List<Station> findRoute(String startId, String finishId) {
         return routeFinder.findRoute(underground.getNode(startId), underground.getNode(finishId));
+    }
+
+    public String findIdByName(String name) {
+        for (String i : locations.keySet()) {
+            if (i.contains(name)) return i + " " + locations.get(i);
+        }
+        for (String i : locations.keySet()) {
+            if (i.toLowerCase().contains(name.toLowerCase())) return i + " " + locations.get(i);
+        }
+        return "Not found id";
     }
 }

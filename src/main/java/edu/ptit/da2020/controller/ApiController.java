@@ -28,4 +28,9 @@ public class ApiController {
     public List<Station> hehe(@RequestParam String startId, @RequestParam String finishId) {
         return datGay.findRoute(startId, finishId);
     }
+
+    @GetMapping(value = "/findStation")
+    public String hehe(@RequestParam String name) {
+        return datGay.findIdByName(name);
+    }
 }
