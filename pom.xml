@@ -80,6 +80,15 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>8.6.2</version>
+        </dependency>
+<!--        https://www.tutorialspoint.com/lucene/lucene_fuzzyquery.htm-->
+
     </dependencies>
 
     <build>
