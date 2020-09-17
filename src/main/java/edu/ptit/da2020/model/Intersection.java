@@ -1,17 +1,17 @@
-package edu.ptit.da2020.testAStar;
+package edu.ptit.da2020.model;
 
-import edu.ptit.da2020.astar.GraphNode;
+import edu.ptit.da2020.model.graphmodel.GraphNode;
 
 import java.util.StringJoiner;
 
 
-public class Station implements GraphNode {
+public class Intersection implements GraphNode {
     private final String id;
     private final String name;
     private final double latitude;
     private final double longitude;
 
-    public Station(String id, String name, double latitude, double longitude) {
+    public Intersection(String id, String name, double latitude, double longitude) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -37,7 +37,7 @@ public class Station implements GraphNode {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Station.class.getSimpleName() + "[", "]").add("id='" + id + "'")
+        return new StringJoiner(", ", Intersection.class.getSimpleName() + "[", "]").add("id='" + id + "'")
                 .add("name='" + name + "'").add("latitude=" + latitude).add("longitude=" + longitude).toString();
     }
 }

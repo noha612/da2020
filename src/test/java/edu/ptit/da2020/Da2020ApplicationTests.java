@@ -1,6 +1,6 @@
 //package edu.ptit.da2020;
 //
-//import edu.ptit.da2020.entity.Node;
+//import edu.ptit.da2020.model.entity.Node;
 //import edu.ptit.da2020.repository.NodeRepository;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

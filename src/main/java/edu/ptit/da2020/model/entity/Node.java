@@ -1,4 +1,4 @@
-//package edu.ptit.da2020.entity;
+//package edu.ptit.da2020.model.entity;
 //
 //import lombok.*;
 //

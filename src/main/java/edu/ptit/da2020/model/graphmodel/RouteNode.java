@@ -1,4 +1,4 @@
-package edu.ptit.da2020.astar;
+package edu.ptit.da2020.model.graphmodel;
 
 public class RouteNode<T extends GraphNode> implements Comparable<RouteNode> {
     private final T current;

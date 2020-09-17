@@ -1,11 +1,11 @@
-package edu.ptit.da2020.utils;
+package edu.ptit.da2020.util;
 
-import edu.ptit.da2020.astar.Scorer;
-import edu.ptit.da2020.entity.Station;
+import edu.ptit.da2020.util.algorithm.Scorer;
+import edu.ptit.da2020.model.Intersection;
 
-public class HaversineScorer implements Scorer<Station> {
+public class HaversineScorer implements Scorer<Intersection> {
     @Override
-    public double computeCost(Station from, Station to) {
+    public double computeCost(Intersection from, Intersection to) {
         double R = 6372.8; // In kilometers
 
         double dLat = Math.toRadians(to.getLatitude() - from.getLatitude());

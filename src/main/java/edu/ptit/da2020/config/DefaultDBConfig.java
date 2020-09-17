@@ -48,7 +48,7 @@
 //    @Bean(name = "mainEntityManagerFactory")
 //    public LocalContainerEntityManagerFactoryBean mainEntityManagerFactory(
 //            EntityManagerFactoryBuilder builder, @Qualifier("mainDataSource") DataSource dataSource) {
-//        return builder.dataSource(dataSource).packages("edu.ptit.da2020.entity")
+//        return builder.dataSource(dataSource).packages("edu.ptit.da2020.model.entity")
 //                .persistenceUnit("main")
 //                .build();
 //    }

@@ -1,4 +1,8 @@
-package edu.ptit.da2020.astar;
+package edu.ptit.da2020.util.algorithm;
+
+import edu.ptit.da2020.model.graphmodel.Graph;
+import edu.ptit.da2020.model.graphmodel.GraphNode;
+import edu.ptit.da2020.model.graphmodel.RouteNode;
 
 import java.util.*;
 
@@ -13,7 +17,7 @@ public class RouteFinder<T extends GraphNode> {
         this.targetScorer = targetScorer;
     }
 
-    public List<T> findRoute(T from, T to) {
+    public List<T> findRouteAStarAlgorithm(T from, T to) {
         Queue<RouteNode> openSet = new PriorityQueue<>();
         Map<T, RouteNode<T>> allNodes = new HashMap<>();
 
