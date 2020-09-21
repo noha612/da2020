@@ -88,6 +88,12 @@
             <version>8.6.2</version>
         </dependency>
 <!--        https://www.tutorialspoint.com/lucene/lucene_fuzzyquery.htm-->
+        <!-- https://mvnrepository.com/artifact/org.osmdroid/osmdroid-android -->
+        <dependency>
+            <groupId>org.osmdroid</groupId>
+            <artifactId>osmdroid-android</artifactId>
+            <version>6.1.7</version>
+        </dependency>
 
     </dependencies>
 

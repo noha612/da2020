@@ -78,6 +78,8 @@ public class GraphConfiguration {
     }
 
     private void initConnectionsAndLocations() {
+        connections = new HashMap<>();
+        locations = new HashMap<>();
         NodeList ways = doc.getElementsByTagName(OsmXMLConstant.OSM_WAY);
 
         for (int i = 0; i < ways.getLength(); i++) {
@@ -101,7 +103,6 @@ public class GraphConfiguration {
     }
 
     private void updateConnections(Set<String> nodeInWay) {
-        connections = new HashMap<>();
         for (String nodeId : nodeInWay) {
             if (connections.containsKey(nodeId)) {
                 for (String j : nodeInWay) {
@@ -115,7 +116,6 @@ public class GraphConfiguration {
     }
 
     private void updateLocations(Element way, Set<String> nodeInWay) {
-        locations = new HashMap<>();
         NodeList tags = way.getElementsByTagName(OsmXMLConstant.OSM_WAY_TAG);
         for (int i = 0; i < tags.getLength(); i++) {
             Node tag = tags.item(i);
