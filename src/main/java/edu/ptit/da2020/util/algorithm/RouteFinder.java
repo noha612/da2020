@@ -3,9 +3,11 @@ package edu.ptit.da2020.util.algorithm;
 import edu.ptit.da2020.model.graphmodel.Graph;
 import edu.ptit.da2020.model.graphmodel.GraphNode;
 import edu.ptit.da2020.model.graphmodel.RouteNode;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 public class RouteFinder<T extends GraphNode> {
     private final Graph<T> graph;
     private final Scorer<T> nextNodeScorer;
@@ -26,6 +28,7 @@ public class RouteFinder<T extends GraphNode> {
         allNodes.put(from, start);
 
         while (!openSet.isEmpty()) {
+            log.info("searching...");
             RouteNode<T> next = openSet.poll();
             if (next.getCurrent().equals(to)) {
                 List<T> route = new ArrayList<>();

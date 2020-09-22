@@ -1,6 +1,7 @@
 package edu.ptit.da2020.controller;
 
 import edu.ptit.da2020.model.Intersection;
+import edu.ptit.da2020.model.Location;
 import edu.ptit.da2020.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class ApiController {
     }
 
     @GetMapping(value = "/findStation")
-    public String hehe(@RequestParam String name) {
+    public Location hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
 }

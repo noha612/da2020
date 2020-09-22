@@ -87,35 +87,39 @@ public class GraphConfiguration {
             Node way = ways.item(i);
             if (way.getNodeType() == Node.ELEMENT_NODE) {
                 NodeList nds = ((Element) way).getElementsByTagName(OsmXMLConstant.OSM_WAY_NODE);
-                Set<String> nodeInWay = new LinkedHashSet<>();
-                for (int j = 0; j < nds.getLength(); j++) {
-                    Node nd = nds.item(j);
-                    if (nd.getNodeType() == Node.ELEMENT_NODE) {
-                        String nodeId = ((Element) nd).getAttribute(OsmXMLConstant.OSM_WAY_REF);
-                        nodeInWay.add(nodeId);
+                if (!((Element) nds.item(0)).getAttribute(OsmXMLConstant.OSM_WAY_REF)
+                        .equals(((Element) nds.item(nds.getLength() - 1)).getAttribute(OsmXMLConstant.OSM_WAY_REF))) {
+                    ArrayList<String> nodeInWay = new ArrayList<>();
+                    for (int j = 0; j < nds.getLength(); j++) {
+                        Node nd = nds.item(j);
+                        if (nd.getNodeType() == Node.ELEMENT_NODE) {
+                            String nodeId = ((Element) nd).getAttribute(OsmXMLConstant.OSM_WAY_REF);
+                            nodeInWay.add(nodeId);
+                        }
                     }
-                }
 
-                updateConnections(nodeInWay);
-                updateLocations((Element) way, nodeInWay);
+                    updateConnections(nodeInWay);
+                    updateLocations((Element) way, nodeInWay);
+                }
             }
         }
     }
 
-    private void updateConnections(Set<String> nodeInWay) {
-        for (String nodeId : nodeInWay) {
-            if (connections.containsKey(nodeId)) {
-                for (String j : nodeInWay) {
-                    if (!nodeId.equals(j)) connections.get(nodeId).add(j);
-                }
+    private void updateConnections(ArrayList<String> nodeInWay) {
+        for (int i = 0; i < nodeInWay.size(); i++) {
+            if (connections.containsKey(nodeInWay.get(i))) {
+                if (i > 0) connections.get(nodeInWay.get(i)).add(nodeInWay.get(i - 1));
+                if (i < nodeInWay.size() - 1) connections.get(nodeInWay.get(i)).add(nodeInWay.get(i + 1));
             } else {
-                connections.put(nodeId, new HashSet<>(nodeInWay));
-                connections.get(nodeId).remove(nodeId);
+                HashSet<String> tempSet = new HashSet<>();
+                if (i > 0) tempSet.add(nodeInWay.get(i - 1));
+                if (i < nodeInWay.size() - 1) tempSet.add(nodeInWay.get(i + 1));
+                connections.put(nodeInWay.get(i), tempSet);
             }
         }
     }
 
-    private void updateLocations(Element way, Set<String> nodeInWay) {
+    private void updateLocations(Element way, ArrayList<String> nodeInWay) {
         NodeList tags = way.getElementsByTagName(OsmXMLConstant.OSM_WAY_TAG);
         for (int i = 0; i < tags.getLength(); i++) {
             Node tag = tags.item(i);
@@ -125,7 +129,7 @@ public class GraphConfiguration {
                 ) {
                     locations.put(
                             ((Element) tag).getAttribute(OsmXMLConstant.OSM_TAG_VALUE),
-                            String.valueOf(nodeInWay.toArray()[0])
+                            nodeInWay.get(0)
                     );
                 }
             }
