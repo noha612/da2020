@@ -25,7 +25,7 @@ public class ApiController {
     }
 
     @GetMapping(value = "/findStation")
-    public Location hehe(@RequestParam String name) {
+    public List<Location> hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
 }
