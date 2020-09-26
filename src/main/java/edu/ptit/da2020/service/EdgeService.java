@@ -42,8 +42,8 @@ public class EdgeService {
 
                 EdgeEntity edgeEntity = EdgeEntity
                         .builder()
-                        .intersactionId1(intersactionId1)
-                        .intersactionId2(intersactionId2)
+                        .intersactionIdFrom(intersactionId1)
+                        .intersactionIdTo(intersactionId2)
                         .haversineScorer(R * c)
                         .build();
                 edgeRepository.save(edgeEntity);

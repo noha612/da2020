@@ -1,9 +1,13 @@
 package edu.ptit.da2020.config;
 
 import edu.ptit.da2020.constant.OsmXMLConstant;
+import edu.ptit.da2020.model.entity.EdgeEntity;
 import edu.ptit.da2020.model.entity.Intersection;
+import edu.ptit.da2020.model.entity.LocationEntity;
 import edu.ptit.da2020.model.graphmodel.Graph;
+import edu.ptit.da2020.repository.EdgeRepository;
 import edu.ptit.da2020.repository.IntersectionRepository;
+import edu.ptit.da2020.repository.LocationRepository;
 import edu.ptit.da2020.util.HaversineScorer;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
 import lombok.Getter;
@@ -48,6 +52,12 @@ public class GraphConfiguration {
     @Autowired
     IntersectionRepository intersectionRepository;
 
+    @Autowired
+    LocationRepository locationRepository;
+
+    @Autowired
+    EdgeRepository edgeRepository;
+
     @SneakyThrows
     @PostConstruct
     public void initMap() {
@@ -60,7 +70,9 @@ public class GraphConfiguration {
 
 //        initIntersectionsFromXML();
         initIntersectionsFromDB();
-        initConnectionsAndLocations();
+
+//        initConnectionsAndLocationsFromXML();
+        initConnectionsAndLocationsFromDB();
 
         map = new Graph<>(intersections, connections);
 
@@ -89,7 +101,7 @@ public class GraphConfiguration {
         }
     }
 
-    private void initConnectionsAndLocations() {
+    private void initConnectionsAndLocationsFromXML() {
         connections = new HashMap<>();
         locations = new HashMap<>();
         NodeList ways = doc.getElementsByTagName(OsmXMLConstant.OSM_WAY);
@@ -114,6 +126,25 @@ public class GraphConfiguration {
                     updateLocations((Element) way, nodeInWay);
                 }
             }
+        }
+    }
+
+    private void initConnectionsAndLocationsFromDB() {
+        connections = new HashMap<>();
+        locations = new HashMap<>();
+
+        for (EdgeEntity edgeEntity : edgeRepository.findAll()) {
+            if (connections.containsKey(edgeEntity.getIntersactionIdFrom())) {
+                connections.get(edgeEntity.getIntersactionIdFrom()).add(edgeEntity.getIntersactionIdTo());
+            } else {
+                Set<String> temp = new HashSet<>();
+                temp.add(edgeEntity.getIntersactionIdTo());
+                connections.put(edgeEntity.getIntersactionIdFrom(), temp);
+            }
+        }
+
+        for (LocationEntity locationEntity : locationRepository.findAll()) {
+            locations.put(locationEntity.getName(), locationEntity.getIntersectionId());
         }
     }
 

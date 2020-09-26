@@ -19,11 +19,11 @@ public class EdgeEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "intersection_id_1")
-    private String intersactionId1;
+    @Column(name = "from")
+    private String intersactionIdFrom;
 
-    @Column(name = "intersection_id_2")
-    private String intersactionId2;
+    @Column(name = "to")
+    private String intersactionIdTo;
 
     @Column(name = "haversine_scorer")
     private Double haversineScorer;

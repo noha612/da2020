@@ -44,12 +44,12 @@ public class ApiController {
         return "ok!";
     }
 
-    @GetMapping(value = "/findRoute")
+    @GetMapping(value = "/routes")
     public List<Intersection> hehe(@RequestParam String startId, @RequestParam String finishId) {
         return mapService.findRoute(startId, finishId);
     }
 
-    @GetMapping(value = "/findStation")
+    @GetMapping(value = "/locations")
     public List<Location> hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
