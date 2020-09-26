@@ -1,7 +1,7 @@
 package edu.ptit.da2020.service;
 
 import edu.ptit.da2020.config.GraphConfiguration;
-import edu.ptit.da2020.model.Intersection;
+import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.model.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,6 @@ public class MapService {
                     }
                 }
             }
-
             i++;
         }
         return locations;

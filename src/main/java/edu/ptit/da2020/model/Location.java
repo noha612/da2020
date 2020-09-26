@@ -1,5 +1,6 @@
 package edu.ptit.da2020.model;
 
+import edu.ptit.da2020.model.entity.Intersection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

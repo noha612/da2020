@@ -1,14 +1,16 @@
 package edu.ptit.da2020.config;
 
 import edu.ptit.da2020.constant.OsmXMLConstant;
-import edu.ptit.da2020.model.Intersection;
+import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.model.graphmodel.Graph;
+import edu.ptit.da2020.repository.IntersectionRepository;
 import edu.ptit.da2020.util.HaversineScorer;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.w3c.dom.Document;
@@ -43,6 +45,8 @@ public class GraphConfiguration {
     private DocumentBuilderFactory dbFactory;
     private File fXmlFile;
 
+    @Autowired
+    IntersectionRepository intersectionRepository;
 
     @SneakyThrows
     @PostConstruct
@@ -54,7 +58,8 @@ public class GraphConfiguration {
         doc = dBuilder.parse(fXmlFile);
         doc.getDocumentElement().normalize();
 
-        initIntersections();
+//        initIntersectionsFromXML();
+        initIntersectionsFromDB();
         initConnectionsAndLocations();
 
         map = new Graph<>(intersections, connections);
@@ -62,7 +67,7 @@ public class GraphConfiguration {
         routeFinder = new RouteFinder<>(map, new HaversineScorer(), new HaversineScorer());
     }
 
-    private void initIntersections() {
+    private void initIntersectionsFromXML() {
         intersections = new HashSet<>();
         NodeList nodes = doc.getElementsByTagName(OsmXMLConstant.OSM_NODE);
 
@@ -72,8 +77,15 @@ public class GraphConfiguration {
                 String id = ((Element) node).getAttribute(OsmXMLConstant.OSM_ID);
                 double lat = Double.parseDouble(((Element) node).getAttribute(OsmXMLConstant.OSM_LATITUDE));
                 double lng = Double.parseDouble(((Element) node).getAttribute(OsmXMLConstant.OSM_LONGITUDE));
-                intersections.add(new Intersection(id, id, lat, lng));
+                intersections.add(new Intersection(id, lat, lng));
             }
+        }
+    }
+
+    private void initIntersectionsFromDB() {
+        intersections = new HashSet<>();
+        for (Intersection intersection : intersectionRepository.findAll()) {
+            intersections.add(intersection);
         }
     }
 

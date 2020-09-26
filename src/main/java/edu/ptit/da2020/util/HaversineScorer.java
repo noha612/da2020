@@ -1,7 +1,7 @@
 package edu.ptit.da2020.util;
 
 import edu.ptit.da2020.util.algorithm.Scorer;
-import edu.ptit.da2020.model.Intersection;
+import edu.ptit.da2020.model.entity.Intersection;
 
 public class HaversineScorer implements Scorer<Intersection> {
     @Override
