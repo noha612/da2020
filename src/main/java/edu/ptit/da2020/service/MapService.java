@@ -1,8 +1,8 @@
 package edu.ptit.da2020.service;
 
 import edu.ptit.da2020.config.GraphConfiguration;
-import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.model.Location;
+import edu.ptit.da2020.model.entity.Intersection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class MapService {
         Set<String> set = graphConfiguration.getLocations().keySet();
         String[] temp = new String[set.size()];
         set.toArray(temp);
-        while (locations.size() < 5 || i == temp.length) {
+        while (locations.size() < 5 && i < temp.length ) {
             if (temp[i].contains(name) || temp[i].toLowerCase().contains(name.toLowerCase())) {
                 for (Intersection j : graphConfiguration.getIntersections()) {
                     if (j.getId().equals(graphConfiguration.getLocations().get(temp[i]))) {
