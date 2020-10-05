@@ -50,4 +50,9 @@ public class EdgeService {
             }
         }
     }
+
+    public double getRealTimeSpeed(Intersection from, Intersection to) {
+        EdgeEntity edgeEntity = edgeRepository.getEstimateSpeedByIntersactionIdFromAndIntersactionIdTo(from.getId(), to.getId());
+        return edgeEntity.getEstimateSpeed();
+    }
 }

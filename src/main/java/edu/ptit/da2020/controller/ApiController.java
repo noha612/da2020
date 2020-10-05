@@ -2,6 +2,7 @@ package edu.ptit.da2020.controller;
 
 import edu.ptit.da2020.model.Location;
 import edu.ptit.da2020.model.entity.Intersection;
+import edu.ptit.da2020.repository.EdgeRepository;
 import edu.ptit.da2020.service.EdgeService;
 import edu.ptit.da2020.service.IntersectionService;
 import edu.ptit.da2020.service.LocationService;
@@ -46,11 +47,23 @@ public class ApiController {
 
     @GetMapping(value = "/routes")
     public List<Intersection> hehe(@RequestParam String startId, @RequestParam String finishId) {
-        return mapService.findRoute(startId, finishId);
+//        return mapService.findRoute(startId, finishId);
+        return mapService.findRouteNewApproach(startId, finishId);
     }
 
     @GetMapping(value = "/locations")
     public List<Location> hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
+
+    @Autowired
+    EdgeRepository edgeRepository;
+
+    @GetMapping(value = "/location")
+    public Location getNearestLocationByCoordinate(@RequestParam double lat, @RequestParam double lng) {
+//        return mapService.findNearestLocationByCoordinate( lat,  lng);
+        System.out.println(edgeRepository.getEstimateSpeedByIntersactionIdFromAndIntersactionIdTo("2291276248", "2291276149"));
+        return null;
+    }
+
 }

@@ -27,4 +27,7 @@ public class EdgeEntity {
 
     @Column(name = "haversine_scorer")
     private Double haversineScorer;
+
+    @Column(name = "estimate_speed")
+    private Double estimateSpeed;
 }

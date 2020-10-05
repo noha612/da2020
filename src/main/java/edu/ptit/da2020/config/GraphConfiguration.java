@@ -8,7 +8,6 @@ import edu.ptit.da2020.model.graphmodel.Graph;
 import edu.ptit.da2020.repository.EdgeRepository;
 import edu.ptit.da2020.repository.IntersectionRepository;
 import edu.ptit.da2020.repository.LocationRepository;
-import edu.ptit.da2020.util.HaversineScorer;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +43,7 @@ public class GraphConfiguration {
     private RouteFinder<Intersection> routeFinder;
     private Set<Intersection> intersections;
     private Map<String, Set<String>> connections;
+    private Map<String, Double> realTimeCost;
     private Document doc;
     private DocumentBuilder dBuilder;
     private DocumentBuilderFactory dbFactory;
@@ -75,8 +75,6 @@ public class GraphConfiguration {
         initConnectionsAndLocationsFromDB();
 
         map = new Graph<>(intersections, connections);
-
-        routeFinder = new RouteFinder<>(map, new HaversineScorer(), new HaversineScorer());
     }
 
     private void initIntersectionsFromXML() {
@@ -132,8 +130,10 @@ public class GraphConfiguration {
     private void initConnectionsAndLocationsFromDB() {
         connections = new HashMap<>();
         locations = new HashMap<>();
+        realTimeCost = new HashMap<>();
 
         for (EdgeEntity edgeEntity : edgeRepository.findAll()) {
+            realTimeCost.put(edgeEntity.getIntersactionIdFrom() + "_" + edgeEntity.getIntersactionIdTo(), edgeEntity.getEstimateSpeed());
             if (connections.containsKey(edgeEntity.getIntersactionIdFrom())) {
                 connections.get(edgeEntity.getIntersactionIdFrom()).add(edgeEntity.getIntersactionIdTo());
             } else {
