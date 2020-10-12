@@ -94,9 +94,7 @@ public class GraphConfiguration {
 
     private void initIntersectionsFromDB() {
         intersections = new HashSet<>();
-        for (Intersection intersection : intersectionRepository.findAll()) {
-            intersections.add(intersection);
-        }
+        intersections.addAll(intersectionRepository.findAll());
     }
 
     private void initConnectionsAndLocationsFromXML() {

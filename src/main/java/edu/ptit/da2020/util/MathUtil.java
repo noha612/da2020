@@ -10,7 +10,8 @@ public class MathUtil {
         return Math.sqrt(p * (p - a) * (p - b) * (p - c));
     }
 
-    public static double getHeightOfTriangle(double x, double S) {
+    public static double getHeightOfTriangle(double a, double b, double c, double x) {
+        double S = getAreaByHeronFormula(a, b, c);
         return 2 * S / x;
     }
 

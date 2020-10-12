@@ -1,10 +1,14 @@
 package edu.ptit.da2020.service;
 
 import edu.ptit.da2020.config.GraphConfiguration;
+import edu.ptit.da2020.model.Location;
 import edu.ptit.da2020.model.entity.EdgeEntity;
 import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.repository.EdgeRepository;
 import edu.ptit.da2020.repository.IntersectionRepository;
+import edu.ptit.da2020.repository.LocationRepository;
+import edu.ptit.da2020.util.HaversineScorer;
+import edu.ptit.da2020.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +27,15 @@ public class EdgeService {
     @Autowired
     IntersectionRepository intersectionRepository;
 
+    @Autowired
+    LocationRepository locationRepository;
+
     public void insertDBFromXML() {
         Map<String, Set<String>> connections = graphConfiguration.getConnections();
         for (String intersactionId1 : connections.keySet()) {
             for (String intersactionId2 : connections.get(intersactionId1)) {
-                Intersection i1 = intersectionRepository.findById(intersactionId1).get();
-                Intersection i2 = intersectionRepository.findById(intersactionId2).get();
+                Intersection i1 = intersectionRepository.findFirstById(intersactionId1);
+                Intersection i2 = intersectionRepository.findFirstById(intersactionId2);
 
                 double R = 6372.8;
 
@@ -54,5 +61,28 @@ public class EdgeService {
     public double getRealTimeSpeed(Intersection from, Intersection to) {
         EdgeEntity edgeEntity = edgeRepository.getEstimateSpeedByIntersactionIdFromAndIntersactionIdTo(from.getId(), to.getId());
         return edgeEntity.getEstimateSpeed();
+    }
+
+    //TODO refactor
+    public void abc(Intersection C) {
+        for (EdgeEntity e : edgeRepository.findAll()) {
+            Intersection A = intersectionRepository.findFirstById(e.getIntersactionIdFrom());
+            Intersection B = intersectionRepository.findFirstById(e.getIntersactionIdTo());
+
+            double AB = new HaversineScorer().computeCost(A, B);
+            double BC = new HaversineScorer().computeCost(B, C);
+            double CA = new HaversineScorer().computeCost(C, A);
+            if (AB * AB <= BC * BC + CA * CA) {
+//                double CH = MathUtil.getHeightOfTriangle(AB, BC, CA, CA); //ngu vcl
+                MathUtil.TwoDimensionCoordinate tdA = new MathUtil.TwoDimensionCoordinate(A.getLatitude(), A.getLongitude());
+                MathUtil.TwoDimensionCoordinate tdB = new MathUtil.TwoDimensionCoordinate(B.getLatitude(), B.getLongitude());
+                MathUtil.TwoDimensionCoordinate tdC = new MathUtil.TwoDimensionCoordinate(C.getLatitude(), C.getLongitude());
+
+                MathUtil.TwoDimensionCoordinate tdH = MathUtil.getAltitudeCoordinateOfTriangle(tdA, tdB, tdC);
+                //return tdH
+            } else {
+                //return BC < CA ? B : A;
+            }
+        }
     }
 }

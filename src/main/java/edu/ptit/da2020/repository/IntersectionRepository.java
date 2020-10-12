@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IntersectionRepository extends JpaRepository<Intersection, String> {
     List<Intersection> findAll();
+    Intersection findFirstById(String id);
 }
