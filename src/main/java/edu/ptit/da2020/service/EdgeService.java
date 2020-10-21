@@ -1,7 +1,6 @@
 package edu.ptit.da2020.service;
 
-import edu.ptit.da2020.config.GraphConfiguration;
-import edu.ptit.da2020.model.Location;
+import edu.ptit.da2020.config.GraphConfig;
 import edu.ptit.da2020.model.entity.EdgeEntity;
 import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.repository.EdgeRepository;
@@ -19,7 +18,7 @@ import java.util.Set;
 public class EdgeService {
 
     @Autowired
-    GraphConfiguration graphConfiguration;
+    GraphConfig graphConfig;
 
     @Autowired
     EdgeRepository edgeRepository;
@@ -31,7 +30,7 @@ public class EdgeService {
     LocationRepository locationRepository;
 
     public void insertDBFromXML() {
-        Map<String, Set<String>> connections = graphConfiguration.getConnections();
+        Map<String, Set<String>> connections = graphConfig.getConnections();
         for (String intersactionId1 : connections.keySet()) {
             for (String intersactionId2 : connections.get(intersactionId1)) {
                 Intersection i1 = intersectionRepository.findFirstById(intersactionId1);

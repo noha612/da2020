@@ -1,6 +1,6 @@
 package edu.ptit.da2020.service;
 
-import edu.ptit.da2020.config.GraphConfiguration;
+import edu.ptit.da2020.config.GraphConfig;
 import edu.ptit.da2020.model.Location;
 import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.util.RealTimeScorer;
@@ -17,13 +17,13 @@ import java.util.Set;
 @Service
 public class MapService {
     @Autowired
-    GraphConfiguration graphConfiguration;
+    GraphConfig graphConfig;
 
     public List<Intersection> findRoute(String startId, String finishId) {
-        graphConfiguration.setRouteFinder(new RouteFinder<>(graphConfiguration.getMap(), new HaversineScorer(), new HaversineScorer()));
-        return graphConfiguration.getRouteFinder().findRouteAStarAlgorithm(
-                graphConfiguration.getMap().getNode(startId),
-                graphConfiguration.getMap().getNode(finishId)
+        graphConfig.setRouteFinder(new RouteFinder<>(graphConfig.getMap(), new HaversineScorer(), new HaversineScorer()));
+        return graphConfig.getRouteFinder().findRouteAStarAlgorithm(
+                graphConfig.getMap().getNode(startId),
+                graphConfig.getMap().getNode(finishId)
         );
     }
 
@@ -34,23 +34,23 @@ public class MapService {
     HaversineToTimeScorer haversineToTimeScorer;
 
     public List<Intersection> findRouteNewApproach(String startId, String finishId) {
-        graphConfiguration.setRouteFinder(new RouteFinder<>(graphConfiguration.getMap(), realTimeScorer, haversineToTimeScorer));
-        return graphConfiguration.getRouteFinder().findRouteAStarAlgorithm(
-                graphConfiguration.getMap().getNode(startId),
-                graphConfiguration.getMap().getNode(finishId)
+        graphConfig.setRouteFinder(new RouteFinder<>(graphConfig.getMap(), realTimeScorer, haversineToTimeScorer));
+        return graphConfig.getRouteFinder().findRouteAStarAlgorithm(
+                graphConfig.getMap().getNode(startId),
+                graphConfig.getMap().getNode(finishId)
         );
     }
 
     public List<Location> findIdByName(String name) {
         List<Location> locations = new ArrayList<>();
         int i = 0;
-        Set<String> set = graphConfiguration.getLocations().keySet();
+        Set<String> set = graphConfig.getLocations().keySet();
         String[] temp = new String[set.size()];
         set.toArray(temp);
         while (locations.size() < 5 && i < temp.length) {
             if (temp[i].contains(name) || temp[i].toLowerCase().contains(name.toLowerCase())) {
-                for (Intersection j : graphConfiguration.getIntersections()) {
-                    if (j.getId().equals(graphConfiguration.getLocations().get(temp[i]))) {
+                for (Intersection j : graphConfig.getIntersections()) {
+                    if (j.getId().equals(graphConfig.getLocations().get(temp[i]))) {
                         locations.add(new Location(temp[i], j));
                     }
                 }
@@ -63,7 +63,7 @@ public class MapService {
     public Location findNearestLocationByCoordinate(double lat, double lng) {
         double minD = 2;
         Intersection r = null;
-        for (Intersection i : graphConfiguration.getIntersections()) {
+        for (Intersection i : graphConfig.getIntersections()) {
             if (lat + lng - i.getLatitude() - i.getLongitude() <= 0.016) {
                 Intersection a = new Intersection("fk", lat, lng);
                 double temp = new HaversineScorer().computeCost(a, i);
@@ -74,7 +74,7 @@ public class MapService {
             }
         }
         double min = 21;
-        Set<Intersection> set = graphConfiguration.getIntersections();
+        Set<Intersection> set = graphConfig.getIntersections();
         Intersection[] temp = new Intersection[set.size()];
         set.toArray(temp);
         for (int i = 0; i < temp.length - 1; i++) {

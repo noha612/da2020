@@ -1,6 +1,6 @@
 package edu.ptit.da2020.model.entity;
 
-import edu.ptit.da2020.model.graphmodel.GraphNode;
+import edu.ptit.da2020.model.graph.GraphNode;
 import lombok.*;
 
 import javax.persistence.Column;

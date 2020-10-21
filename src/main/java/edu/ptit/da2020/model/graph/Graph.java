@@ -1,4 +1,4 @@
-package edu.ptit.da2020.model.graphmodel;
+package edu.ptit.da2020.model.graph;
 
 import java.util.Map;
 import java.util.Set;

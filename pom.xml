@@ -87,7 +87,15 @@
             <artifactId>lucene-core</artifactId>
             <version>8.6.2</version>
         </dependency>
-<!--        https://www.tutorialspoint.com/lucene/lucene_fuzzyquery.htm-->
+        <!--        https://www.tutorialspoint.com/lucene/lucene_fuzzyquery.htm-->
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.11</version>
+        </dependency>
+
 
     </dependencies>
 

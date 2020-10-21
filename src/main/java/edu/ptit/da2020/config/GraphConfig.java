@@ -4,7 +4,7 @@ import edu.ptit.da2020.constant.OsmXMLConstant;
 import edu.ptit.da2020.model.entity.EdgeEntity;
 import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.model.entity.LocationEntity;
-import edu.ptit.da2020.model.graphmodel.Graph;
+import edu.ptit.da2020.model.graph.Graph;
 import edu.ptit.da2020.repository.EdgeRepository;
 import edu.ptit.da2020.repository.IntersectionRepository;
 import edu.ptit.da2020.repository.LocationRepository;
@@ -31,7 +31,7 @@ import java.util.*;
 @Getter
 @Setter
 @Slf4j
-public class GraphConfiguration {
+public class GraphConfig {
 
     @Value("${mapXMLfile}")
     String mapXMLFile;
@@ -68,11 +68,11 @@ public class GraphConfiguration {
         doc = dBuilder.parse(fXmlFile);
         doc.getDocumentElement().normalize();
 
-//        initIntersectionsFromXML();
-        initIntersectionsFromDB();
+        initIntersectionsFromXML();
+//        initIntersectionsFromDB();
 
-//        initConnectionsAndLocationsFromXML();
-        initConnectionsAndLocationsFromDB();
+        initConnectionsAndLocationsFromXML();
+//        initConnectionsAndLocationsFromDB();
 
         map = new Graph<>(intersections, connections);
     }
