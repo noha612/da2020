@@ -29,10 +29,10 @@ public class GraphConfig {
     private Map<String, Set<String>> connections;
     private Map<String, Double> realTimeCost;
 
-    private static final String VERTEX = "HN_vertex.txt";
-    private static final String EDGE = "HN_edge.txt";
-    private static final String INVERTED = "inverted_index.txt";
-    private static final String NAME = "HN_name.txt";
+    private static final String VERTEX = "src/main/resources/HN_vertex.txt";
+    private static final String EDGE = "src/main/resources/HN_edge.txt";
+    private static final String INVERTED = "src/main/resources/inverted_index.txt";
+    private static final String NAME = "src/main/resources/HN_name.txt";
 
     private Map<String, Integer[]> ii;
     private Map<Integer, String> ln;

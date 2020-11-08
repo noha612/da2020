@@ -14,8 +14,8 @@ import java.util.Scanner;
 
 @Slf4j
 public class InvertedIndex {
-    private static final String NAME = "HN_name.txt";
-    private static final String INVERTED = "inverted_index.txt";
+    private static final String NAME = "src/main/resources/HN_name.txt";
+    private static final String INVERTED = "src/main/resources/inverted_index.txt";
 
     public static void main(String[] args) {
         preProcessing();
