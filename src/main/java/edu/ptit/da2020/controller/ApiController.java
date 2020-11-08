@@ -36,6 +36,7 @@ public class ApiController {
     @PostMapping(value = "/intersections")
     public String insertIntersections() {
 //        intersectionService.insertDBFromXML();
+        intersectionService.insertTXTFromXML();
         return "ok!";
     }
 
@@ -58,7 +59,7 @@ public class ApiController {
     }
 
     @GetMapping(value = "/locations")
-    public List<Location> hehe(@RequestParam String name) {
+    public List<String> hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
 
@@ -66,7 +67,7 @@ public class ApiController {
     EdgeRepository edgeRepository;
 
     @GetMapping(value = "/location")
-    public Location getNearestLocationByCoordinate(@RequestParam double lat, @RequestParam double lng) {
+    public String getNearestLocationByCoordinate(@RequestParam double lat, @RequestParam double lng) {
         return mapService.findNearestLocationByCoordinate(lat, lng);
 //        System.out.println(edgeRepository.getEstimateSpeedByIntersactionIdFromAndIntersactionIdTo("2291276248", "2291276149"));
 //        return null;

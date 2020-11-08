@@ -1,30 +1,18 @@
 package edu.ptit.da2020.config;
 
-import edu.ptit.da2020.constant.OsmXMLConstant;
-import edu.ptit.da2020.model.entity.EdgeEntity;
 import edu.ptit.da2020.model.entity.Intersection;
-import edu.ptit.da2020.model.entity.LocationEntity;
 import edu.ptit.da2020.model.graph.Graph;
-import edu.ptit.da2020.repository.EdgeRepository;
-import edu.ptit.da2020.repository.IntersectionRepository;
-import edu.ptit.da2020.repository.LocationRepository;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.annotation.PostConstruct;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 @Configuration
@@ -33,148 +21,140 @@ import java.util.*;
 @Slf4j
 public class GraphConfig {
 
-    @Value("${mapXMLfile}")
-    String mapXMLFile;
-
     private Graph<Intersection> map;
-
     private Map<String, String> locations;
-
     private RouteFinder<Intersection> routeFinder;
     private Set<Intersection> intersections;
+    private ArrayList<Intersection> al;
     private Map<String, Set<String>> connections;
     private Map<String, Double> realTimeCost;
-    private Document doc;
-    private DocumentBuilder dBuilder;
-    private DocumentBuilderFactory dbFactory;
-    private File fXmlFile;
 
-    @Autowired
-    IntersectionRepository intersectionRepository;
+    private static final String VERTEX = "HN_vertex.txt";
+    private static final String EDGE = "HN_edge.txt";
+    private static final String INVERTED = "inverted_index.txt";
+    private static final String NAME = "HN_name.txt";
 
-    @Autowired
-    LocationRepository locationRepository;
-
-    @Autowired
-    EdgeRepository edgeRepository;
+    private Map<String, Integer[]> ii;
+    private Map<Integer, String> ln;
 
     @SneakyThrows
     @PostConstruct
-    public void initMap() {
-        log.info("");
-        fXmlFile = new File(mapXMLFile);
-        dbFactory = DocumentBuilderFactory.newInstance();
-        dBuilder = dbFactory.newDocumentBuilder();
-        doc = dBuilder.parse(fXmlFile);
-        doc.getDocumentElement().normalize();
-
-        initIntersectionsFromXML();
-//        initIntersectionsFromDB();
-
-        initConnectionsAndLocationsFromXML();
-//        initConnectionsAndLocationsFromDB();
-
+    public void initGraph() {
+        log.info("init graph...");
+        initConnectionsFromFile();
+        initIntersectionsFromFile();
         map = new Graph<>(intersections, connections);
+
+        initII();
+        initN();
     }
 
-    private void initIntersectionsFromXML() {
-        intersections = new HashSet<>();
-        NodeList nodes = doc.getElementsByTagName(OsmXMLConstant.OSM_NODE);
 
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                String id = ((Element) node).getAttribute(OsmXMLConstant.OSM_ID);
-                double lat = Double.parseDouble(((Element) node).getAttribute(OsmXMLConstant.OSM_LATITUDE));
-                double lng = Double.parseDouble(((Element) node).getAttribute(OsmXMLConstant.OSM_LONGITUDE));
-                intersections.add(new Intersection(id, lat, lng));
-            }
-        }
-    }
+    private void initIntersectionsFromFile() {
+        intersections = new LinkedHashSet<>();
 
-    private void initIntersectionsFromDB() {
-        intersections = new HashSet<>();
-        intersections.addAll(intersectionRepository.findAll());
-    }
-
-    private void initConnectionsAndLocationsFromXML() {
-        connections = new HashMap<>();
-        locations = new HashMap<>();
-        NodeList ways = doc.getElementsByTagName(OsmXMLConstant.OSM_WAY);
-
-        for (int i = 0; i < ways.getLength(); i++) {
-
-            Node way = ways.item(i);
-            if (way.getNodeType() == Node.ELEMENT_NODE) {
-                NodeList nds = ((Element) way).getElementsByTagName(OsmXMLConstant.OSM_WAY_NODE);
-                if (!((Element) nds.item(0)).getAttribute(OsmXMLConstant.OSM_WAY_REF)
-                        .equals(((Element) nds.item(nds.getLength() - 1)).getAttribute(OsmXMLConstant.OSM_WAY_REF))) {
-                    ArrayList<String> nodeInWay = new ArrayList<>();
-                    for (int j = 0; j < nds.getLength(); j++) {
-                        Node nd = nds.item(j);
-                        if (nd.getNodeType() == Node.ELEMENT_NODE) {
-                            String nodeId = ((Element) nd).getAttribute(OsmXMLConstant.OSM_WAY_REF);
-                            nodeInWay.add(nodeId);
-                        }
+        log.info("start read file " + VERTEX);
+        try {
+            File myObj = new File(VERTEX);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String line = myReader.nextLine().trim();
+                if (StringUtils.isNotEmpty(line)) {
+                    String[] temp = line.split(" ");
+                    if (connections.containsKey(temp[0])) {
+                        intersections.add(
+                                new Intersection(
+                                        temp[0],
+                                        Double.parseDouble(temp[1]),
+                                        Double.parseDouble(temp[2])
+                                )
+                        );
                     }
-
-                    updateConnections(nodeInWay);
-                    updateLocations((Element) way, nodeInWay);
                 }
             }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            log.error("An error occurred " + e);
         }
+        log.info("done read file " + VERTEX + ", total V: " + intersections.size());
     }
 
-    private void initConnectionsAndLocationsFromDB() {
+
+    private void initConnectionsFromFile() {
         connections = new HashMap<>();
         locations = new HashMap<>();
-        realTimeCost = new HashMap<>();
 
-        for (EdgeEntity edgeEntity : edgeRepository.findAll()) {
-            realTimeCost.put(edgeEntity.getIntersactionIdFrom() + "_" + edgeEntity.getIntersactionIdTo(), edgeEntity.getEstimateSpeed());
-            if (connections.containsKey(edgeEntity.getIntersactionIdFrom())) {
-                connections.get(edgeEntity.getIntersactionIdFrom()).add(edgeEntity.getIntersactionIdTo());
-            } else {
-                Set<String> temp = new HashSet<>();
-                temp.add(edgeEntity.getIntersactionIdTo());
-                connections.put(edgeEntity.getIntersactionIdFrom(), temp);
-            }
-        }
-
-        for (LocationEntity locationEntity : locationRepository.findAll()) {
-            locations.put(locationEntity.getName(), locationEntity.getIntersectionId());
-        }
-    }
-
-    private void updateConnections(ArrayList<String> nodeInWay) {
-        for (int i = 0; i < nodeInWay.size(); i++) {
-            if (connections.containsKey(nodeInWay.get(i))) {
-                if (i > 0) connections.get(nodeInWay.get(i)).add(nodeInWay.get(i - 1));
-                if (i < nodeInWay.size() - 1) connections.get(nodeInWay.get(i)).add(nodeInWay.get(i + 1));
-            } else {
-                HashSet<String> tempSet = new HashSet<>();
-                if (i > 0) tempSet.add(nodeInWay.get(i - 1));
-                if (i < nodeInWay.size() - 1) tempSet.add(nodeInWay.get(i + 1));
-                connections.put(nodeInWay.get(i), tempSet);
-            }
-        }
-    }
-
-    private void updateLocations(Element way, ArrayList<String> nodeInWay) {
-        NodeList tags = way.getElementsByTagName(OsmXMLConstant.OSM_WAY_TAG);
-        for (int i = 0; i < tags.getLength(); i++) {
-            Node tag = tags.item(i);
-            if (tag.getNodeType() == Node.ELEMENT_NODE) {
-                if (OsmXMLConstant.OSM_TAG_KEY_NAME.equals(
-                        ((Element) tag).getAttribute(OsmXMLConstant.OSM_TAG_KEY))
-                ) {
-                    locations.put(
-                            ((Element) tag).getAttribute(OsmXMLConstant.OSM_TAG_VALUE),
-                            nodeInWay.get(0)
-                    );
+        log.info("start read file " + EDGE);
+        try {
+            File myObj = new File(EDGE);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String line = myReader.nextLine().trim();
+                if (StringUtils.isNotEmpty(line)) {
+                    String[] temp = line.split(" ");
+                    if (connections.containsKey(temp[0])) {
+                        connections.get(temp[0]).add(temp[1]);
+                    } else {
+                        Set<String> tempSet = new HashSet<>();
+                        tempSet.add(temp[1]);
+                        connections.put(temp[0], tempSet);
+                    }
                 }
             }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            log.error("An error occurred " + e);
         }
+        log.info("done read file " + EDGE + ", total star: " + connections.size());
+    }
+
+    private void initII() {
+        ii = new HashMap<>();
+
+        log.info("start read file " + INVERTED);
+        try {
+            File myObj = new File(INVERTED);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String line = myReader.nextLine().trim();
+                if (StringUtils.isNotEmpty(line)) {
+                    String[] temp = line.split(" = ");
+                    String key = temp[0];
+                    String[] arrayString = temp[1].substring(1, temp[1].length() - 1).split(",");
+                    Integer[] array = new Integer[arrayString.length];
+                    for (int i = 0; i < array.length; i++) array[i] = Integer.parseInt(arrayString[i]);
+                    ii.put(key, array);
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            log.error("An error occurred " + e);
+        }
+        log.info("done read file " + INVERTED);
+
+    }
+
+    private void initN() {
+        ln = new HashMap<>();
+
+        log.info("start read file " + NAME);
+        try {
+            File myObj = new File(NAME);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String line = myReader.nextLine().trim();
+                if (StringUtils.isNotEmpty(line)) {
+                    String[] temp = line.split("::");
+                    Integer key = Integer.parseInt(temp[0]);
+                    String value = temp[1] + "::" + temp[2];
+                    ln.put(key, value);
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            log.error("An error occurred " + e);
+        }
+        log.info("done read file " + NAME);
 
     }
 }
