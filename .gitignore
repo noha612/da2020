@@ -29,3 +29,7 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/resources/raw_node.txt
+src/main/resources/HN_edge.txt
+src/main/resources/HN_vertex.txt
+src/main/resources/HN_name.txt

@@ -11,18 +11,18 @@ import java.util.*;
 
 @Slf4j
 public class Gen {
-    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
+    private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
     //    private static final String MAP_FILE = "src/main/resources/map/mapPTIT";
-    private static final String RAW_NODE = "raw_node.txt";
-    private static final String EDGE = "HN_edge.txt";
-    private static final String VERTEX = "HN_vertex.txt";
-    private static final String NAME = "HN_name.txt";
+    private static final String RAW_NODE = "src/main/resources/raw_node.txt";
+    private static final String EDGE = "src/main/resources/HN_edge.txt";
+    private static final String VERTEX = "src/main/resources/HN_vertex.txt";
+    private static final String NAME = "src/main/resources/HN_name.txt";
     static LinkedHashSet<String> set;
 
     public static void main(String[] args) {
-//        genV();
-//        genE();
-//        filter();
+        genV();
+        genE();
+        filter();
         genN();
     }
 

@@ -1,10 +1,6 @@
 package edu.ptit.da2020.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -19,6 +15,9 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
 @Slf4j
 @Configuration

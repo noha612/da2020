@@ -1,7 +1,6 @@
 package edu.ptit.da2020.controller;
 
 import edu.ptit.da2020.model.Coordinate;
-import edu.ptit.da2020.model.Location;
 import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Moving;
 import edu.ptit.da2020.model.dto.Transport;

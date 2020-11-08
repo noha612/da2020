@@ -1,4 +1,4 @@
-"# da2020" 
+"#da2020" 
 #koolj_dataengineering
 #experience
 
