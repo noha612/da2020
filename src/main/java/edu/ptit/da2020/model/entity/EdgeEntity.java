@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "edge")
-@Data
+//@Data
 public class EdgeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

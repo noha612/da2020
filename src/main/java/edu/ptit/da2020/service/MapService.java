@@ -89,11 +89,36 @@ public class MapService {
         return null;
     }
 
-    private static final String EDGE = "HN_edge.txt";
+    private static final String EDGE = "src/main/resources/map/HN_edge.txt";
 
     public String findNearestLocationByCoordinate(double lat, double lng) {
+//        String result = "hehe";
+//        double d = Double.MAX_VALUE;
+//        log.info("start read file " + EDGE);
+//        try {
+//            File myObj = new File(EDGE);
+//            Scanner myReader = new Scanner(myObj);
+//            while (myReader.hasNextLine()) {
+//                String line = myReader.nextLine().trim();
+//                if (StringUtils.isNotEmpty(line)) {
+//                    String[] temp = line.split(" ");
+//                    double lat1 = Double.parseDouble(temp[1]);
+//                    double lng1 = Double.parseDouble(temp[2]);
+//                    double tempDis = CommonUtils.distance(lat, lat1, lng, lng1);
+//                    if (tempDis < d) {
+//                        result = temp[0];
+//                        d = tempDis;
+//                    }
+//                }
+//            }
+//            myReader.close();
+//        } catch (FileNotFoundException e) {
+//            log.error("An error occurred " + e);
+//        }
+//        log.info("done read file " + EDGE);
+//        return result;
         String result = "hehe";
-        double d = -1;
+        double d = Double.MAX_VALUE;
         log.info("start read file " + EDGE);
         try {
             File myObj = new File(EDGE);
@@ -102,7 +127,13 @@ public class MapService {
                 String line = myReader.nextLine().trim();
                 if (StringUtils.isNotEmpty(line)) {
                     String[] temp = line.split(" ");
-
+                    double lat1 = Double.parseDouble(temp[1]);
+                    double lng1 = Double.parseDouble(temp[2]);
+                    double tempDis = CommonUtils.distance(lat, lat1, lng, lng1);
+                    if (tempDis < d) {
+                        result = temp[0];
+                        d = tempDis;
+                    }
                 }
             }
             myReader.close();

@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @ToString
 @Entity
 @Table(name = "intersection")
-@Data
+//@Data
 public class Intersection implements GraphNode {
     @Id
     @Column(name = "id")

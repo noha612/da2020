@@ -29,8 +29,8 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/resources/raw_node.txt
-src/main/resources/HN_edge.txt
-src/main/resources/HN_vertex.txt
-src/main/resources/HN_name.txt
-src/main/resources/inverted_index.txt
+src/main/resources/map/raw_node.txt
+src/main/resources/map/HN_edge.txt
+src/main/resources/map/HN_vertex.txt
+src/main/resources/map/HN_name.txt
+src/main/resources/map/inverted_index.txt

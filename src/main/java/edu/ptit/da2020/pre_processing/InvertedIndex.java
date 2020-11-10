@@ -1,4 +1,4 @@
-package edu.ptit.da2020.trash_package;
+package edu.ptit.da2020.pre_processing;
 
 import edu.ptit.da2020.util.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,8 @@ import java.util.Scanner;
 
 @Slf4j
 public class InvertedIndex {
-    private static final String NAME = "src/main/resources/HN_name.txt";
-    private static final String INVERTED = "src/main/resources/inverted_index.txt";
+    private static final String NAME = "src/main/resources/map/HN_name.txt";
+    private static final String INVERTED = "src/main/resources/map/inverted_index.txt";
 
     public static void main(String[] args) {
         preProcessing();

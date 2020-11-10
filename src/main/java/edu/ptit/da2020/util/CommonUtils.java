@@ -42,13 +42,14 @@ public class CommonUtils {
         }
         return temp.toArray(new Integer[0]);
     }
-    public static double computeCost(Intersection from, Intersection to) {
+
+    public static double distance(double fromLat, double toLat, double fromLng, double toLng) {
         double R = 6372.8; // km
 
-        double dLat = Math.toRadians(to.getLatitude() - from.getLatitude());
-        double dLon = Math.toRadians(to.getLongitude() - from.getLongitude());
-        double lat1 = Math.toRadians(from.getLatitude());
-        double lat2 = Math.toRadians(to.getLatitude());
+        double dLat = Math.toRadians(toLat - fromLat);
+        double dLon = Math.toRadians(toLng - fromLng);
+        double lat1 = Math.toRadians(fromLat);
+        double lat2 = Math.toRadians(toLat);
 
         double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));

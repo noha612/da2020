@@ -37,7 +37,7 @@
 //        try {
 //            graph = new HashMap<>();
 //
-//            File fXmlFile = new File("src/main/resources/map/mapPTIT.xml");
+//            File fXmlFile = new File("src/main/resources/map/map/map/mapPTIT.xml");
 //            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 //            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 //            Document doc = dBuilder.parse(fXmlFile);

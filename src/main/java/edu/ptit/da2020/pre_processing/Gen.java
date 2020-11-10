@@ -1,4 +1,4 @@
-package edu.ptit.da2020.trash_package;
+package edu.ptit.da2020.pre_processing;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,11 +12,11 @@ import java.util.*;
 @Slf4j
 public class Gen {
     private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
-    //    private static final String MAP_FILE = "src/main/resources/map/mapPTIT";
-    private static final String RAW_NODE = "src/main/resources/raw_node.txt";
-    private static final String EDGE = "src/main/resources/HN_edge.txt";
-    private static final String VERTEX = "src/main/resources/HN_vertex.txt";
-    private static final String NAME = "src/main/resources/HN_name.txt";
+    //    private static final String MAP_FILE = "src/main/resources/map/map/mapPTIT";
+    private static final String RAW_NODE = "src/main/resources/map/raw_node.txt";
+    private static final String EDGE = "src/main/resources/map/HN_edge.txt";
+    private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
+    private static final String NAME = "src/main/resources/map/HN_name.txt";
     static LinkedHashSet<String> set;
 
     public static void main(String[] args) {
