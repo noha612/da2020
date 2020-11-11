@@ -28,9 +28,12 @@ public class MathUtil {
     }
 
     public static void main(String[] args) {
+//        TwoDimensionCoordinate A = new TwoDimensionCoordinate(2.0, -1.0);
+//        TwoDimensionCoordinate B = new TwoDimensionCoordinate(-1.0, 5.0);
+//        TwoDimensionCoordinate C = new TwoDimensionCoordinate(5.0, 3.0);
         TwoDimensionCoordinate A = new TwoDimensionCoordinate(2.0, -1.0);
-        TwoDimensionCoordinate B = new TwoDimensionCoordinate(-1.0, 5.0);
-        TwoDimensionCoordinate C = new TwoDimensionCoordinate(5.0, 3.0);
+        TwoDimensionCoordinate B = new TwoDimensionCoordinate(2.0, 5.0);
+        TwoDimensionCoordinate C = new TwoDimensionCoordinate(2.0, 3.0);
         System.out.println(getAltitudeCoordinateOfTriangle(A, B, C));
     }
 

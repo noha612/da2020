@@ -8,7 +8,10 @@ import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.service.MapService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +22,7 @@ public class ApiController {
     @Autowired
     MapService mapService;
 
-    @GetMapping(value = "/routes")
-    public List<Intersection> hehe(@RequestParam String startId, @RequestParam String finishId) {
-//        return mapService.findRoute(startId, finishId);
-        return mapService.findRouteNewApproach(startId, finishId);
-    }
-
-    @GetMapping(value = "/locations")
+    @GetMapping(value = "/places")
     public List<String> hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
@@ -33,18 +30,12 @@ public class ApiController {
     @GetMapping(value = "/location")
     public String getNearestLocationByCoordinate(@RequestParam double lat, @RequestParam double lng) {
         return mapService.findNearestLocationByCoordinate(lat, lng);
-//        System.out.println(edgeRepository.getEstimateSpeedByIntersactionIdFromAndIntersactionIdTo("2291276248", "2291276149"));
-//        return null;
     }
 
     @GetMapping(value = "/directions")
     public Direction getDirection(
             @RequestParam(required = false) String fromId,
-            @RequestParam(required = false) String toId,
-            @RequestParam(required = false) String fromLat,
-            @RequestParam(required = false) String toLat,
-            @RequestParam(required = false) String fromLng,
-            @RequestParam(required = false) String toLng
+            @RequestParam(required = false) String toId
     ) {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
             Direction direction = new Direction();
@@ -60,11 +51,6 @@ public class ApiController {
             List<Moving> mvs = new ArrayList<>();
             mvs.add(mv);
             direction.setMovings(mvs);
-            return direction;
-        }
-        if (StringUtils.isNotEmpty(fromLat) && StringUtils.isNotEmpty(toLat)
-                && StringUtils.isNotEmpty(fromLng) && StringUtils.isNotEmpty(toLng)) {
-            Direction direction = new Direction();
             return direction;
         }
         return null;

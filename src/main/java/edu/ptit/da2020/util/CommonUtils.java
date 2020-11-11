@@ -54,4 +54,11 @@ public class CommonUtils {
         double c = 2 * Math.asin(Math.sqrt(a));
         return R * c;
     }
+
+    public static void main(String[] args) {
+
+        double latA = 21.9749816;
+        double lngA = 105.8651266;
+        System.out.println(distance(latA, latA, lngA, lngA));
+    }
 }
