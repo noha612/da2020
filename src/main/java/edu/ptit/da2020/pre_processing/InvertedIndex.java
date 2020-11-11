@@ -47,7 +47,6 @@ public class InvertedIndex {
         log.info("done read file " + NAME);
 
 
-
         log.info("start write file " + INVERTED);
         try {
             File f = new File(INVERTED);

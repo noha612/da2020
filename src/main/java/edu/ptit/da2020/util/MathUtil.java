@@ -15,14 +15,6 @@ public class MathUtil {
         return 2 * S / x;
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class TwoDimensionCoordinate {
-        private double x;
-        private double y;
-    }
-
     //Altitude of C
     public static TwoDimensionCoordinate getAltitudeCoordinateOfTriangle(
             TwoDimensionCoordinate A,
@@ -40,5 +32,13 @@ public class MathUtil {
         TwoDimensionCoordinate B = new TwoDimensionCoordinate(-1.0, 5.0);
         TwoDimensionCoordinate C = new TwoDimensionCoordinate(5.0, 3.0);
         System.out.println(getAltitudeCoordinateOfTriangle(A, B, C));
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TwoDimensionCoordinate {
+        private double x;
+        private double y;
     }
 }

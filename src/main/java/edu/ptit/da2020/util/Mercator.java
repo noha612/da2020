@@ -5,5 +5,6 @@ abstract class Mercator {
     final static double RADIUS_MINOR = 6356752.3142;
 
     abstract double yAxisProjection(double input);
+
     abstract double xAxisProjection(double input);
 }

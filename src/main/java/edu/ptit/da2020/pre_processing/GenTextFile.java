@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Slf4j
-public class Gen {
+public class GenTextFile {
     private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
     //    private static final String MAP_FILE = "src/main/resources/map/map/mapPTIT";
     private static final String RAW_NODE = "src/main/resources/map/raw_node.txt";

@@ -5,10 +5,6 @@ import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Moving;
 import edu.ptit.da2020.model.dto.Transport;
 import edu.ptit.da2020.model.entity.Intersection;
-import edu.ptit.da2020.repository.EdgeRepository;
-import edu.ptit.da2020.service.EdgeService;
-import edu.ptit.da2020.service.IntersectionService;
-import edu.ptit.da2020.service.LocationService;
 import edu.ptit.da2020.service.MapService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,34 +19,6 @@ public class ApiController {
     @Autowired
     MapService mapService;
 
-    @Autowired
-    IntersectionService intersectionService;
-
-    @Autowired
-    LocationService locationService;
-
-    @Autowired
-    EdgeService edgeService;
-
-    @PostMapping(value = "/intersections")
-    public String insertIntersections() {
-//        intersectionService.insertDBFromXML();
-        intersectionService.insertTXTFromXML();
-        return "ok!";
-    }
-
-    @PostMapping(value = "/locations")
-    public String insertLocations() {
-//        locationService.insertDBFromXML();
-        return "ok!";
-    }
-
-    @PostMapping(value = "/edges")
-    public String insertEdges() {
-//        edgeService.insertDBFromXML();
-        return "ok!";
-    }
-
     @GetMapping(value = "/routes")
     public List<Intersection> hehe(@RequestParam String startId, @RequestParam String finishId) {
 //        return mapService.findRoute(startId, finishId);
@@ -61,9 +29,6 @@ public class ApiController {
     public List<String> hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
-
-    @Autowired
-    EdgeRepository edgeRepository;
 
     @GetMapping(value = "/location")
     public String getNearestLocationByCoordinate(@RequestParam double lat, @RequestParam double lng) {

@@ -1,6 +1,5 @@
 package edu.ptit.da2020.util;
 
-import edu.ptit.da2020.model.entity.Intersection;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

@@ -1,20 +1,23 @@
-package edu.ptit.da2020.config;
+package edu.ptit.da2020.init;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 @Configuration
-@Getter
-@Setter
+@Data
 @Slf4j
+@Order(1)
 public class LoadFile {
 
     private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
@@ -38,7 +41,7 @@ public class LoadFile {
     }
 
     private void loadVertex() {
-        listV = new HashMap<>();
+        listV = new LinkedHashMap<>();
 
         log.info("start read file " + VERTEX);
         try {

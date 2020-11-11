@@ -1,49 +1,46 @@
 package edu.ptit.da2020.service;
 
-import edu.ptit.da2020.config.GraphConfig;
+import edu.ptit.da2020.init.LoadFile;
+import edu.ptit.da2020.init.MapGraph;
 import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.util.CommonUtils;
 import edu.ptit.da2020.util.HaversineScorer;
 import edu.ptit.da2020.util.HaversineToTimeScorer;
-import edu.ptit.da2020.util.RealTimeScorer;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 @Service
 @Slf4j
 public class MapService {
+    private static final String EDGE = "src/main/resources/map/HN_edge.txt";
     @Autowired
-    GraphConfig graphConfig;
-
-    public List<Intersection> findRoute(String startId, String finishId) {
-        graphConfig.setRouteFinder(new RouteFinder<>(graphConfig.getMap(), new HaversineScorer(), new HaversineScorer()));
-        return graphConfig.getRouteFinder().findRouteAStarAlgorithm(
-                graphConfig.getMap().getNode(startId),
-                graphConfig.getMap().getNode(finishId)
-        );
-    }
+    LoadFile loadFile;
 
     @Autowired
-    RealTimeScorer realTimeScorer;
+    MapGraph mapGraph;
 
     @Autowired
     HaversineToTimeScorer haversineToTimeScorer;
 
+    public List<Intersection> findRoute(String startId, String finishId) {
+        mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), new HaversineScorer(), new HaversineScorer()));
+        return mapGraph.getRouteFinder().findRouteAStarAlgorithm(
+                mapGraph.getGraph().getNode(startId),
+                mapGraph.getGraph().getNode(finishId)
+        );
+    }
+
     public List<Intersection> findRouteNewApproach(String startId, String finishId) {
-        graphConfig.setRouteFinder(new RouteFinder<>(graphConfig.getMap(), realTimeScorer, haversineToTimeScorer));
-        return graphConfig.getRouteFinder().findRouteAStarAlgorithm(
-                graphConfig.getMap().getNode(startId),
-                graphConfig.getMap().getNode(finishId)
+        mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), haversineToTimeScorer, haversineToTimeScorer));
+        return mapGraph.getRouteFinder().findRouteAStarAlgorithm(
+                mapGraph.getGraph().getNode(startId),
+                mapGraph.getGraph().getNode(finishId)
         );
     }
 
@@ -53,13 +50,13 @@ public class MapService {
         String[] nameSplit = name.split("\\s+");
         List<Integer[]> list = new ArrayList<>();
         for (String i : nameSplit) {
-            if (graphConfig.getIi().containsKey(i))
-                list.add(graphConfig.getIi().get(i));
+            if (loadFile.getIi().containsKey(i))
+                list.add(loadFile.getIi().get(i));
             else {
                 Integer[] integers = new Integer[0];
-                for (String s : graphConfig.getIi().keySet()) {
+                for (String s : loadFile.getIi().keySet()) {
                     if (s.startsWith(i)) {
-                        integers = ArrayUtils.addAll(integers, graphConfig.getIi().get(s));
+                        integers = ArrayUtils.addAll(integers, loadFile.getIi().get(s));
                         if (integers.length > 10) {
                             list.add(integers);
                             break;
@@ -72,7 +69,7 @@ public class MapService {
             ArrayList<String> result = new ArrayList<>();
             Integer[] li = CommonUtils.intersectionArrays(list);
             for (Integer i : li) {
-                result.add(graphConfig.getLn().get(i));
+                result.add(loadFile.getListName().get(i));
             }
             result.sort((s1, s2) -> {
                 s1 = CommonUtils.removeAccents(s1);
@@ -89,58 +86,18 @@ public class MapService {
         return null;
     }
 
-    private static final String EDGE = "src/main/resources/map/HN_edge.txt";
-
     public String findNearestLocationByCoordinate(double lat, double lng) {
-//        String result = "hehe";
-//        double d = Double.MAX_VALUE;
-//        log.info("start read file " + EDGE);
-//        try {
-//            File myObj = new File(EDGE);
-//            Scanner myReader = new Scanner(myObj);
-//            while (myReader.hasNextLine()) {
-//                String line = myReader.nextLine().trim();
-//                if (StringUtils.isNotEmpty(line)) {
-//                    String[] temp = line.split(" ");
-//                    double lat1 = Double.parseDouble(temp[1]);
-//                    double lng1 = Double.parseDouble(temp[2]);
-//                    double tempDis = CommonUtils.distance(lat, lat1, lng, lng1);
-//                    if (tempDis < d) {
-//                        result = temp[0];
-//                        d = tempDis;
-//                    }
-//                }
-//            }
-//            myReader.close();
-//        } catch (FileNotFoundException e) {
-//            log.error("An error occurred " + e);
-//        }
-//        log.info("done read file " + EDGE);
-//        return result;
         String result = "hehe";
         double d = Double.MAX_VALUE;
-        log.info("start read file " + EDGE);
-        try {
-            File myObj = new File(EDGE);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine().trim();
-                if (StringUtils.isNotEmpty(line)) {
-                    String[] temp = line.split(" ");
-                    double lat1 = Double.parseDouble(temp[1]);
-                    double lng1 = Double.parseDouble(temp[2]);
-                    double tempDis = CommonUtils.distance(lat, lat1, lng, lng1);
-                    if (tempDis < d) {
-                        result = temp[0];
-                        d = tempDis;
-                    }
-                }
+        for (Intersection i : mapGraph.getNodes()) {
+            double lat1 = i.getLatitude();
+            double lng1 = i.getLongitude();
+            double tempDis = CommonUtils.distance(lat, lat1, lng, lng1);
+            if (tempDis < d) {
+                result = i.getId();
+                d = tempDis;
             }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("An error occurred " + e);
         }
-        log.info("done read file " + EDGE);
         return result;
     }
 }
