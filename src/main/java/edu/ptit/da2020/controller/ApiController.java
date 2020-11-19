@@ -1,6 +1,7 @@
 package edu.ptit.da2020.controller;
 
 import edu.ptit.da2020.model.Coordinate;
+import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Moving;
 import edu.ptit.da2020.model.dto.Transport;
@@ -23,7 +24,7 @@ public class ApiController {
     MapService mapService;
 
     @GetMapping(value = "/places")
-    public List<String> hehe(@RequestParam String name) {
+    public List<Place> hehe(@RequestParam String name) {
         return mapService.findIdByName(name);
     }
 

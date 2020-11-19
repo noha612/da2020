@@ -2,6 +2,7 @@ package edu.ptit.da2020.service;
 
 import edu.ptit.da2020.init.LoadFile;
 import edu.ptit.da2020.init.MapGraph;
+import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.entity.Intersection;
 import edu.ptit.da2020.util.CommonUtils;
 import edu.ptit.da2020.util.HaversineScorer;
@@ -38,7 +39,7 @@ public class MapService {
         );
     }
 
-    public List<String> findIdByName(String name) {
+    public List<Place> findIdByName(String name) {
         name = CommonUtils.removeAccents(name);
         name = name.toLowerCase();
         String[] nameSplit = name.split("\\s+");
@@ -60,22 +61,33 @@ public class MapService {
             }
         }
         if (list.size() > 0) {
-            ArrayList<String> result = new ArrayList<>();
+            List<Place> result = new ArrayList<>();
             Integer[] li = CommonUtils.intersectionArrays(list);
             for (Integer i : li) {
-                result.add(loadFile.getListName().get(i));
+                Place p = new Place();
+                String[] strArr = loadFile.getListName().get(i).split("::");
+                p.setId(strArr[1]);
+                p.setName(strArr[0]);
+                result.add(p);
             }
-            result.sort((s1, s2) -> {
-                s1 = CommonUtils.removeAccents(s1);
-                s1 = s1.toLowerCase();
-                s2 = CommonUtils.removeAccents(s2);
-                s2 = s2.toLowerCase();
-                if (s1.indexOf(nameSplit[0]) < s2.indexOf(nameSplit[0]))
+            result.sort((p1, p2) -> {
+                String name1 = CommonUtils.removeAccents(p1.getName());
+                name1 = name1.toLowerCase();
+                String name2 = CommonUtils.removeAccents(p2.getName());
+                name2 = name2.toLowerCase();
+                if (name1.indexOf(nameSplit[0]) < name2.indexOf(nameSplit[0]))
                     return -1;
                 return 0;
             });
-            return result.size() > 10 ? result.subList(0, 10) : result;
-
+            result = result.size() > 10 ? result.subList(0, 10) : result;
+            for (int i = 0; i < result.size(); i++) {
+                Place p = result.get(i);
+                Double[] coor = loadFile.getListV().get(p.getId());
+                p.setLatitude(coor[0]);
+                p.setLongitude(coor[1]);
+                result.set(i, p);
+            }
+            return result;
         }
         return null;
     }

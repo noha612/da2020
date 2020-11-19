@@ -10,7 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Location {
+public class Place {
     private String name;
-    private Intersection intersection;
+    private String id;
+    private double latitude;
+    private double longitude;
 }
