@@ -1,15 +1,15 @@
 package edu.ptit.da2020.util;
 
-import edu.ptit.da2020.model.entity.Intersection;
+import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.util.algorithm.Scorer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HaversineToTimeScorer implements Scorer<Intersection> {
+public class HaversineToTimeScorer implements Scorer<Junction> {
 
 
     @Override
-    public double computeCost(Intersection from, Intersection to) {
+    public double computeCost(Junction from, Junction to) {
         double R = 6372.8; // km
 
         double dLat = Math.toRadians(to.getLatitude() - from.getLatitude());

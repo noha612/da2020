@@ -1,15 +1,10 @@
 package edu.ptit.da2020.model;
 
-import edu.ptit.da2020.model.entity.Intersection;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class Place {
     private String name;
     private String id;

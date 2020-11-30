@@ -1,17 +1,20 @@
 package edu.ptit.da2020.util;
 
-import edu.ptit.da2020.model.entity.Intersection;
+import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.util.algorithm.Scorer;
 
-public class HaversineScorer implements Scorer<Intersection> {
+public class HaversineScorer implements Scorer<Junction> {
     public static void main(String[] args) {
-        Intersection a = new Intersection("0", 0, 0);
-        Intersection b = new Intersection("0", 0.00, 0.016);
-        System.out.println(new HaversineScorer().computeCost(a, b));
+        Junction a = new Junction("0", 20.945, 105.742);
+        Junction b = new Junction("0", 20.945, 105.911);
+
+        Junction c = new Junction("0", 20.945, 105.742);
+        Junction d = new Junction("0", 21.098, 105.742);
+        System.out.println(new HaversineScorer().computeCost(a, b)*new HaversineScorer().computeCost(c, d));
     }
 
     @Override
-    public double computeCost(Intersection from, Intersection to) {
+    public double computeCost(Junction from, Junction to) {
         double R = 6372.8; // km
 
         double dLat = Math.toRadians(to.getLatitude() - from.getLatitude());

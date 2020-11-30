@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Data
-public class Intersection implements GraphNode {
+public class Junction implements GraphNode {
     private String id;
     private double latitude;
     private double longitude;

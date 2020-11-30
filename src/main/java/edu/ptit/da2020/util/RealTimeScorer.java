@@ -1,18 +1,18 @@
 package edu.ptit.da2020.util;
 
 import edu.ptit.da2020.init.MapGraph;
-import edu.ptit.da2020.model.entity.Intersection;
+import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.util.algorithm.Scorer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RealTimeScorer implements Scorer<Intersection> {
+public class RealTimeScorer implements Scorer<Junction> {
     @Autowired
     MapGraph mapGraph;
 
     @Override
-    public double computeCost(Intersection from, Intersection to) {
+    public double computeCost(Junction from, Junction to) {
         double R = 6372.8; // km
 
         double dLat = Math.toRadians(to.getLatitude() - from.getLatitude());

@@ -1,6 +1,6 @@
 package edu.ptit.da2020.init;
 
-import edu.ptit.da2020.model.entity.Intersection;
+import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.model.graph.Graph;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
 import lombok.Data;
@@ -21,10 +21,10 @@ public class MapGraph {
     @Autowired
     LoadFile loadFile;
 
-    private Graph<Intersection> graph;
-    private RouteFinder<Intersection> routeFinder;
-    private Set<Intersection> nodes;
-    private ArrayList<Intersection> al;
+    private Graph<Junction> graph;
+    private RouteFinder<Junction> routeFinder;
+    private Set<Junction> nodes;
+    private ArrayList<Junction> al;
     private Map<String, Set<String>> neighbourhoods;
 
     @SneakyThrows
@@ -41,7 +41,7 @@ public class MapGraph {
         nodes = new LinkedHashSet<>();
 
         for (Map.Entry<String, Double[]> entry : loadFile.getListV().entrySet()) {
-            nodes.add(new Intersection(entry.getKey(), entry.getValue()[0], entry.getValue()[1]));
+            nodes.add(new Junction(entry.getKey(), entry.getValue()[0], entry.getValue()[1]));
         }
         log.info("total V: " + nodes.size());
     }

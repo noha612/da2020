@@ -2,8 +2,10 @@ package edu.ptit.da2020.service;
 
 import edu.ptit.da2020.init.LoadFile;
 import edu.ptit.da2020.init.MapGraph;
+import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Place;
-import edu.ptit.da2020.model.entity.Intersection;
+import edu.ptit.da2020.model.dto.Location;
+import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.util.CommonUtils;
 import edu.ptit.da2020.util.HaversineScorer;
 import edu.ptit.da2020.util.HaversineToTimeScorer;
@@ -31,7 +33,7 @@ public class MapService {
     @Autowired
     HaversineToTimeScorer haversineToTimeScorer;
 
-    public List<Intersection> findRoute(String startId, String finishId) {
+    public List<Junction> findRoute(String startId, String finishId) {
         mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), new HaversineScorer(), new HaversineScorer()));
         return mapGraph.getRouteFinder().findRouteAStarAlgorithm(
                 mapGraph.getGraph().getNode(startId),
@@ -92,30 +94,47 @@ public class MapService {
         return null;
     }
 
-    public String findNearestLocationByCoordinate(double lat, double lng) {
-        String result = "hehe";
+    public Location findLocationByPoint(double lat, double lng) {
+        Location location = new Location();
+        location.setMarker(new GeoPoint(lat, lng));
+        Place place = new Place();
         double d = Double.MAX_VALUE;
         double tempDis;
-        String tempResult;
+        Location tempResult = new Location();
+        tempResult.setMarker(new GeoPoint(lat, lng));
 
         for (Map.Entry<String, String[]> entry : loadFile.getListE().entrySet()) {
 
+            String idA = entry.getValue()[0];
             double latA = loadFile.getListV().get(entry.getValue()[0])[0];
             double lngA = loadFile.getListV().get(entry.getValue()[0])[1];
 
+            String idB = entry.getValue()[1];
             double latB = loadFile.getListV().get(entry.getValue()[1])[0];
             double lngB = loadFile.getListV().get(entry.getValue()[1])[1];
 
             double AC = CommonUtils.distance(latA, lat, lngA, lng);
             if (AC == 0) {
                 log.info("||| node");
-                return latA + "_" + lngA;
+                location.setH(new GeoPoint(latA, lngA));
+                place.setId(idA);
+                place.setName(idA);
+                place.setLatitude(latA);
+                place.setLongitude(lngA);
+                location.setPlace(place);
+                return location;
             }
 
             double BC = CommonUtils.distance(latB, lat, lngB, lng);
             if (BC == 0) {
                 log.info("||| node");
-                return latB + "_" + lngB;
+                location.setH(new GeoPoint(latB, lngB));
+                place.setId(idB);
+                place.setName(idB);
+                place.setLatitude(latB);
+                place.setLongitude(lngB);
+                location.setPlace(place);
+                return location;
             }
 
             double AB = CommonUtils.distance(latA, latB, lngA, lngB);
@@ -123,7 +142,13 @@ public class MapService {
 
             if (AC + BC == AB) {
                 //TODO: choose A or B next?
-                return lat + "_" + lng + "->A?B";
+                location.setH(new GeoPoint(latA, lngA));
+                place.setId(idA);
+                place.setName(idA);
+                place.setLatitude(latA);
+                place.setLongitude(lngA);
+                location.setPlace(place);
+                return location;
             }
 
             if (
@@ -139,22 +164,40 @@ public class MapService {
                 double lngH = td.getY();
                 tempDis = CommonUtils.distance(lat, latH, lng, lngH);
                 //TODO: choose A or B next?
-                tempResult = latH + "_" + lngH + "->A?B";
+                tempResult.setH(new GeoPoint(latH, lngH));
+                place.setId(idA);
+                place.setName(idA);
+                place.setLatitude(latA);
+                place.setLongitude(lngA);
+                tempResult.setPlace(place);
             } else {
-                tempDis = AC;
-                tempResult = latA + "_" + lngA;
                 if (AC > BC) {
                     tempDis = BC;
-                    tempResult = latB + "_" + lngB;
+                    tempResult.setH(new GeoPoint(latB, lngB));
+                    place.setId(idB);
+                    place.setName(idB);
+                    place.setLatitude(latB);
+                    place.setLongitude(lngB);
+                    tempResult.setPlace(place);
+                } else {
+                    tempDis = AC;
+                    tempResult.setH(new GeoPoint(latA, lngA));
+                    place.setId(idA);
+                    place.setName(idA);
+                    place.setLatitude(latA);
+                    place.setLongitude(lngA);
+                    tempResult.setPlace(place);
                 }
             }
 
             if (tempDis < d) {
-                result = tempResult;
+                location = new Location(tempResult.getMarker(), tempResult.getH(), new Place(tempResult.getPlace().getName(), tempResult.getPlace().getId(), tempResult.getPlace().getLatitude(), tempResult.getPlace().getLongitude()));
+                log.info(location.toString());
                 d = tempDis;
             }
         }
+        log.info(location.toString());
 
-        return result;
+        return location;
     }
 }
