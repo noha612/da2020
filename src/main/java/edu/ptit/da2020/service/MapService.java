@@ -37,7 +37,8 @@ public class MapService {
         mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), new HaversineScorer(), new HaversineScorer()));
         return mapGraph.getRouteFinder().findRouteAStarAlgorithm(
                 mapGraph.getGraph().getNode(startId),
-                mapGraph.getGraph().getNode(finishId)
+                mapGraph.getGraph().getNode(finishId),
+                loadFile.getListTraffic()
         );
     }
 
@@ -199,5 +200,9 @@ public class MapService {
         log.info(location.toString());
 
         return location;
+    }
+
+    public int getTrafficStatusByRoadId(String id) {
+        return loadFile.getListTraffic().get(id);
     }
 }

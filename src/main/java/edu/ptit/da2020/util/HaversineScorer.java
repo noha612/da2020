@@ -10,7 +10,7 @@ public class HaversineScorer implements Scorer<Junction> {
 
         Junction c = new Junction("0", 20.945, 105.742);
         Junction d = new Junction("0", 21.098, 105.742);
-        System.out.println(new HaversineScorer().computeCost(a, b)*new HaversineScorer().computeCost(c, d));
+        System.out.println(new HaversineScorer().computeCost(a, b) * new HaversineScorer().computeCost(c, d));
     }
 
     @Override
@@ -24,6 +24,6 @@ public class HaversineScorer implements Scorer<Junction> {
 
         double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        return R * c;
+        return R * c * 1000;
     }
 }

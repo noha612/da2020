@@ -11,7 +11,8 @@ import java.util.*;
 
 @Slf4j
 public class GenTextFile {
-    private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
+    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
+    //    private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
     //    private static final String MAP_FILE = "src/main/resources/map/map/mapPTIT";
     private static final String RAW_NODE = "src/main/resources/map/raw_node.txt";
     private static final String EDGE = "src/main/resources/map/HN_edge.txt";
@@ -124,7 +125,7 @@ public class GenTextFile {
         ) {
             log.info("begin insert E, size: " + set.size());
             for (String i : set) {
-                fw.write(i + "\n");
+                fw.write(i + " " + 1 + "\n");
             }
             log.info("done");
         } catch (IOException e) {

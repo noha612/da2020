@@ -29,6 +29,7 @@ public class LoadFile {
     private Map<String, String[]> listE;
     private Map<String, Integer[]> ii;
     private Map<Integer, String> listName;
+    private Map<String, Integer> listTraffic;
 
     @PostConstruct
     public void initGraph() {
@@ -38,6 +39,7 @@ public class LoadFile {
         loadEdge();
         loadInvertedKey();
         loadName();
+        loadTraffic();
     }
 
     private void loadVertex() {
@@ -133,5 +135,26 @@ public class LoadFile {
         }
         log.info("done read file " + NAME);
 
+    }
+
+    private void loadTraffic() {
+        listTraffic = new HashMap<>();
+
+        log.info("start read file " + EDGE);
+        try {
+            File myObj = new File(EDGE);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String line = myReader.nextLine().trim();
+                if (StringUtils.isNotEmpty(line)) {
+                    String[] temp = line.split(" ");
+                    listTraffic.put(temp[0] + "_" + temp[1], Integer.parseInt(temp[2]));
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            log.error("An error occurred " + e);
+        }
+        log.info("done read file " + EDGE + ", total star: " + listE.size());
     }
 }

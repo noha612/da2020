@@ -4,8 +4,6 @@ import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Location;
-import edu.ptit.da2020.model.dto.Moving;
-import edu.ptit.da2020.model.dto.Transport;
 import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.service.MapService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +25,19 @@ public class ApiController {
     MapService mapService;
 
     @GetMapping(value = "/places")
-    public List<Place> getListPlaceByName(@RequestParam String name) {
+    public List<Place> getListPlaceByName(@RequestParam(name = "name") String name) {
         return mapService.findIdByName(name);
     }
 
     @GetMapping(value = "/locations")
-    public Location getLocationByPoint(@RequestParam double lat, @RequestParam double lng) {
+    public Location getLocationByPoint(@RequestParam(name = "lat") double lat, @RequestParam(name = "lng") double lng) {
         return mapService.findLocationByPoint(lat, lng);
     }
 
     @GetMapping(value = "/directions")
     public Direction getDirection(
-            @RequestParam(required = false) String fromId,
-            @RequestParam(required = false) String toId
+            @RequestParam(required = false, name = "from-id") String fromId,
+            @RequestParam(required = false, name = "to-id") String toId
     ) {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
             Direction direction = new Direction();
@@ -50,11 +48,16 @@ public class ApiController {
             for (Junction i : lsIts) {
                 lsCoor.add(new GeoPoint(i.getLatitude(), i.getLongitude()));
             }
-            direction.setRoute(lsCoor);
+            direction.setJunctions(lsIts);
             log.info(direction.toString());
             return direction;
         }
         return null;
+    }
+
+    @GetMapping(value = "/traffics")
+    public Integer getTraffic(@RequestParam(name = "road-id") String id) {
+        return mapService.getTrafficStatusByRoadId(id);
     }
 
 }
