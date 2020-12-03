@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @RequestMapping("/da2020/v1")
-public interface ApiInterface {
+public interface APIInterface {
 
     @GetMapping(value = "/places")
     public List<Place> getListPlaceByName(@RequestParam(name = "name") String name);
