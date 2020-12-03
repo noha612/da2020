@@ -1,6 +1,6 @@
 package edu.ptit.da2020.controller;
 
-import edu.ptit.da2020.init.LoadFile;
+import edu.ptit.da2020.init.DataInit;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.Place;
@@ -31,7 +31,7 @@ public class APIImpl implements APIInterface {
     TrafficService trafficService;
 
     @Autowired
-    LoadFile loadFile;
+    DataInit dataInit;
 
     @Override
     public List<Place> getListPlaceByName(String name) {
@@ -54,7 +54,7 @@ public class APIImpl implements APIInterface {
             direction.setJunctions(lsIts);
             Map<String, Integer> traffics = new LinkedHashMap<>();
             for (int i = 0; i < lsIts.size() - 1; i++) {
-                traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(), loadFile.getListCongestions().get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
+                traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(), dataInit.getListCongestions().get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
             }
             direction.setTraffics(traffics);
             log.info(direction.toString());

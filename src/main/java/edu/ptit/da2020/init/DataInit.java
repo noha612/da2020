@@ -18,7 +18,7 @@ import java.util.Scanner;
 @Data
 @Slf4j
 @Order(1)
-public class LoadFile {
+public class DataInit {
 
     private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
     private static final String EDGE = "src/main/resources/map/HN_edge.txt";

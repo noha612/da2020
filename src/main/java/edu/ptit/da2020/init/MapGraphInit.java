@@ -17,9 +17,9 @@ import java.util.*;
 @Data
 @Slf4j
 @Order(2)
-public class MapGraph {
+public class MapGraphInit {
     @Autowired
-    LoadFile loadFile;
+    DataInit dataInit;
 
     private Graph<Junction> graph;
     private RouteFinder<Junction> routeFinder;
@@ -41,7 +41,7 @@ public class MapGraph {
     private void initNodes() {
         nodes = new LinkedHashSet<>();
 
-        for (Map.Entry<String, Double[]> entry : loadFile.getListV().entrySet()) {
+        for (Map.Entry<String, Double[]> entry : dataInit.getListV().entrySet()) {
             nodes.add(new Junction(entry.getKey(), entry.getValue()[0], entry.getValue()[1]));
         }
         log.info("total V: " + nodes.size());
@@ -51,7 +51,7 @@ public class MapGraph {
     private void initLinks() {
         neighbourhoods = new HashMap<>();
 
-        for (Map.Entry<String, String[]> entry : loadFile.getListE().entrySet()) {
+        for (Map.Entry<String, String[]> entry : dataInit.getListE().entrySet()) {
             if (neighbourhoods.containsKey(entry.getValue()[0])) {
                 neighbourhoods.get(entry.getValue()[0]).add(entry.getValue()[1]);
             } else {

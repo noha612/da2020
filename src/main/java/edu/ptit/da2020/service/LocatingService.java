@@ -1,6 +1,6 @@
 package edu.ptit.da2020.service;
 
-import edu.ptit.da2020.init.LoadFile;
+import edu.ptit.da2020.init.DataInit;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Location;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class LocatingService {
     @Autowired
-    LoadFile loadFile;
+    DataInit dataInit;
 
     public List<Place> findIdByName(String name) {
         name = CommonUtils.removeAccents(name);
@@ -27,13 +27,13 @@ public class LocatingService {
         String[] nameSplit = name.split("\\s+");
         List<Integer[]> list = new ArrayList<>();
         for (String i : nameSplit) {
-            if (loadFile.getIi().containsKey(i))
-                list.add(loadFile.getIi().get(i));
+            if (dataInit.getIi().containsKey(i))
+                list.add(dataInit.getIi().get(i));
             else {
                 Integer[] integers = new Integer[0];
-                for (String s : loadFile.getIi().keySet()) {
+                for (String s : dataInit.getIi().keySet()) {
                     if (s.startsWith(i)) {
-                        integers = ArrayUtils.addAll(integers, loadFile.getIi().get(s));
+                        integers = ArrayUtils.addAll(integers, dataInit.getIi().get(s));
                         if (integers.length > 10) {
                             list.add(integers);
                             break;
@@ -47,7 +47,7 @@ public class LocatingService {
             Integer[] li = CommonUtils.intersectionArrays(list);
             for (Integer i : li) {
                 Place p = new Place();
-                String[] strArr = loadFile.getListName().get(i).split("::");
+                String[] strArr = dataInit.getListName().get(i).split("::");
                 p.setId(strArr[1]);
                 p.setName(strArr[0]);
                 result.add(p);
@@ -64,7 +64,7 @@ public class LocatingService {
             result = result.size() > 10 ? result.subList(0, 10) : result;
             for (int i = 0; i < result.size(); i++) {
                 Place p = result.get(i);
-                Double[] coor = loadFile.getListV().get(p.getId());
+                Double[] coor = dataInit.getListV().get(p.getId());
                 p.setLatitude(coor[0]);
                 p.setLongitude(coor[1]);
                 result.set(i, p);
@@ -83,15 +83,15 @@ public class LocatingService {
         Location tempResult = new Location();
         tempResult.setMarker(new GeoPoint(lat, lng));
 
-        for (Map.Entry<String, String[]> entry : loadFile.getListE().entrySet()) {
+        for (Map.Entry<String, String[]> entry : dataInit.getListE().entrySet()) {
 
             String idA = entry.getValue()[0];
-            double latA = loadFile.getListV().get(entry.getValue()[0])[0];
-            double lngA = loadFile.getListV().get(entry.getValue()[0])[1];
+            double latA = dataInit.getListV().get(entry.getValue()[0])[0];
+            double lngA = dataInit.getListV().get(entry.getValue()[0])[1];
 
             String idB = entry.getValue()[1];
-            double latB = loadFile.getListV().get(entry.getValue()[1])[0];
-            double lngB = loadFile.getListV().get(entry.getValue()[1])[1];
+            double latB = dataInit.getListV().get(entry.getValue()[1])[0];
+            double lngB = dataInit.getListV().get(entry.getValue()[1])[1];
 
             double AC = CommonUtils.distance(latA, lat, lngA, lng);
             if (AC == 0) {
