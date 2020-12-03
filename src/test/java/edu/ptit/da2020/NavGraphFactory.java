@@ -1,51 +1,60 @@
 package edu.ptit.da2020;
 
-import org.xguzm.pathfinding.grid.GridCell;
-import org.xguzm.pathfinding.grid.NavigationGrid;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.util.Scanner;
 
 public class NavGraphFactory {
+    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
 
-    private static // 0 means closed, 1 means open, 2 is marker for start, 3 is marker for goal
-    int[][] navCells = new int[][]{
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},    // 8
-            {0, 0, 0, 0, 3, 1, 0, 0, 0, 0},
-            {0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-            {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
-            {0, 0, 0, 1, 1, 0, 1, 1, 0, 0},   // 4
-            {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
-            {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
-            {0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
-            {0, 0, 2, 1, 1, 0, 0, 0, 0, 0}    //0
-            //0				 5			 9
-    };
+    public static void main(String[] args) {
+        String node = "";
+        String name = "";
+        String number = "";
+        String street = "";
+        int d = 0;
 
-    public static NavigationGrid<GridCell> getGridCellMap() {
-        GridCell[][] cells = new GridCell[navCells[0].length][navCells.length];
+        try {
+            File myObj = new File(MAP_FILE);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String way = myReader.nextLine().trim();
+                if (way.startsWith("<node")) {
+                    String[] temp = way.split(" ");
 
+                    node =
+                            temp[1].substring(temp[1].indexOf("\"") + 1, temp[1].length() - 1) + " " +
+                                    temp[2].substring(temp[2].indexOf("\"") + 1, temp[2].length() - 1) + " " +
+                                    temp[3].substring(temp[3].indexOf("\"") + 1, temp[3].length() - 1) + " "
+                    ;
 
-        for (int y = navCells.length - 1; y >= 0; y--)
-            for (int x = 0; x < navCells[0].length; x++) {
-                int invY = navCells.length - 1 - y;
-                GridCell cell = new GridCell(x, invY, navCells[y][x] > 0);
-                cells[x][invY] = cell;
+                    String line = myReader.nextLine().trim();
+                    while (!line.startsWith("</node") && !line.startsWith("<node")) {
+                        if (line.startsWith("<tag k=\"name\" ")) {
+                            name = line;
+                            d++;
+                        }
+                        if (line.startsWith("<tag k=\"addr:housenumber\"")) {
+                            number = line;
+                        }
+                        if (line.startsWith("<tag k=\"addr:street\" ")) {
+                            street = line;
+                        }
+                        line = myReader.nextLine().trim();
+                    }
+                }
+                if (StringUtils.isNotEmpty(name) || StringUtils.isNotEmpty(number) || StringUtils.isNotEmpty(street))
+                    System.out.println(node + number + street + name);
+
+                node = "";
+                name = "";
+                number = "";
+                street = "";
             }
-
-        return new NavigationGrid<GridCell>(cells, false);
-
-    }
-
-    public static NavigationGrid<GridCell> getAutoAssignedGridCellMap() {
-        GridCell[][] cells = new GridCell[navCells[0].length][navCells.length];
-
-
-        for (int y = navCells.length - 1; y >= 0; y--)
-            for (int x = 0; x < navCells[0].length; x++) {
-                int invY = navCells.length - 1 - y;
-                GridCell cell = new GridCell(navCells[y][x] > 0);
-                cells[x][invY] = cell;
-            }
-
-        return new NavigationGrid<GridCell>(cells, true);
-
+            myReader.close();
+        } catch (Exception e) {
+        }
+        System.out.println(d);
     }
 }
