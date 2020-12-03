@@ -1,7 +1,7 @@
 package edu.ptit.da2020.model.dto;
 
 import edu.ptit.da2020.model.GeoPoint;
-import edu.ptit.da2020.model.entity.Junction;
+import edu.ptit.da2020.model.Junction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

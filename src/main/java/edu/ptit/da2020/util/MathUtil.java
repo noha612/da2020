@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static edu.ptit.da2020.constant.Constants.R;
+
 public class MathUtil {
     public static double getAreaByHeronFormula(double a, double b, double c) {
         double p = (a + b + c) / 2;
@@ -43,5 +45,20 @@ public class MathUtil {
     public static class TwoDimensionCoordinate {
         private double x;
         private double y;
+    }
+
+    public static double haversineFomular(
+            double fromLat, double fromLng,
+            double toLat, double toLng
+    ) {
+
+        double dLat = Math.toRadians(toLat - fromLat);
+        double dLon = Math.toRadians(toLng - fromLng);
+        double lat1 = Math.toRadians(fromLat);
+        double lat2 = Math.toRadians(toLat);
+
+        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return R * c;
     }
 }

@@ -1,10 +1,10 @@
 package edu.ptit.da2020.controller;
 
 import edu.ptit.da2020.model.GeoPoint;
+import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Location;
-import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.service.MapService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,11 +42,11 @@ public class ApiController {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
             Direction direction = new Direction();
             List<Junction> lsIts = mapService.findRoute(fromId, toId);
-            direction.setFrom(new GeoPoint(lsIts.get(0).getLatitude(), lsIts.get(0).getLongitude()));
-            direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLatitude(), lsIts.get(lsIts.size() - 1).getLongitude()));
+            direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
+            direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(), lsIts.get(lsIts.size() - 1).getLng()));
             List<GeoPoint> lsCoor = new ArrayList<>();
             for (Junction i : lsIts) {
-                lsCoor.add(new GeoPoint(i.getLatitude(), i.getLongitude()));
+                lsCoor.add(new GeoPoint(i.getLat(), i.getLng()));
             }
             direction.setJunctions(lsIts);
             log.info(direction.toString());

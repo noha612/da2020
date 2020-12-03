@@ -1,4 +1,4 @@
-package edu.ptit.da2020.model.entity;
+package edu.ptit.da2020.testAStar;
 
 import edu.ptit.da2020.model.graph.GraphNode;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Data
-public class Junction implements GraphNode {
+public class Intersection implements GraphNode {
     private String id;
-    private double latitude;
-    private double longitude;
 }

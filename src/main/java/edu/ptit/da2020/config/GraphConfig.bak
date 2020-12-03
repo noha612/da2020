@@ -2,7 +2,7 @@ package edu.ptit.da2020.config;
 
 import edu.ptit.da2020.constant.OsmXMLConstant;
 import edu.ptit.da2020.model.entity.EdgeEntity;
-import edu.ptit.da2020.model.entity.Junction;
+import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.entity.LocationEntity;
 import edu.ptit.da2020.model.graph.Graph;
 import edu.ptit.da2020.repository.EdgeRepository;

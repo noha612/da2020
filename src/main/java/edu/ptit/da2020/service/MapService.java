@@ -3,14 +3,14 @@ package edu.ptit.da2020.service;
 import edu.ptit.da2020.init.LoadFile;
 import edu.ptit.da2020.init.MapGraph;
 import edu.ptit.da2020.model.GeoPoint;
+import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Location;
-import edu.ptit.da2020.model.entity.Junction;
 import edu.ptit.da2020.util.CommonUtils;
-import edu.ptit.da2020.util.HaversineScorer;
-import edu.ptit.da2020.util.HaversineToTimeScorer;
 import edu.ptit.da2020.util.MathUtil;
+import edu.ptit.da2020.util.algorithm.EstTimeScorer;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
+import edu.ptit.da2020.util.algorithm.TimeScorer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +31,13 @@ public class MapService {
     MapGraph mapGraph;
 
     @Autowired
-    HaversineToTimeScorer haversineToTimeScorer;
+    TimeScorer timeScorer;
 
     public List<Junction> findRoute(String startId, String finishId) {
-        mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), new HaversineScorer(), new HaversineScorer()));
+        mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), timeScorer, new EstTimeScorer()));
         return mapGraph.getRouteFinder().findRouteAStarAlgorithm(
                 mapGraph.getGraph().getNode(startId),
-                mapGraph.getGraph().getNode(finishId),
-                loadFile.getListTraffic()
+                mapGraph.getGraph().getNode(finishId)
         );
     }
 

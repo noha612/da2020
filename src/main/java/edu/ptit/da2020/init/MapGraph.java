@@ -1,6 +1,6 @@
 package edu.ptit.da2020.init;
 
-import edu.ptit.da2020.model.entity.Junction;
+import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.graph.Graph;
 import edu.ptit.da2020.util.algorithm.RouteFinder;
 import lombok.Data;
