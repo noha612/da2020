@@ -1,7 +1,7 @@
 package edu.ptit.da2020.testAStar;
 
 import edu.ptit.da2020.model.graph.GraphNode;
-import edu.ptit.da2020.util.algorithm.Scorer;
+import edu.ptit.da2020.pathfinding.scorer.Scorer;
 
 import java.util.HashMap;
 import java.util.Map;

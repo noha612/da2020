@@ -29,7 +29,7 @@ public class LoadFile {
     private Map<String, String[]> listE;
     private Map<String, Integer[]> ii;
     private Map<Integer, String> listName;
-    private Map<String, Integer> listTraffic;
+    private Map<String, Integer> listCongestions;
 
     @PostConstruct
     public void initGraph() {
@@ -39,7 +39,7 @@ public class LoadFile {
         loadEdge();
         loadInvertedKey();
         loadName();
-        loadTraffic();
+        loadCongestion();
     }
 
     private void loadVertex() {
@@ -137,8 +137,8 @@ public class LoadFile {
 
     }
 
-    private void loadTraffic() {
-        listTraffic = new HashMap<>();
+    public void loadCongestion() {
+        listCongestions = new HashMap<>();
 
         log.info("start read file " + EDGE);
         try {
@@ -148,7 +148,7 @@ public class LoadFile {
                 String line = myReader.nextLine().trim();
                 if (StringUtils.isNotEmpty(line)) {
                     String[] temp = line.split(" ");
-                    listTraffic.put(temp[0] + "_" + temp[1], Integer.parseInt(temp[2]));
+                    listCongestions.put(temp[0] + "_" + temp[1], Integer.parseInt(temp[2]));
                 }
             }
             myReader.close();

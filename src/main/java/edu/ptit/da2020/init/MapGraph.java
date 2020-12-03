@@ -2,7 +2,7 @@ package edu.ptit.da2020.init;
 
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.graph.Graph;
-import edu.ptit.da2020.util.algorithm.RouteFinder;
+import edu.ptit.da2020.pathfinding.RouteFinder;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

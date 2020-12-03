@@ -1,4 +1,4 @@
-package edu.ptit.da2020.util.algorithm;
+package edu.ptit.da2020.pathfinding.scorer;
 
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.util.MathUtil;

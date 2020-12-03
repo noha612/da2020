@@ -8,9 +8,9 @@ import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Location;
 import edu.ptit.da2020.util.CommonUtils;
 import edu.ptit.da2020.util.MathUtil;
-import edu.ptit.da2020.util.algorithm.EstTimeScorer;
-import edu.ptit.da2020.util.algorithm.RouteFinder;
-import edu.ptit.da2020.util.algorithm.TimeScorer;
+import edu.ptit.da2020.pathfinding.scorer.EstTimeScorer;
+import edu.ptit.da2020.pathfinding.RouteFinder;
+import edu.ptit.da2020.pathfinding.scorer.TimeScorer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ import java.util.Map;
 @Service
 @Slf4j
 public class MapService {
-    private static final String EDGE = "src/main/resources/map/HN_edge.txt";
     @Autowired
     LoadFile loadFile;
 
@@ -33,9 +32,12 @@ public class MapService {
     @Autowired
     TimeScorer timeScorer;
 
+    @Autowired
+    EstTimeScorer estTimeScorer;
+
     public List<Junction> findRoute(String startId, String finishId) {
-        mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), timeScorer, new EstTimeScorer()));
-        return mapGraph.getRouteFinder().findRouteAStarAlgorithm(
+        mapGraph.setRouteFinder(new RouteFinder<>(mapGraph.getGraph(), timeScorer, estTimeScorer));
+        return mapGraph.getRouteFinder().findRoute(
                 mapGraph.getGraph().getNode(startId),
                 mapGraph.getGraph().getNode(finishId)
         );
@@ -202,6 +204,6 @@ public class MapService {
     }
 
     public int getTrafficStatusByRoadId(String id) {
-        return loadFile.getListTraffic().get(id);
+        return loadFile.getListCongestions().get(id);
     }
 }

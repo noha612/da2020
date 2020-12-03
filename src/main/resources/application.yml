@@ -1,0 +1,4 @@
+congestionToSpeed:
+  low: 30
+  medium: 10
+  high: 2

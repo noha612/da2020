@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +16,5 @@ public class Direction {
     private GeoPoint from;
     private GeoPoint to;
     private List<Junction> junctions;
+    private Map<String,Integer> traffics;
 }

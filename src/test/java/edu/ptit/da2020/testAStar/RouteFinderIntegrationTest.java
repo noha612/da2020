@@ -1,7 +1,7 @@
 package edu.ptit.da2020.testAStar;
 
 import edu.ptit.da2020.model.graph.Graph;
-import edu.ptit.da2020.util.algorithm.RouteFinder;
+import edu.ptit.da2020.pathfinding.RouteFinder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +50,7 @@ public class RouteFinderIntegrationTest {
 
     @Test
     public void findRoute() {
-        List<Intersection> route = routeFinder.findRouteAStarAlgorithm(underground.getNode("A"), underground.getNode("K"));
+        List<Intersection> route = routeFinder.findRoute(underground.getNode("A"), underground.getNode("K"));
 
         System.out.println(route.stream().map(Intersection::getId).collect(Collectors.toList()));
     }

@@ -1,8 +1,9 @@
-package edu.ptit.da2020.util.algorithm;
+package edu.ptit.da2020.pathfinding;
 
 import edu.ptit.da2020.model.graph.Graph;
 import edu.ptit.da2020.model.graph.GraphNode;
 import edu.ptit.da2020.model.graph.RouteNode;
+import edu.ptit.da2020.pathfinding.scorer.Scorer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -19,16 +20,20 @@ public class RouteFinder<T extends GraphNode> {
         this.targetScorer = targetScorer;
     }
 
-    public List<T> findRouteAStarAlgorithm(T from, T to) {
+    public List<T> findRoute(T from, T to) {
+        return aStar(from, to);
+    }
+
+    private List<T> aStar(T from, T to) {
+        log.info("searching...");
         Queue<RouteNode> openSet = new PriorityQueue<>();
         Map<T, RouteNode<T>> allNodes = new HashMap<>();
 
-        RouteNode<T> start = new RouteNode<>(from, null, 0d, targetScorer.computeCost(from, to)) ;
+        RouteNode<T> start = new RouteNode<>(from, null, 0d, targetScorer.computeCost(from, to));
         openSet.add(start);
         allNodes.put(from, start);
 
         while (!openSet.isEmpty()) {
-            log.info("searching...");
             RouteNode<T> next = openSet.poll();
             if (next.getCurrent().equals(to)) {
                 List<T> route = new ArrayList<>();
