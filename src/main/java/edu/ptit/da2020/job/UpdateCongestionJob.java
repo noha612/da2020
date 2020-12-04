@@ -13,7 +13,7 @@ public class UpdateCongestionJob {
     DataInit dataInit;
 
     @Scheduled(cron = "0 0/5 * * * ?")
-    public void update() {
+    private void update() {
         log.info("update congestion level...");
         dataInit.loadCongestion();
     }

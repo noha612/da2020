@@ -12,7 +12,8 @@ import java.util.*;
 
 @Slf4j
 public class NameFilter {
-    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
+//    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
+        private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
     private static final String NAME = "src/main/resources/map/HN_name.txt";
     private static final String RAW = "src/main/resources/map/raw_node.txt";
     private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
@@ -25,7 +26,7 @@ public class NameFilter {
         loadVertex();
         loadRawNode();
         vertexToName();
-//        nameToVertex();
+        nameToVertex();
 
     }
 

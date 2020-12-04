@@ -34,7 +34,7 @@ public class DataInit {
     private Map<String, String> listVN;
 
     @PostConstruct
-    public void initGraph() {
+    private void initGraph() {
         log.info("init graph...");
 
         loadVertex();
