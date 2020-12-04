@@ -24,12 +24,14 @@ public class DataInit {
     private static final String EDGE = "src/main/resources/map/HN_edge.txt";
     private static final String INVERTED = "src/main/resources/map/inverted_index.txt";
     private static final String NAME = "src/main/resources/map/HN_name.txt";
+    private static final String VERTEX_NAME = "src/main/resources/map/HN_vertex_with_name.txt";
 
     private Map<String, Double[]> listV;
     private Map<String, String[]> listE;
     private Map<String, Integer[]> ii;
     private Map<Integer, String> listName;
     private Map<String, Integer> listCongestions;
+    private Map<String, String> listVN;
 
     @PostConstruct
     public void initGraph() {
@@ -40,6 +42,7 @@ public class DataInit {
         loadInvertedKey();
         loadName();
         loadCongestion();
+        loadVertexWithName();
     }
 
     private void loadVertex() {
@@ -156,5 +159,26 @@ public class DataInit {
             log.error("An error occurred " + e);
         }
         log.info("done read file " + EDGE + ", total star: " + listE.size());
+    }
+
+    private void loadVertexWithName() {
+        listVN = new LinkedHashMap<>();
+
+        log.info("start read file " + VERTEX_NAME);
+        try {
+            File myObj = new File(VERTEX_NAME);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String line = myReader.nextLine().trim();
+                if (StringUtils.isNotEmpty(line)) {
+                    String[] temp = line.split("::");
+                    listVN.put(temp[0], temp[1]);
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            log.error("An error occurred " + e);
+        }
+        log.info("done read file " + VERTEX_NAME + ", total V: " + listVN.size());
     }
 }

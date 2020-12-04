@@ -98,7 +98,7 @@ public class LocatingService {
                 log.info("||| node");
                 location.setH(new GeoPoint(latA, lngA));
                 place.setId(idA);
-                place.setName(idA);
+                place.setName(dataInit.getListVN().get(idA));
                 place.setLatitude(latA);
                 place.setLongitude(lngA);
                 location.setPlace(place);
@@ -110,7 +110,7 @@ public class LocatingService {
                 log.info("||| node");
                 location.setH(new GeoPoint(latB, lngB));
                 place.setId(idB);
-                place.setName(idB);
+                place.setName(dataInit.getListVN().get(idB));
                 place.setLatitude(latB);
                 place.setLongitude(lngB);
                 location.setPlace(place);
@@ -124,7 +124,7 @@ public class LocatingService {
                 //TODO: choose A or B next?
                 location.setH(new GeoPoint(latA, lngA));
                 place.setId(idA);
-                place.setName(idA);
+                place.setName(dataInit.getListVN().get(idA));
                 place.setLatitude(latA);
                 place.setLongitude(lngA);
                 location.setPlace(place);
@@ -146,7 +146,7 @@ public class LocatingService {
                 //TODO: choose A or B next?
                 tempResult.setH(new GeoPoint(latH, lngH));
                 place.setId(idA);
-                place.setName(idA);
+                place.setName(dataInit.getListVN().get(idA));
                 place.setLatitude(latA);
                 place.setLongitude(lngA);
                 tempResult.setPlace(place);
@@ -155,7 +155,7 @@ public class LocatingService {
                     tempDis = BC;
                     tempResult.setH(new GeoPoint(latB, lngB));
                     place.setId(idB);
-                    place.setName(idB);
+                    place.setName(dataInit.getListVN().get(idB));
                     place.setLatitude(latB);
                     place.setLongitude(lngB);
                     tempResult.setPlace(place);
@@ -163,7 +163,7 @@ public class LocatingService {
                     tempDis = AC;
                     tempResult.setH(new GeoPoint(latA, lngA));
                     place.setId(idA);
-                    place.setName(idA);
+                    place.setName(dataInit.getListVN().get(idA));
                     place.setLatitude(latA);
                     place.setLongitude(lngA);
                     tempResult.setPlace(place);

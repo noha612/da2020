@@ -34,3 +34,4 @@ src/main/resources/map/HN_edge.txt
 src/main/resources/map/HN_vertex.txt
 src/main/resources/map/HN_name.txt
 src/main/resources/map/inverted_index.txt
+src/main/resources/map/HN_vertex_with_name.txt

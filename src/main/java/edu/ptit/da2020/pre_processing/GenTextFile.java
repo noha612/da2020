@@ -24,7 +24,7 @@ public class GenTextFile {
         genV();
         genE();
         filter();
-        genN();
+//        genN();
     }
 
     private static void genV() {
