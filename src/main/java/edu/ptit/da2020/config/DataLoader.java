@@ -14,17 +14,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import static edu.ptit.da2020.constant.FileConstant.*;
+
 @Configuration
 @Data
 @Slf4j
 @Order(1)
 public class DataLoader {
-
-    private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
-    private static final String EDGE = "src/main/resources/map/HN_edge.txt";
-    private static final String INVERTED = "src/main/resources/map/inverted_index.txt";
-    private static final String NAME = "src/main/resources/map/HN_name.txt";
-    private static final String VERTEX_NAME = "src/main/resources/map/HN_vertex_with_name.txt";
 
     private Map<String, Double[]> listV;
     private Map<String, String[]> listE;

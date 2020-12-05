@@ -1,8 +1,8 @@
 package edu.ptit.da2020.pathfinding.scorer;
 
 import edu.ptit.da2020.config.AppConfig;
-import edu.ptit.da2020.constant.Constants;
 import edu.ptit.da2020.config.DataLoader;
+import edu.ptit.da2020.constant.BaseConstant;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +24,16 @@ public class TimeScorer implements Scorer<Junction> {
         double spd;
         switch (trafficLevel) {
             case 1:
-                spd = appConfig.getCongestionToSpeed().get(Constants.SPEED_NORMAL);
+                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_NORMAL);
                 break;
             case 2:
-                spd = appConfig.getCongestionToSpeed().get(Constants.SPEED_SLOW);
+                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_SLOW);
                 break;
             case 3:
-                spd = appConfig.getCongestionToSpeed().get(Constants.SPEED_JAM);
+                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_JAM);
                 break;
             default:
-                spd = appConfig.getCongestionToSpeed().get(Constants.SPEED_NORMAL);
+                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_NORMAL);
                 break;
         }
         return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng()) / spd;

@@ -1,7 +1,7 @@
 package edu.ptit.da2020.constant;
 
 
-public class Constants {
+public class BaseConstant {
 
     public static final double R = 6372.8; // km
     public static final String SPEED_NORMAL = "low"; // km/h

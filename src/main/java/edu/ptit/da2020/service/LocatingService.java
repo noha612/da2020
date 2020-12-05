@@ -4,7 +4,7 @@ import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Location;
-import edu.ptit.da2020.util.CommonUtils;
+import edu.ptit.da2020.util.CommonUtil;
 import edu.ptit.da2020.util.MathUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -22,7 +22,7 @@ public class LocatingService {
     DataLoader dataLoader;
 
     public List<Place> findIdByName(String name) {
-        name = CommonUtils.removeAccents(name);
+        name = CommonUtil.removeAccents(name);
         name = name.toLowerCase();
         String[] nameSplit = name.split("\\s+");
         List<Integer[]> list = new ArrayList<>();
@@ -44,7 +44,7 @@ public class LocatingService {
         }
         if (list.size() > 0) {
             List<Place> result = new ArrayList<>();
-            Integer[] li = CommonUtils.intersectionArrays(list);
+            Integer[] li = CommonUtil.intersectionArrays(list);
             for (Integer i : li) {
                 Place p = new Place();
                 String[] strArr = dataLoader.getListName().get(i).split("::");
@@ -53,9 +53,9 @@ public class LocatingService {
                 result.add(p);
             }
             result.sort((p1, p2) -> {
-                String name1 = CommonUtils.removeAccents(p1.getName());
+                String name1 = CommonUtil.removeAccents(p1.getName());
                 name1 = name1.toLowerCase();
-                String name2 = CommonUtils.removeAccents(p2.getName());
+                String name2 = CommonUtil.removeAccents(p2.getName());
                 name2 = name2.toLowerCase();
                 if (name1.indexOf(nameSplit[0]) < name2.indexOf(nameSplit[0]))
                     return -1;
@@ -93,7 +93,7 @@ public class LocatingService {
             double latB = dataLoader.getListV().get(entry.getValue()[1])[0];
             double lngB = dataLoader.getListV().get(entry.getValue()[1])[1];
 
-            double AC = CommonUtils.distance(latA, lat, lngA, lng);
+            double AC = CommonUtil.distance(latA, lat, lngA, lng);
             if (AC == 0) {
                 log.info("||| node");
                 location.setH(new GeoPoint(latA, lngA));
@@ -105,7 +105,7 @@ public class LocatingService {
                 return location;
             }
 
-            double BC = CommonUtils.distance(latB, lat, lngB, lng);
+            double BC = CommonUtil.distance(latB, lat, lngB, lng);
             if (BC == 0) {
                 log.info("||| node");
                 location.setH(new GeoPoint(latB, lngB));
@@ -117,7 +117,7 @@ public class LocatingService {
                 return location;
             }
 
-            double AB = CommonUtils.distance(latA, latB, lngA, lngB);
+            double AB = CommonUtil.distance(latA, latB, lngA, lngB);
 
 
             if (AC + BC == AB) {
@@ -142,7 +142,7 @@ public class LocatingService {
 
                 double latH = td.getX();
                 double lngH = td.getY();
-                tempDis = CommonUtils.distance(lat, latH, lng, lngH);
+                tempDis = CommonUtil.distance(lat, latH, lng, lngH);
                 //TODO: choose A or B next?
                 tempResult.setH(new GeoPoint(latH, lngH));
                 place.setId(idA);

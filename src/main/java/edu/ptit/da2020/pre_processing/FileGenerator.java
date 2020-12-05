@@ -9,15 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import static edu.ptit.da2020.constant.FileConstant.*;
+
 @Slf4j
 public class FileGenerator {
-    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
-//        private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
-//        private static final String MAP_FILE = "src/main/resources/map/map/mapPTIT";
-    private static final String RAW_NODE = "src/main/resources/map/raw_node.txt";
-    private static final String EDGE = "src/main/resources/map/HN_edge.txt";
-    private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
-    private static final String NAME = "src/main/resources/map/HN_name.txt";
     static LinkedHashSet<String> set;
 
     public static void main(String[] args) {
@@ -50,9 +45,9 @@ public class FileGenerator {
         }
         log.info("done read file " + MAP_FILE);
 
-        log.info("start write file " + RAW_NODE);
+        log.info("start write file " + RAW);
         try {
-            File f = new File(RAW_NODE);
+            File f = new File(RAW);
             if (f.createNewFile()) {
                 log.info("File created " + f.getName());
             } else {
@@ -62,7 +57,7 @@ public class FileGenerator {
             log.error("An error occurred " + e);
         }
         try (
-                FileWriter fw = new FileWriter(RAW_NODE)
+                FileWriter fw = new FileWriter(RAW)
         ) {
             log.info("begin insert raw node, size: " + set.size());
             for (String i : set) {
@@ -220,9 +215,9 @@ public class FileGenerator {
         log.info("done read file " + EDGE);
 
 
-        log.info("start read file " + RAW_NODE);
+        log.info("start read file " + RAW);
         try {
-            File myObj = new File(RAW_NODE);
+            File myObj = new File(RAW);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String line = myReader.nextLine().trim();

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static edu.ptit.da2020.constant.Constants.R;
+import static edu.ptit.da2020.constant.BaseConstant.R;
 
 public class MathUtil {
     public static double getAreaByHeronFormula(double a, double b, double c) {
@@ -39,14 +39,6 @@ public class MathUtil {
         System.out.println(getAltitudeCoordinateOfTriangle(A, B, C));
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class TwoDimensionCoordinate {
-        private double x;
-        private double y;
-    }
-
     public static double haversineFomular(
             double fromLat, double fromLng,
             double toLat, double toLng
@@ -60,5 +52,13 @@ public class MathUtil {
         double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));
         return R * c;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TwoDimensionCoordinate {
+        private double x;
+        private double y;
     }
 }

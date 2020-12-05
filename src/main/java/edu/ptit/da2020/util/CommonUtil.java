@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommonUtils {
+public class CommonUtil {
 
     public static String removeAccents(String input) {
         if (input == null || input.length() < 1) {

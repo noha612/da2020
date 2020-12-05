@@ -14,5 +14,5 @@ import java.util.Map;
 @Setter
 @Slf4j
 public class AppConfig {
-    private Map<String,Double> congestionToSpeed;
+    private Map<String, Double> congestionToSpeed;
 }

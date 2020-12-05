@@ -1,6 +1,6 @@
 package edu.ptit.da2020.pre_processing;
 
-import edu.ptit.da2020.util.CommonUtils;
+import edu.ptit.da2020.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,10 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import static edu.ptit.da2020.constant.FileConstant.INVERTED;
+import static edu.ptit.da2020.constant.FileConstant.NAME;
+
 @Slf4j
 public class InvertedIndex {
-    private static final String NAME = "src/main/resources/map/HN_name.txt";
-    private static final String INVERTED = "src/main/resources/map/inverted_index.txt";
 
     public static void main(String[] args) {
         preProcessing();
@@ -33,7 +34,7 @@ public class InvertedIndex {
                 if (StringUtils.isNotEmpty(line)) {
                     String[] temp = line.split("::");
                     for (String i : temp[1].split("\\s+")) {
-                        i = CommonUtils.removeAccents(i);
+                        i = CommonUtil.removeAccents(i);
                         i = i.toLowerCase();
                         String arrayValue = map.get(i) == null ? temp[0] : map.get(i) + "," + temp[0];
                         map.put(i, arrayValue);
