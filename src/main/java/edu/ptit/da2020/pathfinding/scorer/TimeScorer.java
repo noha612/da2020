@@ -2,7 +2,7 @@ package edu.ptit.da2020.pathfinding.scorer;
 
 import edu.ptit.da2020.config.AppConfig;
 import edu.ptit.da2020.constant.Constants;
-import edu.ptit.da2020.init.DataInit;
+import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TimeScorer implements Scorer<Junction> {
     @Autowired
-    DataInit dataInit;
+    DataLoader dataLoader;
 
     @Autowired
     AppConfig appConfig;
@@ -20,7 +20,7 @@ public class TimeScorer implements Scorer<Junction> {
     public double computeCost(Junction from, Junction to) {
 
         String roadId = from.getId() + "_" + to.getId();
-        int trafficLevel = dataInit.getListCongestions().get(roadId);
+        int trafficLevel = dataLoader.getListCongestions().get(roadId);
         double spd;
         switch (trafficLevel) {
             case 1:

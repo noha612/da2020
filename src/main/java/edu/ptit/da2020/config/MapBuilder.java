@@ -1,4 +1,4 @@
-package edu.ptit.da2020.init;
+package edu.ptit.da2020.config;
 
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.graph.Graph;
@@ -17,9 +17,9 @@ import java.util.*;
 @Data
 @Slf4j
 @Order(2)
-public class MapGraphInit {
+public class MapBuilder {
     @Autowired
-    DataInit dataInit;
+    DataLoader dataLoader;
 
     private Graph<Junction> graph;
     private RouteFinder<Junction> routeFinder;
@@ -41,7 +41,7 @@ public class MapGraphInit {
     private void initNodes() {
         nodes = new LinkedHashSet<>();
 
-        for (Map.Entry<String, Double[]> entry : dataInit.getListV().entrySet()) {
+        for (Map.Entry<String, Double[]> entry : dataLoader.getListV().entrySet()) {
             nodes.add(new Junction(entry.getKey(), entry.getValue()[0], entry.getValue()[1]));
         }
         log.info("total V: " + nodes.size());
@@ -51,7 +51,7 @@ public class MapGraphInit {
     private void initLinks() {
         neighbourhoods = new HashMap<>();
 
-        for (Map.Entry<String, String[]> entry : dataInit.getListE().entrySet()) {
+        for (Map.Entry<String, String[]> entry : dataLoader.getListE().entrySet()) {
             if (neighbourhoods.containsKey(entry.getValue()[0])) {
                 neighbourhoods.get(entry.getValue()[0]).add(entry.getValue()[1]);
             } else {

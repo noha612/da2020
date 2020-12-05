@@ -1,7 +1,7 @@
 package edu.ptit.da2020.service;
 
-import edu.ptit.da2020.init.DataInit;
-import edu.ptit.da2020.init.MapGraphInit;
+import edu.ptit.da2020.config.DataLoader;
+import edu.ptit.da2020.config.MapBuilder;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.pathfinding.RouteFinder;
 import edu.ptit.da2020.pathfinding.scorer.EstTimeScorer;
@@ -16,10 +16,10 @@ import java.util.List;
 @Slf4j
 public class DirectionService {
     @Autowired
-    DataInit dataInit;
+    DataLoader dataLoader;
 
     @Autowired
-    MapGraphInit mapGraphInit;
+    MapBuilder mapBuilder;
 
     @Autowired
     TimeScorer timeScorer;
@@ -28,10 +28,10 @@ public class DirectionService {
     EstTimeScorer estTimeScorer;
 
     public List<Junction> findRoute(String startId, String finishId) {
-        mapGraphInit.setRouteFinder(new RouteFinder<>(mapGraphInit.getGraph(), timeScorer, estTimeScorer));
-        return mapGraphInit.getRouteFinder().findRoute(
-                mapGraphInit.getGraph().getNode(startId),
-                mapGraphInit.getGraph().getNode(finishId)
+        mapBuilder.setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estTimeScorer));
+        return mapBuilder.getRouteFinder().findRoute(
+                mapBuilder.getGraph().getNode(startId),
+                mapBuilder.getGraph().getNode(finishId)
         );
     }
 }

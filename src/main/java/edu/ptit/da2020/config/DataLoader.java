@@ -1,4 +1,4 @@
-package edu.ptit.da2020.init;
+package edu.ptit.da2020.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.util.Scanner;
 @Data
 @Slf4j
 @Order(1)
-public class DataInit {
+public class DataLoader {
 
     private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
     private static final String EDGE = "src/main/resources/map/HN_edge.txt";

@@ -1,6 +1,6 @@
 package edu.ptit.da2020.service;
 
-import edu.ptit.da2020.init.DataInit;
+import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Location;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class LocatingService {
     @Autowired
-    DataInit dataInit;
+    DataLoader dataLoader;
 
     public List<Place> findIdByName(String name) {
         name = CommonUtils.removeAccents(name);
@@ -27,13 +27,13 @@ public class LocatingService {
         String[] nameSplit = name.split("\\s+");
         List<Integer[]> list = new ArrayList<>();
         for (String i : nameSplit) {
-            if (dataInit.getIi().containsKey(i))
-                list.add(dataInit.getIi().get(i));
+            if (dataLoader.getIi().containsKey(i))
+                list.add(dataLoader.getIi().get(i));
             else {
                 Integer[] integers = new Integer[0];
-                for (String s : dataInit.getIi().keySet()) {
+                for (String s : dataLoader.getIi().keySet()) {
                     if (s.startsWith(i)) {
-                        integers = ArrayUtils.addAll(integers, dataInit.getIi().get(s));
+                        integers = ArrayUtils.addAll(integers, dataLoader.getIi().get(s));
                         if (integers.length > 10) {
                             list.add(integers);
                             break;
@@ -47,7 +47,7 @@ public class LocatingService {
             Integer[] li = CommonUtils.intersectionArrays(list);
             for (Integer i : li) {
                 Place p = new Place();
-                String[] strArr = dataInit.getListName().get(i).split("::");
+                String[] strArr = dataLoader.getListName().get(i).split("::");
                 p.setId(strArr[1]);
                 p.setName(strArr[0]);
                 result.add(p);
@@ -64,7 +64,7 @@ public class LocatingService {
             result = result.size() > 10 ? result.subList(0, 10) : result;
             for (int i = 0; i < result.size(); i++) {
                 Place p = result.get(i);
-                Double[] coor = dataInit.getListV().get(p.getId());
+                Double[] coor = dataLoader.getListV().get(p.getId());
                 p.setLatitude(coor[0]);
                 p.setLongitude(coor[1]);
                 result.set(i, p);
@@ -83,22 +83,22 @@ public class LocatingService {
         Location tempResult = new Location();
         tempResult.setMarker(new GeoPoint(lat, lng));
 
-        for (Map.Entry<String, String[]> entry : dataInit.getListE().entrySet()) {
+        for (Map.Entry<String, String[]> entry : dataLoader.getListE().entrySet()) {
 
             String idA = entry.getValue()[0];
-            double latA = dataInit.getListV().get(entry.getValue()[0])[0];
-            double lngA = dataInit.getListV().get(entry.getValue()[0])[1];
+            double latA = dataLoader.getListV().get(entry.getValue()[0])[0];
+            double lngA = dataLoader.getListV().get(entry.getValue()[0])[1];
 
             String idB = entry.getValue()[1];
-            double latB = dataInit.getListV().get(entry.getValue()[1])[0];
-            double lngB = dataInit.getListV().get(entry.getValue()[1])[1];
+            double latB = dataLoader.getListV().get(entry.getValue()[1])[0];
+            double lngB = dataLoader.getListV().get(entry.getValue()[1])[1];
 
             double AC = CommonUtils.distance(latA, lat, lngA, lng);
             if (AC == 0) {
                 log.info("||| node");
                 location.setH(new GeoPoint(latA, lngA));
                 place.setId(idA);
-                place.setName(dataInit.getListVN().get(idA));
+                place.setName(dataLoader.getListVN().get(idA));
                 place.setLatitude(latA);
                 place.setLongitude(lngA);
                 location.setPlace(place);
@@ -110,7 +110,7 @@ public class LocatingService {
                 log.info("||| node");
                 location.setH(new GeoPoint(latB, lngB));
                 place.setId(idB);
-                place.setName(dataInit.getListVN().get(idB));
+                place.setName(dataLoader.getListVN().get(idB));
                 place.setLatitude(latB);
                 place.setLongitude(lngB);
                 location.setPlace(place);
@@ -124,7 +124,7 @@ public class LocatingService {
                 //TODO: choose A or B next?
                 location.setH(new GeoPoint(latA, lngA));
                 place.setId(idA);
-                place.setName(dataInit.getListVN().get(idA));
+                place.setName(dataLoader.getListVN().get(idA));
                 place.setLatitude(latA);
                 place.setLongitude(lngA);
                 location.setPlace(place);
@@ -146,7 +146,7 @@ public class LocatingService {
                 //TODO: choose A or B next?
                 tempResult.setH(new GeoPoint(latH, lngH));
                 place.setId(idA);
-                place.setName(dataInit.getListVN().get(idA));
+                place.setName(dataLoader.getListVN().get(idA));
                 place.setLatitude(latA);
                 place.setLongitude(lngA);
                 tempResult.setPlace(place);
@@ -155,7 +155,7 @@ public class LocatingService {
                     tempDis = BC;
                     tempResult.setH(new GeoPoint(latB, lngB));
                     place.setId(idB);
-                    place.setName(dataInit.getListVN().get(idB));
+                    place.setName(dataLoader.getListVN().get(idB));
                     place.setLatitude(latB);
                     place.setLongitude(lngB);
                     tempResult.setPlace(place);
@@ -163,7 +163,7 @@ public class LocatingService {
                     tempDis = AC;
                     tempResult.setH(new GeoPoint(latA, lngA));
                     place.setId(idA);
-                    place.setName(dataInit.getListVN().get(idA));
+                    place.setName(dataLoader.getListVN().get(idA));
                     place.setLatitude(latA);
                     place.setLongitude(lngA);
                     tempResult.setPlace(place);

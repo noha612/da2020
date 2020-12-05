@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.util.*;
 
 @Slf4j
-public class GenTextFile {
-//    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
-        private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
-    //    private static final String MAP_FILE = "src/main/resources/map/map/mapPTIT";
+public class FileGenerator {
+    private static final String MAP_FILE = "/home/hoangpn/Downloads/map";
+//        private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
+//        private static final String MAP_FILE = "src/main/resources/map/map/mapPTIT";
     private static final String RAW_NODE = "src/main/resources/map/raw_node.txt";
     private static final String EDGE = "src/main/resources/map/HN_edge.txt";
     private static final String VERTEX = "src/main/resources/map/HN_vertex.txt";
