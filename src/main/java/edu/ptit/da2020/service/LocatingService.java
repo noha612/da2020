@@ -65,8 +65,8 @@ public class LocatingService {
             for (int i = 0; i < result.size(); i++) {
                 Place p = result.get(i);
                 Double[] coor = dataLoader.getListV().get(p.getId());
-                p.setLatitude(coor[0]);
-                p.setLongitude(coor[1]);
+                p.setLat(coor[0]);
+                p.setLng(coor[1]);
                 result.set(i, p);
             }
             return result;
@@ -99,8 +99,8 @@ public class LocatingService {
                 location.setH(new GeoPoint(latA, lngA));
                 place.setId(idA);
                 place.setName(dataLoader.getListVN().get(idA));
-                place.setLatitude(latA);
-                place.setLongitude(lngA);
+                place.setLat(latA);
+                place.setLng(lngA);
                 location.setPlace(place);
                 return location;
             }
@@ -111,8 +111,8 @@ public class LocatingService {
                 location.setH(new GeoPoint(latB, lngB));
                 place.setId(idB);
                 place.setName(dataLoader.getListVN().get(idB));
-                place.setLatitude(latB);
-                place.setLongitude(lngB);
+                place.setLat(latB);
+                place.setLng(lngB);
                 location.setPlace(place);
                 return location;
             }
@@ -125,8 +125,8 @@ public class LocatingService {
                 location.setH(new GeoPoint(latA, lngA));
                 place.setId(idA);
                 place.setName(dataLoader.getListVN().get(idA));
-                place.setLatitude(latA);
-                place.setLongitude(lngA);
+                place.setLat(latA);
+                place.setLng(lngA);
                 location.setPlace(place);
                 return location;
             }
@@ -135,10 +135,10 @@ public class LocatingService {
                     BC * BC <= AC * AC + AB * AB &&
                             AC * AC <= BC * BC + AB * AB
             ) {
-                MathUtil.TwoDimensionCoordinate A = new MathUtil.TwoDimensionCoordinate(latA, lngA);
-                MathUtil.TwoDimensionCoordinate B = new MathUtil.TwoDimensionCoordinate(latB, lngB);
-                MathUtil.TwoDimensionCoordinate C = new MathUtil.TwoDimensionCoordinate(lat, lng);
-                MathUtil.TwoDimensionCoordinate td = MathUtil.getAltitudeCoordinateOfTriangle(A, B, C);
+                MathUtil.Coordinate A = new MathUtil.Coordinate(latA, lngA);
+                MathUtil.Coordinate B = new MathUtil.Coordinate(latB, lngB);
+                MathUtil.Coordinate C = new MathUtil.Coordinate(lat, lng);
+                MathUtil.Coordinate td = MathUtil.getAltitudeCoordinateOfTriangle(A, B, C);
 
                 double latH = td.getX();
                 double lngH = td.getY();
@@ -147,8 +147,8 @@ public class LocatingService {
                 tempResult.setH(new GeoPoint(latH, lngH));
                 place.setId(idA);
                 place.setName(dataLoader.getListVN().get(idA));
-                place.setLatitude(latA);
-                place.setLongitude(lngA);
+                place.setLat(latA);
+                place.setLng(lngA);
                 tempResult.setPlace(place);
             } else {
                 if (AC > BC) {
@@ -156,22 +156,22 @@ public class LocatingService {
                     tempResult.setH(new GeoPoint(latB, lngB));
                     place.setId(idB);
                     place.setName(dataLoader.getListVN().get(idB));
-                    place.setLatitude(latB);
-                    place.setLongitude(lngB);
+                    place.setLat(latB);
+                    place.setLng(lngB);
                     tempResult.setPlace(place);
                 } else {
                     tempDis = AC;
                     tempResult.setH(new GeoPoint(latA, lngA));
                     place.setId(idA);
                     place.setName(dataLoader.getListVN().get(idA));
-                    place.setLatitude(latA);
-                    place.setLongitude(lngA);
+                    place.setLat(latA);
+                    place.setLng(lngA);
                     tempResult.setPlace(place);
                 }
             }
 
             if (tempDis < d) {
-                location = new Location(tempResult.getMarker(), tempResult.getH(), new Place(tempResult.getPlace().getName(), tempResult.getPlace().getId(), tempResult.getPlace().getLatitude(), tempResult.getPlace().getLongitude()));
+                location = new Location(tempResult.getMarker(), tempResult.getH(), new Place(tempResult.getPlace().getName(), tempResult.getPlace().getId(), tempResult.getPlace().getLat(), tempResult.getPlace().getLng()));
                 log.info(location.toString());
                 d = tempDis;
             }

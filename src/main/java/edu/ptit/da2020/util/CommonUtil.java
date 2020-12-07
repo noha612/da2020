@@ -59,6 +59,9 @@ public class CommonUtil {
 
         double latA = 21.9749816;
         double lngA = 105.8651266;
-        System.out.println(distance(21.025841, 21.02167, 105.831981, 105.8407492));
+        System.out.println(distance(20.9450, 20.9450, 105.7420, 105.9110));
+        System.out.println(distance(20.9450, 21.0980, 105.7420, 105.7420));
+        System.out.println(17.555203956249414*
+        17.017630413377333);
     }
 }

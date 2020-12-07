@@ -7,9 +7,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Place {
+public class Place extends GeoPoint {
     private String name;
     private String id;
-    private double latitude;
-    private double longitude;
+
+    public Place(String name, String id, Double lat, Double lng) {
+        super(lat, lng);
+        this.name = name;
+        this.id = id;
+    }
 }

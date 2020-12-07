@@ -27,11 +27,11 @@ public class DirectionService {
     @Autowired
     EstTimeScorer estTimeScorer;
 
-    public List<Junction> findRoute(String startId, String finishId) {
+    public List<Junction> findRoute(String fromId, String toId) {
         mapBuilder.setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estTimeScorer));
         return mapBuilder.getRouteFinder().findRoute(
-                mapBuilder.getGraph().getNode(startId),
-                mapBuilder.getGraph().getNode(finishId)
+                mapBuilder.getGraph().getNode(fromId),
+                mapBuilder.getGraph().getNode(toId)
         );
     }
 }

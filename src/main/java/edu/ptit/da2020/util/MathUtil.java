@@ -18,24 +18,24 @@ public class MathUtil {
     }
 
     //Altitude of C
-    public static TwoDimensionCoordinate getAltitudeCoordinateOfTriangle(
-            TwoDimensionCoordinate A,
-            TwoDimensionCoordinate B,
-            TwoDimensionCoordinate C
+    public static Coordinate getAltitudeCoordinateOfTriangle(
+            Coordinate A,
+            Coordinate B,
+            Coordinate C
     ) {
         double d = (B.y - A.y) / (B.x - A.x);
         double x = (A.x * d * d + (C.y - A.y) * d + C.x) / (d * d + 1);
         double y = C.y - (x - C.x) / d;
-        return new TwoDimensionCoordinate(x, y);
+        return new Coordinate(x, y);
     }
 
     public static void main(String[] args) {
 //        TwoDimensionCoordinate A = new TwoDimensionCoordinate(2.0, -1.0);
 //        TwoDimensionCoordinate B = new TwoDimensionCoordinate(-1.0, 5.0);
 //        TwoDimensionCoordinate C = new TwoDimensionCoordinate(5.0, 3.0);
-        TwoDimensionCoordinate A = new TwoDimensionCoordinate(2.0, -1.0);
-        TwoDimensionCoordinate B = new TwoDimensionCoordinate(2.0, 5.0);
-        TwoDimensionCoordinate C = new TwoDimensionCoordinate(2.0, 3.0);
+        Coordinate A = new Coordinate(2.0, -1.0);
+        Coordinate B = new Coordinate(2.0, 5.0);
+        Coordinate C = new Coordinate(2.0, 3.0);
         System.out.println(getAltitudeCoordinateOfTriangle(A, B, C));
     }
 
@@ -57,7 +57,7 @@ public class MathUtil {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class TwoDimensionCoordinate {
+    public static class Coordinate {
         private double x;
         private double y;
     }

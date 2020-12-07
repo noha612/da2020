@@ -1,8 +1,8 @@
 package edu.ptit.da2020.constant;
 
 public class FileConstant {
-    public static final String MAP_FILE = "/home/hoangpn/Downloads/map";
-    //        private static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
+//    public static final String MAP_FILE = "/home/hoangpn/Downloads/map";
+public static final String MAP_FILE = "C:\\Users\\ntnhu\\Documents\\doan\\map";
 //        private static final String MAP_FILE = "src/main/resources/map/map/mapPTIT";
     public static final String RAW = "src/main/resources/map/raw_node.txt";
     public static final String EDGE = "src/main/resources/map/HN_edge.txt";
