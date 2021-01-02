@@ -16,10 +16,10 @@ public class FileGenerator {
     static LinkedHashSet<String> set;
 
     public static void main(String[] args) {
-//        genV();
+        genV();
         genE();
-//        filter();
-//        genN();
+        filter();
+        genN();
     }
 
     private static void genV() {

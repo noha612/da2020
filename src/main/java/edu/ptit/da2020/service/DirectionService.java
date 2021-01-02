@@ -27,7 +27,8 @@ public class DirectionService {
     @Autowired
     EstTimeScorer estTimeScorer;
 
-    public List<Junction> findRoute(String fromId, String toId) {
+    public List<Junction> findRoute(String fromId, String toId, Double x) {
+        estTimeScorer.setX(x);
         mapBuilder.setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estTimeScorer));
         return mapBuilder.getRouteFinder().findRoute(
                 mapBuilder.getGraph().getNode(fromId),

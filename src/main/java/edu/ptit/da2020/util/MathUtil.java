@@ -1,5 +1,6 @@
 package edu.ptit.da2020.util;
 
+import edu.ptit.da2020.model.GeoPoint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,6 +49,18 @@ public class MathUtil {
         double dLon = Math.toRadians(toLng - fromLng);
         double lat1 = Math.toRadians(fromLat);
         double lat2 = Math.toRadians(toLat);
+
+        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return R * c;
+    }
+
+    public static double haversineFomular(GeoPoint from, GeoPoint to) {
+
+        double dLat = Math.toRadians(to.getLat() - from.getLat());
+        double dLon = Math.toRadians(to.getLng() - from.getLng());
+        double lat1 = Math.toRadians(from.getLat());
+        double lat2 = Math.toRadians(to.getLat());
 
         double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));

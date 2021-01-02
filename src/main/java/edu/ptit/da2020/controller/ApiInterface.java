@@ -3,9 +3,7 @@ package edu.ptit.da2020.controller;
 import edu.ptit.da2020.model.Place;
 import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Location;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,9 +20,23 @@ public interface ApiInterface {
     @GetMapping(value = "/directions")
     public Direction getDirection(
             @RequestParam(required = false, name = "from-id") String fromId,
-            @RequestParam(required = false, name = "to-id") String toId
+            @RequestParam(required = false, name = "to-id") String toId,
+            @RequestParam(required = false, name = "x") Double x
     );
 
     @GetMapping(value = "/traffics")
     public Integer getTraffic(@RequestParam(name = "road-id") String id);
+
+    @GetMapping(value = "/distance")
+    public double getDistance(
+            @RequestParam(required = false, name = "from-id") String fromId,
+            @RequestParam(required = false, name = "to-id") String toId,
+            @RequestParam(required = false, name = "from-lat") Double fromLat,
+            @RequestParam(required = false, name = "from-lng") Double fromLng,
+            @RequestParam(required = false, name = "to-lat") Double toLat,
+            @RequestParam(required = false, name = "to-lng") Double toLng
+    );
+
+    @PostMapping(value = "/redis")
+    public String updateCongestion(@RequestBody String s);
 }

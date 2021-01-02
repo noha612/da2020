@@ -13,9 +13,15 @@ public class EstTimeScorer implements Scorer<Junction> {
     @Autowired
     AppConfig appConfig;
 
+    private double x;
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
     @Override
     public double computeCost(Junction from, Junction to) {
         double spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_NORMAL);
-        return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng()) / spd;
+        return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng()) / spd * x;
     }
 }

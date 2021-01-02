@@ -9,6 +9,7 @@ import edu.ptit.da2020.model.dto.Location;
 import edu.ptit.da2020.service.DirectionService;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
+import edu.ptit.da2020.util.MathUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +45,11 @@ public class ApiController implements ApiInterface {
     }
 
     @Override
-    public Direction getDirection(String fromId, String toId
+    public Direction getDirection(String fromId, String toId, Double x
     ) {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
             Direction direction = new Direction();
-            List<Junction> lsIts = directionService.findRoute(fromId, toId);
+            List<Junction> lsIts = directionService.findRoute(fromId, toId, x);
             direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
             direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(), lsIts.get(lsIts.size() - 1).getLng()));
             direction.setJunctions(lsIts);
@@ -58,6 +59,8 @@ public class ApiController implements ApiInterface {
             }
             direction.setTraffics(traffics);
             log.info(direction.toString());
+            log.info(direction.getJunctions().size() + "");
+            log.info(direction.length() + "");
             return direction;
         }
         return null;
@@ -68,4 +71,17 @@ public class ApiController implements ApiInterface {
         return trafficService.getTrafficStatusByRoadId(id);
     }
 
+    @Override
+    public double getDistance(String fromId, String toId, Double fromLat, Double fromLng, Double toLat, Double toLng) {
+        if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
+            GeoPoint from = new GeoPoint(dataLoader.getListV().get(fromId)[0], dataLoader.getListV().get(fromId)[1]);
+            GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0], dataLoader.getListV().get(toId)[1]);
+            return MathUtil.haversineFomular(from, to);
+        } else return MathUtil.haversineFomular(fromLat, fromLng, toLat, toLng);
+    }
+
+    @Override
+    public String updateCongestion(String s) {
+        return trafficService.update(s);
+    }
 }
