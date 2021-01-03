@@ -20,8 +20,7 @@ public interface ApiInterface {
     @GetMapping(value = "/directions")
     public Direction getDirection(
             @RequestParam(required = false, name = "from-id") String fromId,
-            @RequestParam(required = false, name = "to-id") String toId,
-            @RequestParam(required = false, name = "x") Double x
+            @RequestParam(required = false, name = "to-id") String toId
     );
 
     @GetMapping(value = "/traffics")

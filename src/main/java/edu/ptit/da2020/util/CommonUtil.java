@@ -1,5 +1,6 @@
 package edu.ptit.da2020.util;
 
+import edu.ptit.da2020.model.GeoPoint;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class CommonUtil {
         double lngA = 105.8651266;
         System.out.println(distance(20.9450, 20.9450, 105.7420, 105.9110));
         System.out.println(distance(20.9450, 21.0980, 105.7420, 105.7420));
-        System.out.println(17.555203956249414*
-        17.017630413377333);
+        System.out.println(17.555203956249414 *
+                17.017630413377333);
     }
 }

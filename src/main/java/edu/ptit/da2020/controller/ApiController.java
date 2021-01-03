@@ -9,6 +9,7 @@ import edu.ptit.da2020.model.dto.Location;
 import edu.ptit.da2020.service.DirectionService;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
+import edu.ptit.da2020.util.CommonUtil;
 import edu.ptit.da2020.util.MathUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,15 +42,18 @@ public class ApiController implements ApiInterface {
 
     @Override
     public Location getLocationByPoint(double lat, double lng) {
-        return locatingService.findLocationByPoint(lat, lng);
+        Location l = locatingService.findLocationByPoint(lat, lng);
+        if (!l.getH().getLng().equals(l.getMarker().getLng()) && !l.getH().getLat().equals(l.getMarker().getLat())) {
+            l.getPlace().setName("gần " + l.getPlace().getName());
+        }
+        return l;
     }
 
     @Override
-    public Direction getDirection(String fromId, String toId, Double x
-    ) {
+    public Direction getDirection(String fromId, String toId) {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
             Direction direction = new Direction();
-            List<Junction> lsIts = directionService.findRoute(fromId, toId, x);
+            List<Junction> lsIts = directionService.findRoute(fromId, toId);
             direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
             direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(), lsIts.get(lsIts.size() - 1).getLng()));
             direction.setJunctions(lsIts);
