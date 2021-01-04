@@ -1,8 +1,10 @@
 package edu.ptit.da2020.controller;
 
 import edu.ptit.da2020.model.Place;
+import edu.ptit.da2020.model.dto.AlertDTO;
 import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Location;
+import edu.ptit.da2020.model.dto.Road;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,23 +13,25 @@ import java.util.List;
 public interface ApiInterface {
 
     @GetMapping(value = "/places")
-    public List<Place> getListPlaceByName(@RequestParam(name = "name") String name);
+     List<Place> getListPlaceByName(@RequestParam(name = "name") String name);
 
     @GetMapping(value = "/locations")
-    public Location getLocationByPoint(@RequestParam(name = "lat") double lat, @RequestParam(name = "lng") double lng);
+     Location getLocationByPoint(@RequestParam(name = "lat") double lat, @RequestParam(name = "lng") double lng);
 
+    @GetMapping(value = "/roads")
+    Road getRoadByPoint(@RequestParam(name = "lat") double lat, @RequestParam(name = "lng") double lng);
 
     @GetMapping(value = "/directions")
-    public Direction getDirection(
+     Direction getDirection(
             @RequestParam(required = false, name = "from-id") String fromId,
             @RequestParam(required = false, name = "to-id") String toId
     );
 
     @GetMapping(value = "/traffics")
-    public Integer getTraffic(@RequestParam(name = "road-id") String id);
+     Integer getTraffic(@RequestParam(name = "road-id") String id);
 
     @GetMapping(value = "/distance")
-    public double getDistance(
+     double getDistance(
             @RequestParam(required = false, name = "from-id") String fromId,
             @RequestParam(required = false, name = "to-id") String toId,
             @RequestParam(required = false, name = "from-lat") Double fromLat,
@@ -36,6 +40,6 @@ public interface ApiInterface {
             @RequestParam(required = false, name = "to-lng") Double toLng
     );
 
-    @PostMapping(value = "/redis")
-    public String updateCongestion(@RequestBody String s);
+    @PostMapping(value = "/alert")
+     void updateCongestion(@RequestBody AlertDTO alertDTO);
 }

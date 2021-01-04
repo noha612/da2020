@@ -4,8 +4,10 @@ import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.Place;
+import edu.ptit.da2020.model.dto.AlertDTO;
 import edu.ptit.da2020.model.dto.Direction;
 import edu.ptit.da2020.model.dto.Location;
+import edu.ptit.da2020.model.dto.Road;
 import edu.ptit.da2020.service.DirectionService;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
@@ -50,6 +52,11 @@ public class ApiController implements ApiInterface {
     }
 
     @Override
+    public Road getRoadByPoint(double lat, double lng) {
+        return locatingService.findRoadByPoint(lat,lng);
+    }
+
+    @Override
     public Direction getDirection(String fromId, String toId) {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
             Direction direction = new Direction();
@@ -85,7 +92,7 @@ public class ApiController implements ApiInterface {
     }
 
     @Override
-    public String updateCongestion(String s) {
-        return trafficService.update(s);
+    public void updateCongestion(AlertDTO alertDTO) {
+        log.info(alertDTO.toString());
     }
 }
