@@ -1,15 +1,25 @@
 package edu.ptit.da2020.pre_processing;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import static edu.ptit.da2020.constant.FileConstant.EDGE;
+import static edu.ptit.da2020.constant.FileConstant.MAP_FILE;
+import static edu.ptit.da2020.constant.FileConstant.NAME;
+import static edu.ptit.da2020.constant.FileConstant.RAW;
+import static edu.ptit.da2020.constant.FileConstant.VERTEX;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
-
-import static edu.ptit.da2020.constant.FileConstant.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 public class FileGenerator {
@@ -80,6 +90,7 @@ public class FileGenerator {
             while (myReader.hasNextLine()) {
                 String way = myReader.nextLine().trim();
                 if (way.startsWith("<way")) {
+                    boolean oneWay = false;
                     ArrayList<String> nodeInWay = new ArrayList<>();
                     String line = myReader.nextLine().trim();
                     while (!line.startsWith("</way")) {
@@ -88,12 +99,19 @@ public class FileGenerator {
                             line = line.replace("\"/>", "");
                             nodeInWay.add(line);
                         }
+                        if(line.contains("<tag k=\"oneway\" v=\"yes\"/>")){
+                            oneWay = true;
+                        }
                         line = myReader.nextLine().trim();
                     }
                     if (!nodeInWay.get(0).equalsIgnoreCase(nodeInWay.get(nodeInWay.size() - 1))) {
                         for (int i = 0; i < nodeInWay.size(); i++) {
-                            if (i < nodeInWay.size() - 1) set.add(nodeInWay.get(i) + " " + nodeInWay.get(i + 1));
-                            if (i > 0) set.add(nodeInWay.get(i) + " " + nodeInWay.get(i - 1));
+                            if (i < nodeInWay.size() - 1) {
+                                set.add(nodeInWay.get(i) + " " + nodeInWay.get(i + 1));
+                            }
+                            if (i > 0 && !oneWay) {
+                                set.add(nodeInWay.get(i) + " " + nodeInWay.get(i - 1));
+                            }
                         }
                     }
                 }

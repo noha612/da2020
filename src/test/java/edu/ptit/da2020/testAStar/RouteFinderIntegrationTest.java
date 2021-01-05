@@ -50,7 +50,7 @@ public class RouteFinderIntegrationTest {
 
     @Test
     public void findRoute() {
-        List<Intersection> route = routeFinder.findRoute(underground.getNode("A"), underground.getNode("K"));
+        List<Intersection> route = routeFinder.findRouteBackUp(underground.getNode("A"), underground.getNode("K"));
 
         System.out.println(route.stream().map(Intersection::getId).collect(Collectors.toList()));
     }

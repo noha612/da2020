@@ -23,7 +23,6 @@ public class TimeScorer implements Scorer<Junction> {
     public double computeCost(Junction from, Junction to) {
 
         String roadId = from.getId() + "_" + to.getId();
-        log.info(roadId);
         int trafficLevel = 1;
         if (dataLoader.getListCongestions().containsKey(roadId)) {
             trafficLevel = dataLoader.getListCongestions().get(roadId);
@@ -44,5 +43,6 @@ public class TimeScorer implements Scorer<Junction> {
                 break;
         }
         return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng()) / spd;
+//        return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng());
     }
 }
