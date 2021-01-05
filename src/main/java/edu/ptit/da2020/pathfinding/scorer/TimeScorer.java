@@ -23,9 +23,13 @@ public class TimeScorer implements Scorer<Junction> {
     public double computeCost(Junction from, Junction to) {
 
         String roadId = from.getId() + "_" + to.getId();
+        String roadId2 = to.getId() + "_" + from.getId();
         int trafficLevel = 1;
         if (dataLoader.getListCongestions().containsKey(roadId)) {
             trafficLevel = dataLoader.getListCongestions().get(roadId);
+        }
+        if (dataLoader.getListCongestions().containsKey(roadId2)) {
+            trafficLevel = dataLoader.getListCongestions().get(roadId2);
         }
         double spd;
         switch (trafficLevel) {

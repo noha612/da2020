@@ -1,20 +1,27 @@
 package edu.ptit.da2020.config;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import static edu.ptit.da2020.constant.FileConstant.EDGE;
+import static edu.ptit.da2020.constant.FileConstant.INVERTED;
+import static edu.ptit.da2020.constant.FileConstant.NAME;
+import static edu.ptit.da2020.constant.FileConstant.VERTEX;
+import static edu.ptit.da2020.constant.FileConstant.VERTEX_NAME;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import static edu.ptit.da2020.constant.FileConstant.*;
+import javax.annotation.PostConstruct;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @Data
@@ -28,6 +35,9 @@ public class DataLoader {
     private Map<Integer, String> listName;
     private Map<String, Integer> listCongestions;
     private Map<String, String> listVN;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @PostConstruct
     private void initGraph() {
@@ -137,24 +147,15 @@ public class DataLoader {
     }
 
     public void loadCongestion() {
+        LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.opsForHash()
+            .keys("CONGEST");
+        List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
         listCongestions = new HashMap<>();
-
-        log.info("start read file " + EDGE);
-        try {
-            File myObj = new File(EDGE);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine().trim();
-                if (StringUtils.isNotEmpty(line)) {
-                    String[] temp = line.split(" ");
-                    listCongestions.put(temp[0] + "_" + temp[1], Integer.parseInt(temp[2]));
-                }
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("An error occurred " + e);
+        int i = 0;
+        for (String k : keySet) {
+            listCongestions.put(k, level.get(i));
+            i++;
         }
-        log.info("done read file " + EDGE + ", total star: " + listE.size());
     }
 
     private void loadVertexWithName() {

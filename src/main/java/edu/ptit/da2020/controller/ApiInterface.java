@@ -42,4 +42,7 @@ public interface ApiInterface {
 
     @PostMapping(value = "/alert")
      void updateCongestion(@RequestBody AlertDTO alertDTO);
+
+  @PostMapping(value = "/test")
+  void test();
 }

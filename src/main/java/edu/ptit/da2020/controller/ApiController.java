@@ -13,9 +13,12 @@ import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
 import edu.ptit.da2020.util.CommonUtil;
 import edu.ptit.da2020.util.MathUtil;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
@@ -36,6 +39,9 @@ public class ApiController implements ApiInterface {
 
     @Autowired
     DataLoader dataLoader;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Override
     public List<Place> getListPlaceByName(String name) {
@@ -94,5 +100,17 @@ public class ApiController implements ApiInterface {
     @Override
     public void updateCongestion(AlertDTO alertDTO) {
         log.info(alertDTO.toString());
+    }
+
+    @Override
+    public void test() {
+        redisTemplate.opsForHash().put("CONGEST","id1",1);
+        redisTemplate.opsForHash().put("CONGEST","id2",1);
+        redisTemplate.opsForHash().put("CONGEST","id2",2);
+        redisTemplate.opsForHash().put("CONGEST","id3",3);
+
+        LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.opsForHash().keys("CONGEST");
+        List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
+        for(Integer i : level)log.info(i.toString());
     }
 }
