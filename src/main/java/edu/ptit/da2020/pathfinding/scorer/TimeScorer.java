@@ -5,11 +5,14 @@ import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.constant.BaseConstant;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.util.MathUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class TimeScorer implements Scorer<Junction> {
+
     @Autowired
     DataLoader dataLoader;
 
@@ -20,7 +23,11 @@ public class TimeScorer implements Scorer<Junction> {
     public double computeCost(Junction from, Junction to) {
 
         String roadId = from.getId() + "_" + to.getId();
-        int trafficLevel = dataLoader.getListCongestions().get(roadId);
+        log.info(roadId);
+        int trafficLevel = 1;
+        if (dataLoader.getListCongestions().containsKey(roadId)) {
+            trafficLevel = dataLoader.getListCongestions().get(roadId);
+        }
         double spd;
         switch (trafficLevel) {
             case 1:

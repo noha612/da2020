@@ -4,9 +4,13 @@ import edu.ptit.da2020.model.graph.Graph;
 import edu.ptit.da2020.model.graph.GraphNode;
 import edu.ptit.da2020.model.graph.RouteNode;
 import edu.ptit.da2020.pathfinding.scorer.Scorer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.*;
 
 @Slf4j
 public class RouteFinder<T extends GraphNode> {
@@ -50,6 +54,46 @@ public class RouteFinder<T extends GraphNode> {
                 allNodes.put(connection, nextNode);
                 double newScore = next.getRouteScore() + nextNodeScorer.computeCost(next.getCurrent(), connection);
                 if (newScore < nextNode.getRouteScore()) {
+                    nextNode.setPrevious(next.getCurrent());
+                    nextNode.setRouteScore(newScore);
+                    nextNode.setEstimatedScore(newScore + targetScorer.computeCost(connection, to));
+                    openSet.add(nextNode);
+                }
+            });
+        }
+
+        throw new IllegalStateException("No route found");
+    }
+
+    private List<T> aStarOld(T from, T to) {
+        Map<T, RouteNode<T>> allNodes = new HashMap<>();
+        Queue<RouteNode> openSet = new PriorityQueue<>();
+
+        RouteNode<T> start = new RouteNode<>(from, null, 0d, targetScorer.computeCost(from, to));
+        allNodes.put(from, start);
+        openSet.add(start);
+
+        while (!openSet.isEmpty()) {
+            RouteNode<T> next = openSet.poll();
+            if (next.getCurrent().equals(to)) {
+
+                List<T> route = new ArrayList<>();
+                RouteNode<T> current = next;
+                do {
+                    route.add(0, current.getCurrent());
+                    current = allNodes.get(current.getPrevious());
+                } while (current != null);
+                return route;
+            }
+
+            graph.getConnections(next.getCurrent()).forEach(connection -> {
+                double newScore = next.getRouteScore() + nextNodeScorer
+                    .computeCost(next.getCurrent(), connection);
+                RouteNode<T> nextNode = allNodes
+                    .getOrDefault(connection, new RouteNode<>(connection));
+                allNodes.put(connection, nextNode);
+
+                if (nextNode.getRouteScore() > newScore) {
                     nextNode.setPrevious(next.getCurrent());
                     nextNode.setRouteScore(newScore);
                     nextNode.setEstimatedScore(newScore + targetScorer.computeCost(connection, to));
