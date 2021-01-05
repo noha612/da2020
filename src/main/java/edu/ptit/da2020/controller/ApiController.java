@@ -11,19 +11,17 @@ import edu.ptit.da2020.model.dto.Road;
 import edu.ptit.da2020.service.DirectionService;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
-import edu.ptit.da2020.util.CommonUtil;
 import edu.ptit.da2020.util.MathUtil;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -99,18 +97,22 @@ public class ApiController implements ApiInterface {
 
     @Override
     public void updateCongestion(AlertDTO alertDTO) {
-        log.info(alertDTO.toString());
+        trafficService.update(alertDTO);
     }
 
     @Override
     public void test() {
-        redisTemplate.opsForHash().put("CONGEST","id1",1);
-        redisTemplate.opsForHash().put("CONGEST","id2",1);
-        redisTemplate.opsForHash().put("CONGEST","id2",2);
-        redisTemplate.opsForHash().put("CONGEST","id3",3);
+        redisTemplate.opsForHash().put("CONGEST", "id1", 1);
+        redisTemplate.opsForHash().put("CONGEST", "id2", 1);
+        redisTemplate.opsForHash().put("CONGEST", "id2", 2);
+        redisTemplate.opsForHash().put("CONGEST", "id3", 3);
 
-        LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.opsForHash().keys("CONGEST");
-        List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
-        for(Integer i : level)log.info(i.toString());
+        LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.keys("*roadId*");
+        List<Integer> level = redisTemplate.opsForValue().multiGet(keySet);
+        int i = 0;
+        for (String k : keySet) {
+            log.info(k + " " + level.get(i));
+            i++;
+        }
     }
 }
