@@ -46,6 +46,7 @@ public class RouteFinder<T extends GraphNode> {
         while (!openSet.isEmpty()) {
             RouteNode<T> next = openSet.poll();
             if (next.getCurrent().equals(to)) {
+                log.info(next.getEstimatedScore() + "");
                 log.info("Done!");
                 List<T> route = new ArrayList<>();
                 RouteNode<T> current = next;

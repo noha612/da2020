@@ -31,19 +31,26 @@ public class TimeScorer implements Scorer<Junction> {
         if (dataLoader.getListCongestions().containsKey(roadId2)) {
             trafficLevel = dataLoader.getListCongestions().get(roadId2);
         }
+        if(trafficLevel != 1){
+            log.info("oho");
+        }
         double spd;
         switch (trafficLevel) {
             case 1:
                 spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_NORMAL);
+                spd = 27.69;
                 break;
             case 2:
                 spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_SLOW);
+                spd = 10.38;
                 break;
             case 3:
                 spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_JAM);
+                spd = 3.46;
                 break;
             default:
                 spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_NORMAL);
+                spd = 27.69;
                 break;
         }
         return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng()) / spd;

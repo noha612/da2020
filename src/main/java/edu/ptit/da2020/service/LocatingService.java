@@ -224,7 +224,7 @@ public class LocatingService {
                 }
             }
         }
-
+        log.info(road.toString());
         return road;
     }
 }

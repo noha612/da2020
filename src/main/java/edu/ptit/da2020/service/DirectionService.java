@@ -41,7 +41,7 @@ public class DirectionService {
         GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0],
             dataLoader.getListV().get(toId)[1]);
         if (MathUtil.haversineFomular(from, to) > 3) {
-            estTimeScorer.setX(2);
+            estTimeScorer.setX(1);
         } else {
             estTimeScorer.setX(1);
         }
@@ -56,7 +56,7 @@ public class DirectionService {
         List<Junction> list = null;
         Future<Object> future = executor.submit(task);
         try {
-            list = (List<Junction>) future.get(4, TimeUnit.SECONDS);
+            list = (List<Junction>) future.get(4000, TimeUnit.SECONDS);
         } catch (TimeoutException ex) {
             log.info("Timeout, use back up route finder");
             list = mapBuilder.getRouteFinder().findRouteBackUp(
