@@ -173,7 +173,6 @@ public class LocatingService {
 
             if (tempDis < d) {
                 location = new Location(tempResult.getMarker(), tempResult.getH(), new Place(tempResult.getPlace().getName(), tempResult.getPlace().getId(), tempResult.getPlace().getLat(), tempResult.getPlace().getLng()));
-                log.info(location.toString());
                 d = tempDis;
             }
         }

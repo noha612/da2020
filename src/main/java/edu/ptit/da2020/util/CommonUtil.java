@@ -44,7 +44,7 @@ public class CommonUtil {
     }
 
     public static double distance(double fromLat, double toLat, double fromLng, double toLng) {
-        double R = 6372.8; // km
+        double R = 6378.1; // km
 
         double dLat = Math.toRadians(toLat - fromLat);
         double dLon = Math.toRadians(toLng - fromLng);

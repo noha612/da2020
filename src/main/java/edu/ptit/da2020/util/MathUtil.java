@@ -1,11 +1,10 @@
 package edu.ptit.da2020.util;
 
+import static edu.ptit.da2020.constant.BaseConstant.R;
+
 import edu.ptit.da2020.model.GeoPoint;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import static edu.ptit.da2020.constant.BaseConstant.R;
 
 public class MathUtil {
     public static double getAreaByHeronFormula(double a, double b, double c) {
@@ -27,7 +26,12 @@ public class MathUtil {
         double d = (B.y - A.y) / (B.x - A.x);
         double x = (A.x * d * d + (C.y - A.y) * d + C.x) / (d * d + 1);
         double y = C.y - (x - C.x) / d;
-        return new Coordinate(x, y);
+
+        Mercator mercator = new SphericalMercator();
+        Coordinate coordinate = new Coordinate();
+        coordinate.setX(mercator.yAxisInverseProjection(x));
+        coordinate.setY(mercator.xAxisInverseProjection(y));
+        return coordinate;
     }
 
     public static void main(String[] args) {
@@ -68,10 +72,16 @@ public class MathUtil {
     }
 
     @Data
-    @AllArgsConstructor
     @NoArgsConstructor
     public static class Coordinate {
+
         private double x;
         private double y;
+
+        public Coordinate(double x, double y) {
+            Mercator mercator = new SphericalMercator();
+            this.x = mercator.yAxisProjection(x);
+            this.y = mercator.xAxisProjection(y);
+        }
     }
 }
