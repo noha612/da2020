@@ -41,7 +41,7 @@ public class DirectionService {
         GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0],
             dataLoader.getListV().get(toId)[1]);
         if (MathUtil.haversineFomular(from, to) > 3) {
-            estTimeScorer.setX(1);
+            estTimeScorer.setX(1.5);
         } else {
             estTimeScorer.setX(1);
         }

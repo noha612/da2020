@@ -105,7 +105,6 @@ public class LocatingService {
                 location.setPlace(place);
                 return location;
             }
-
             double BC = CommonUtil.distance(latB, lat, lngB, lng);
             if (BC == 0) {
                 log.info("||| node");
@@ -117,12 +116,8 @@ public class LocatingService {
                 location.setPlace(place);
                 return location;
             }
-
             double AB = CommonUtil.distance(latA, latB, lngA, lngB);
-
-
             if (AC + BC == AB) {
-                //TODO: choose A or B next?
                 location.setH(new GeoPoint(latA, lngA));
                 place.setId(idA);
                 place.setName(dataLoader.getListVN().get(idA));
@@ -131,7 +126,6 @@ public class LocatingService {
                 location.setPlace(place);
                 return location;
             }
-
             if (
                     BC * BC <= AC * AC + AB * AB &&
                             AC * AC <= BC * BC + AB * AB
@@ -140,11 +134,9 @@ public class LocatingService {
                 MathUtil.Coordinate B = new MathUtil.Coordinate(latB, lngB);
                 MathUtil.Coordinate C = new MathUtil.Coordinate(lat, lng);
                 MathUtil.Coordinate td = MathUtil.getAltitudeCoordinateOfTriangle(A, B, C);
-
                 double latH = td.getX();
                 double lngH = td.getY();
                 tempDis = CommonUtil.distance(lat, latH, lng, lngH);
-                //TODO: choose A or B next?
                 tempResult.setH(new GeoPoint(latH, lngH));
                 place.setId(idA);
                 place.setName(dataLoader.getListVN().get(idA));
@@ -225,5 +217,13 @@ public class LocatingService {
         }
         log.info(road.toString());
         return road;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(21.013927086732753/20.991101806616804);
+        System.out.println(105.79862568617128/105.80007709924588);
+
+        System.out.println(21.008125302295525/20.985563516334967);
+        System.out.println(105.75604232966695/105.75603143346574);
     }
 }
