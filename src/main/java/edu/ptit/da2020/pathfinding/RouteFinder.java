@@ -35,7 +35,7 @@ public class RouteFinder<T extends GraphNode> {
     }
 
     private List<T> aStar(T from, T to) {
-        log.info("searching...");
+//        log.info("searching...");
         Queue<RouteNode> openSet = new PriorityQueue<>();
         Map<T, RouteNode<T>> allNodes = new HashMap<>();
 
@@ -46,8 +46,8 @@ public class RouteFinder<T extends GraphNode> {
         while (!openSet.isEmpty()) {
             RouteNode<T> next = openSet.poll();
             if (next.getCurrent().equals(to)) {
-                log.info(next.getEstimatedScore() + "");
-                log.info("Done!");
+//                log.info(next.getEstimatedScore() + "");
+//                log.info("Done!");
                 List<T> route = new ArrayList<>();
                 RouteNode<T> current = next;
                 do {
@@ -73,7 +73,7 @@ public class RouteFinder<T extends GraphNode> {
                     }
                 });
             } catch (Exception e) {
-                log.error(" e " + next.getCurrent().toString());
+//                log.error(" e " + next.getCurrent().toString());
                 RouteNode<T> nextNode = allNodes
                     .getOrDefault(next.getPrevious(), new RouteNode<>(next.getPrevious()));
                 allNodes.put(next.getPrevious(), nextNode);

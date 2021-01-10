@@ -8,17 +8,12 @@ import edu.ptit.da2020.pathfinding.RouteFinder;
 import edu.ptit.da2020.pathfinding.scorer.EstTimeScorer;
 import edu.ptit.da2020.pathfinding.scorer.TimeScorer;
 import edu.ptit.da2020.util.MathUtil;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.concurrent.*;
 
 @Service
 @Slf4j
@@ -37,21 +32,21 @@ public class DirectionService {
 
     public List<Junction> findRoute(String fromId, String toId) {
         GeoPoint from = new GeoPoint(dataLoader.getListV().get(fromId)[0],
-            dataLoader.getListV().get(fromId)[1]);
+                dataLoader.getListV().get(fromId)[1]);
         GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0],
-            dataLoader.getListV().get(toId)[1]);
+                dataLoader.getListV().get(toId)[1]);
         if (MathUtil.haversineFomular(from, to) > 3) {
             estTimeScorer.setX(1.5);
         } else {
             estTimeScorer.setX(1);
         }
         mapBuilder
-            .setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estTimeScorer));
+                .setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estTimeScorer));
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Callable<Object> task = () -> mapBuilder.getRouteFinder().findRoute(
-            mapBuilder.getGraph().getNode(fromId),
-            mapBuilder.getGraph().getNode(toId)
+                mapBuilder.getGraph().getNode(fromId),
+                mapBuilder.getGraph().getNode(toId)
         );
         List<Junction> list = null;
         Future<Object> future = executor.submit(task);
@@ -60,8 +55,8 @@ public class DirectionService {
         } catch (TimeoutException ex) {
             log.info("Timeout, use back up route finder");
             list = mapBuilder.getRouteFinder().findRouteBackUp(
-                mapBuilder.getGraph().getNode(fromId),
-                mapBuilder.getGraph().getNode(toId)
+                    mapBuilder.getGraph().getNode(fromId),
+                    mapBuilder.getGraph().getNode(toId)
             );
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -72,6 +67,22 @@ public class DirectionService {
             future.cancel(true);
             executor.shutdownNow();
         }
+        return list;
+    }
+
+    public List<Junction> findRouteExp(String fromId, String toId, double x) {
+//        GeoPoint from = new GeoPoint(dataLoader.getListV().get(fromId)[0],
+//                dataLoader.getListV().get(fromId)[1]);
+//        GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0],
+//                dataLoader.getListV().get(toId)[1]);
+        estTimeScorer.setX(x);
+        mapBuilder
+                .setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estTimeScorer));
+
+        List<Junction> list = mapBuilder.getRouteFinder().findRoute(
+                mapBuilder.getGraph().getNode(fromId),
+                mapBuilder.getGraph().getNode(toId)
+        );
         return list;
     }
 }

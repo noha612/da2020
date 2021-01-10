@@ -42,9 +42,13 @@ public class TimeScorer implements Scorer<Junction> {
                 break;
             case 2:
                 spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_SLOW);
-                spd = 10.38;
+                spd = 17.31;
                 break;
             case 3:
+                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_JAM);
+                spd = 10.38;
+                break;
+            case 4:
                 spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_JAM);
                 spd = 3.46;
                 break;
