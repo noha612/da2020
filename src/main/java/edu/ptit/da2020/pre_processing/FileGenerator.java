@@ -1,11 +1,5 @@
 package edu.ptit.da2020.pre_processing;
 
-import static edu.ptit.da2020.constant.FileConstant.EDGE;
-import static edu.ptit.da2020.constant.FileConstant.MAP_FILE;
-import static edu.ptit.da2020.constant.FileConstant.NAME;
-import static edu.ptit.da2020.constant.FileConstant.RAW;
-import static edu.ptit.da2020.constant.FileConstant.VERTEX;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -18,8 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+
+import static edu.ptit.da2020.constant.FileConstant.*;
 
 @Slf4j
 public class FileGenerator {
@@ -99,7 +96,7 @@ public class FileGenerator {
                             line = line.replace("\"/>", "");
                             nodeInWay.add(line);
                         }
-                        if(line.contains("<tag k=\"oneway\" v=\"yes\"/>")){
+                        if (line.contains("<tag k=\"oneway\" v=\"yes\"/>")) {
                             oneWay = true;
                         }
                         line = myReader.nextLine().trim();
@@ -212,6 +209,7 @@ public class FileGenerator {
 
     private static void filter() {
         Set<String> keys = new HashSet<>();
+        Set<String> disconnect = new HashSet<>();
         List<String> filter = new ArrayList<>();
 
         log.info("start read file " + EDGE);
@@ -232,6 +230,22 @@ public class FileGenerator {
         }
         log.info("done read file " + EDGE);
 
+        log.info("start read file " + DISCONNECT);
+        try {
+            File myObj = new File(DISCONNECT);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String line = myReader.nextLine().trim();
+                if (StringUtils.isNotEmpty(line)) {
+                    disconnect.add(line.trim());
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            log.error("An error occurred " + e);
+        }
+        log.info("done read file " + DISCONNECT);
+
 
         log.info("start read file " + RAW);
         try {
@@ -241,7 +255,7 @@ public class FileGenerator {
                 String line = myReader.nextLine().trim();
                 if (StringUtils.isNotEmpty(line)) {
                     String[] temp = line.split(" ");
-                    if (keys.contains(temp[0])) {
+                    if (keys.contains(temp[0]) && !disconnect.contains(temp[0])) {
                         filter.add(temp[0] + " " + temp[1] + " " + temp[2]);
                     }
                 }

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -42,10 +43,10 @@ public class ApiController implements ApiInterface {
     DataLoader dataLoader;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    MapBuilder mapBuilder;
 
     @Autowired
-    MapBuilder mapBuilder;
+    RedisTemplate redisTemplate;
 
     @Override
     public List<Place> getListPlaceByName(String name) {
@@ -74,28 +75,28 @@ public class ApiController implements ApiInterface {
 //            List<Junction> lsIts = directionService.findRoute(fromId, toId);
             double x = 1.7;
 //            for (int c = 0; c <= 10; c++) {
-            direction = new Direction();
-            LocalDateTime start = LocalDateTime.now();
-            List<Junction> lsIts = directionService.findRouteExp(fromId, toId, x);
-            LocalDateTime finish = LocalDateTime.now();
-            direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
-            direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(),
-                    lsIts.get(lsIts.size() - 1).getLng()));
-            direction.setJunctions(lsIts);
-            Map<String, Integer> traffics = new LinkedHashMap<>();
-            for (int i = 0; i < lsIts.size() - 1; i++) {
-                traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(),
-                        dataLoader.getListCongestions()
-                                .get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
-            }
-            direction.setTraffics(traffics);
-            direction.setLength(direction.calLength());
-            direction.setTime(direction.calTime());
+                direction = new Direction();
+                LocalDateTime start = LocalDateTime.now();
+                List<Junction> lsIts = directionService.findRouteExp(fromId, toId, x);
+                LocalDateTime finish = LocalDateTime.now();
+                direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
+                direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(),
+                        lsIts.get(lsIts.size() - 1).getLng()));
+                direction.setJunctions(lsIts);
+                Map<String, Integer> traffics = new LinkedHashMap<>();
+                for (int i = 0; i < lsIts.size() - 1; i++) {
+                    traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(),
+                            dataLoader.getListCongestions()
+                                    .get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
+                }
+                direction.setTraffics(traffics);
+                direction.setLength(direction.calLength());
+                direction.setTime(direction.calTime());
 //            log.info(direction.toString());
 //            log.info(direction.getJunctions().size() + "");
 //            log.info(direction.calLength() + "");
 //            log.info(direction.calTime() * 60 + "");
-            System.out.println("x: " + x + " " + direction.calLength() + " " + direction.getJunctions().size() + " " + getTime(start, finish));
+                System.out.println("x: " + x + " " + direction.calLength() + " " + direction.getJunctions().size() + " " + getTime(start, finish));
 //                x += 0.1;
 //            }
             return direction;
@@ -242,6 +243,36 @@ public class ApiController implements ApiInterface {
 //            log.info(k + " " + level.get(i));
 //            i++;
 //        }
+
+        Map<String, Integer> v = new HashMap<>();
+        for (String i : dataLoader.getListV().keySet()) v.put(i, 0);
+        Map<String, Set<String>> e = mapBuilder.getNeighbourhoods();
+//        v.put("1893253381", 1);
+//        int d = 1;
+//        boolean yet;
+//        do {
+//            yet = false;
+//            for (String i : e.keySet()) {
+//                if (v.get(i) == 1) {
+//                    v.put(i, 2);
+//                    for (String j : e.keySet()) {
+//                        if (v.get(j) == 0 && e.get(i).contains(j)) {
+//                            v.put(j, 1);
+//                            log.info(j);
+//                            log.info(d + "");
+//                            d++;
+//                            yet = true;
+//                        }
+//                    }
+//                }
+//            }
+//        } while (yet);
+//        System.out.println(d + "");
+        int d = 0;
+        for (String i : v.keySet()) {
+            d += e.get(i).size();
+        }
+        System.out.println(d);
     }
 
     public static void main(String[] args) {
