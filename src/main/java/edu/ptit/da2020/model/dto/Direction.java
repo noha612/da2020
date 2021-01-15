@@ -2,7 +2,7 @@ package edu.ptit.da2020.model.dto;
 
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Junction;
-import edu.ptit.da2020.util.MathUtil;
+import edu.ptit.da2020.util.CommonUtil;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class Direction {
             GeoPoint from = new GeoPoint(junctions.get(i).getLat(), junctions.get(i).getLng());
             GeoPoint to = new GeoPoint(junctions.get(i + 1).getLat(),
                 junctions.get(i + 1).getLng());
-            length += MathUtil.haversineFomular(from, to);
+            length += CommonUtil.haversineFormula(from, to);
         }
         return length;
     }
@@ -49,7 +49,7 @@ public class Direction {
                     v = 3.46;
                 }
             }
-            time += MathUtil.haversineFomular(from, to) / v;
+            time += CommonUtil.haversineFormula(from, to) / v;
         }
         return time;
     }

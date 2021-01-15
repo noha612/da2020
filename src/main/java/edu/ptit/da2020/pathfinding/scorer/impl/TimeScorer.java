@@ -1,10 +1,11 @@
-package edu.ptit.da2020.pathfinding.scorer;
+package edu.ptit.da2020.pathfinding.scorer.impl;
 
 import edu.ptit.da2020.config.AppConfig;
 import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.constant.BaseConstant;
 import edu.ptit.da2020.model.Junction;
-import edu.ptit.da2020.util.MathUtil;
+import edu.ptit.da2020.pathfinding.scorer.Scorer;
+import edu.ptit.da2020.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,27 +38,22 @@ public class TimeScorer implements Scorer<Junction> {
         double spd;
         switch (trafficLevel) {
             case 1:
-                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_NORMAL);
-                spd = 27.69;
+                spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
                 break;
             case 2:
-                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_SLOW);
-                spd = 17.31;
+                spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_SMOOTH);
                 break;
             case 3:
-                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_JAM);
-                spd = 10.38;
+                spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_MILD);
                 break;
             case 4:
-                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_JAM);
-                spd = 3.46;
+                spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_HEAVY);
                 break;
             default:
-                spd = appConfig.getCongestionToSpeed().get(BaseConstant.SPEED_NORMAL);
-                spd = 27.69;
+                spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
                 break;
         }
-        return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng()) / spd;
-//        return MathUtil.haversineFomular(from.getLat(), from.getLng(), to.getLat(), to.getLng());
+        return CommonUtil.haversineFormula(from.getLat(), from.getLng(), to.getLat(), to.getLng())
+            / spd;
     }
 }

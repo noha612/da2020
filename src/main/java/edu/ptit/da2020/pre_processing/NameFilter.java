@@ -1,6 +1,6 @@
 package edu.ptit.da2020.pre_processing;
 
-import edu.ptit.da2020.util.MathUtil;
+import edu.ptit.da2020.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -114,7 +114,7 @@ public class NameFilter {
             double d = Double.MAX_VALUE;
             String nn = "blabla";
             for (Map.Entry<String, String> entry2 : map.entrySet()) {
-                double temp = MathUtil.haversineFomular(entry.getValue()[0], entry.getValue()[1], listR.get(entry2.getValue())[0], listR.get(entry2.getValue())[1]);
+                double temp = CommonUtil.haversineFormula(entry.getValue()[0], entry.getValue()[1], listR.get(entry2.getValue())[0], listR.get(entry2.getValue())[1]);
                 if (temp < d) {
                     d = temp;
                     nn = entry2.getKey();
@@ -321,7 +321,7 @@ public class NameFilter {
         String id = "blabla";
 
         for (Map.Entry<String, Double[]> entry : listV.entrySet()) {
-            double temp = MathUtil.haversineFomular(lat, lng, entry.getValue()[0], entry.getValue()[1]);
+            double temp = CommonUtil.haversineFormula(lat, lng, entry.getValue()[0], entry.getValue()[1]);
             if (temp < d) {
                 d = temp;
                 id = entry.getKey();

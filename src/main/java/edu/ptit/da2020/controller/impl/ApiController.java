@@ -1,7 +1,8 @@
-package edu.ptit.da2020.controller;
+package edu.ptit.da2020.controller.impl;
 
 import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.config.MapBuilder;
+import edu.ptit.da2020.controller.ApiInterface;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.model.Place;
@@ -12,20 +13,19 @@ import edu.ptit.da2020.model.dto.Road;
 import edu.ptit.da2020.service.DirectionService;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
-import edu.ptit.da2020.util.MathUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.RestController;
-
+import edu.ptit.da2020.util.CommonUtil;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.*;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -71,38 +71,69 @@ public class ApiController implements ApiInterface {
     public Direction getDirection(String fromId, String toId) {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
             Direction direction = new Direction();
-//            LocalDateTime start = LocalDateTime.now();
-//            List<Junction> lsIts = directionService.findRoute(fromId, toId);
-            double x = 1.7;
-//            for (int c = 0; c <= 10; c++) {
-                direction = new Direction();
-                LocalDateTime start = LocalDateTime.now();
-                List<Junction> lsIts = directionService.findRouteExp(fromId, toId, x);
-                LocalDateTime finish = LocalDateTime.now();
-                direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
-                direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(),
-                        lsIts.get(lsIts.size() - 1).getLng()));
-                direction.setJunctions(lsIts);
-                Map<String, Integer> traffics = new LinkedHashMap<>();
-                for (int i = 0; i < lsIts.size() - 1; i++) {
-                    traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(),
-                            dataLoader.getListCongestions()
-                                    .get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
-                }
-                direction.setTraffics(traffics);
-                direction.setLength(direction.calLength());
-                direction.setTime(direction.calTime());
-//            log.info(direction.toString());
-//            log.info(direction.getJunctions().size() + "");
-//            log.info(direction.calLength() + "");
-//            log.info(direction.calTime() * 60 + "");
-                System.out.println("x: " + x + " " + direction.calLength() + " " + direction.getJunctions().size() + " " + getTime(start, finish));
-//                x += 0.1;
-//            }
+            LocalDateTime start = LocalDateTime.now();
+            List<Junction> lsIts = directionService.findRoute(fromId, toId);
+            LocalDateTime finish = LocalDateTime.now();
+            direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
+            direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(),
+                lsIts.get(lsIts.size() - 1).getLng()));
+            direction.setJunctions(lsIts);
+            Map<String, Integer> traffics = new LinkedHashMap<>();
+            for (int i = 0; i < lsIts.size() - 1; i++) {
+                traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(),
+                    dataLoader.getListCongestions()
+                        .get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
+            }
+            direction.setTraffics(traffics);
+            direction.setLength(direction.calLength());
+            direction.setTime(direction.calTime());
+            log.info(direction.toString());
+            log.info(direction.getJunctions().size() + "");
+            log.info(direction.calLength() + "");
+            log.info(direction.calTime() * 60 + "");
+            log.info("Process time: " + getTime(start, finish));
             return direction;
         }
         return null;
     }
+
+    //For Testing
+//    @Override
+//    public Direction getDirection(String fromId, String toId) {
+//        Direction direction = new Direction();
+//        if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
+//            double x = 1;
+//            for (int c = 0; c <= 10; c++) {
+//                direction = new Direction();
+//                LocalDateTime start = LocalDateTime.now();
+//                List<Junction> lsIts = directionService.findRouteExp(fromId, toId, x);
+//                LocalDateTime finish = LocalDateTime.now();
+//                direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
+//                direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(),
+//                    lsIts.get(lsIts.size() - 1).getLng()));
+//                direction.setJunctions(lsIts);
+//                Map<String, Integer> traffics = new LinkedHashMap<>();
+//                for (int i = 0; i < lsIts.size() - 1; i++) {
+//                    traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(),
+//                        dataLoader.getListCongestions()
+//                            .get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
+//                }
+//                direction.setTraffics(traffics);
+//                direction.setLength(direction.calLength());
+//                direction.setTime(direction.calTime());
+//                log.info(direction.toString());
+//                log.info(direction.getJunctions().size() + "");
+//                log.info(direction.calLength() + "");
+//                log.info(direction.calTime() * 60 + "");
+//                System.out.println(
+//                    "x: " + x + " " + direction.calLength() + " " + direction.getJunctions().size()
+//                        + " " + getTime(start, finish));
+//                x += 0.1;
+//            }
+//            return direction;
+//        }
+//        return null;
+//    }
 
     @Override
     public Integer getTraffic(String id) {
@@ -110,12 +141,17 @@ public class ApiController implements ApiInterface {
     }
 
     @Override
-    public double getDistance(String fromId, String toId, Double fromLat, Double fromLng, Double toLat, Double toLng) {
+    public double getDistance(String fromId, String toId, Double fromLat, Double fromLng,
+        Double toLat, Double toLng) {
         if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
-            GeoPoint from = new GeoPoint(dataLoader.getListV().get(fromId)[0], dataLoader.getListV().get(fromId)[1]);
-            GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0], dataLoader.getListV().get(toId)[1]);
-            return MathUtil.haversineFomular(from, to);
-        } else return MathUtil.haversineFomular(fromLat, fromLng, toLat, toLng);
+            GeoPoint from = new GeoPoint(dataLoader.getListV().get(fromId)[0],
+                dataLoader.getListV().get(fromId)[1]);
+            GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0],
+                dataLoader.getListV().get(toId)[1]);
+            return CommonUtil.haversineFormula(from, to);
+        } else {
+            return CommonUtil.haversineFormula(fromLat, fromLng, toLat, toLng);
+        }
     }
 
     @Override
@@ -292,20 +328,15 @@ public class ApiController implements ApiInterface {
     private String getTime(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
 
         LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
-
-        long years = tempDateTime.until(toDateTime, ChronoUnit.YEARS);
-        tempDateTime = tempDateTime.plusYears(years);
-
-        long months = tempDateTime.until(toDateTime, ChronoUnit.MONTHS);
-        tempDateTime = tempDateTime.plusMonths(months);
-
-        long days = tempDateTime.until(toDateTime, ChronoUnit.DAYS);
-        tempDateTime = tempDateTime.plusDays(days);
-
-
-        long hours = tempDateTime.until(toDateTime, ChronoUnit.HOURS);
-        tempDateTime = tempDateTime.plusHours(hours);
-
+//
+//        long years = tempDateTime.until(toDateTime, ChronoUnit.YEARS);
+//        tempDateTime = tempDateTime.plusYears(years);
+//        long months = tempDateTime.until(toDateTime, ChronoUnit.MONTHS);
+//        tempDateTime = tempDateTime.plusMonths(months);
+//        long days = tempDateTime.until(toDateTime, ChronoUnit.DAYS);
+//        tempDateTime = tempDateTime.plusDays(days);
+//        long hours = tempDateTime.until(toDateTime, ChronoUnit.HOURS);
+//        tempDateTime = tempDateTime.plusHours(hours);
 //        long minutes = tempDateTime.until(toDateTime, ChronoUnit.MINUTES);
 //        tempDateTime = tempDateTime.plusMinutes(minutes);
 
@@ -314,8 +345,6 @@ public class ApiController implements ApiInterface {
 
         long milisecond = tempDateTime.until(toDateTime, ChronoUnit.MILLIS);
 
-        return
-                seconds + "." +
-                        milisecond;
+        return seconds + "." + milisecond;
     }
 }

@@ -1,5 +1,12 @@
 package edu.ptit.da2020.pre_processing;
 
+import static edu.ptit.da2020.constant.FileConstant.DISCONNECT;
+import static edu.ptit.da2020.constant.FileConstant.EDGE;
+import static edu.ptit.da2020.constant.FileConstant.MAP_FILE;
+import static edu.ptit.da2020.constant.FileConstant.NAME;
+import static edu.ptit.da2020.constant.FileConstant.RAW;
+import static edu.ptit.da2020.constant.FileConstant.VERTEX;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -12,11 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
-import static edu.ptit.da2020.constant.FileConstant.*;
 
 @Slf4j
 public class FileGenerator {
@@ -135,7 +139,7 @@ public class FileGenerator {
         ) {
             log.info("begin insert E, size: " + set.size());
             for (String i : set) {
-                fw.write(i + " " + 1 + "\n");
+                fw.write(i + "\n");
             }
             log.info("done");
         } catch (IOException e) {
