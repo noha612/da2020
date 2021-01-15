@@ -36,7 +36,7 @@ public class AppConfig {
 
   @Bean
   public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory factory) {
-    RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
+    RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
     redisTemplate.setConnectionFactory(factory);
     redisTemplate.setKeySerializer(new StringRedisSerializer());
     redisTemplate.setHashKeySerializer(new StringRedisSerializer());
