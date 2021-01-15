@@ -29,153 +29,157 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Order(1)
 public class DataLoader {
 
-    private Map<String, Double[]> listV;
-    private Map<String, String[]> listE;
-    private Map<String, Integer[]> ii;
-    private Map<Integer, String> listName;
-    private Map<String, Integer> listCongestions;
-    private Map<String, String> listVN;
+  private Map<String, Double[]> listV;
+  private Map<String, String[]> listE;
+  private Map<String, Integer[]> ii;
+  private Map<Integer, String> listName;
+  private Map<String, Integer> listCongestions;
+  private Map<String, String> listVN;
 
-    @Autowired
-    RedisTemplate redisTemplate;
+  @Autowired
+  RedisTemplate redisTemplate;
 
-    @PostConstruct
-    private void initGraph() {
-        log.info("init graph...");
+  @PostConstruct
+  private void initGraph() {
+    log.info("init graph...");
 
-        loadVertex();
-        loadEdge();
-        loadInvertedKey();
-        loadName();
-        loadCongestion();
-        loadVertexWithName();
-    }
+    loadVertex();
+    loadEdge();
+    loadInvertedKey();
+    loadName();
+    loadCongestion();
+    loadVertexWithName();
+  }
 
-    private void loadVertex() {
-        listV = new LinkedHashMap<>();
+  private void loadVertex() {
+    listV = new LinkedHashMap<>();
 
-        log.info("start read file " + VERTEX);
-        try {
-            File myObj = new File(VERTEX);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine().trim();
-                if (StringUtils.isNotEmpty(line)) {
-                    String[] temp = line.split(" ");
-                    String key = temp[0];
-                    Double[] array = new Double[2];
-                    for (int i = 0; i < array.length; i++) array[i] = Double.parseDouble(temp[i + 1]);
-                    listV.put(key, array);
-                }
+    log.info("start read file " + VERTEX);
+    try {
+      File myObj = new File(VERTEX);
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String line = myReader.nextLine().trim();
+        if (StringUtils.isNotEmpty(line)) {
+          String[] temp = line.split(" ");
+          String key = temp[0];
+          Double[] array = new Double[2];
+            for (int i = 0; i < array.length; i++) {
+                array[i] = Double.parseDouble(temp[i + 1]);
             }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("An error occurred " + e);
+          listV.put(key, array);
         }
-        log.info("done read file " + VERTEX + ", total V: " + listV.size());
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      log.error("An error occurred " + e);
     }
+    log.info("done read file " + VERTEX + ", total V: " + listV.size());
+  }
 
-    private void loadEdge() {
-        listE = new HashMap<>();
+  private void loadEdge() {
+    listE = new HashMap<>();
 
-        log.info("start read file " + EDGE);
-        try {
-            File myObj = new File(EDGE);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine().trim();
-                if (StringUtils.isNotEmpty(line)) {
-                    String[] temp = line.split(" ");
-                    listE.put(temp[0] + "_" + temp[1], temp);
-                }
+    log.info("start read file " + EDGE);
+    try {
+      File myObj = new File(EDGE);
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String line = myReader.nextLine().trim();
+        if (StringUtils.isNotEmpty(line)) {
+          String[] temp = line.split(" ");
+          listE.put(temp[0] + "_" + temp[1], temp);
+        }
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      log.error("An error occurred " + e);
+    }
+    log.info("done read file " + EDGE + ", total star: " + listE.size());
+  }
+
+  private void loadInvertedKey() {
+    ii = new HashMap<>();
+
+    log.info("start read file " + INVERTED);
+    try {
+      File myObj = new File(INVERTED);
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String line = myReader.nextLine().trim();
+        if (StringUtils.isNotEmpty(line)) {
+          String[] temp = line.split(" = ");
+          String key = temp[0];
+          String[] arrayString = temp[1].substring(1, temp[1].length() - 1).split(",");
+          Integer[] array = new Integer[arrayString.length];
+            for (int i = 0; i < array.length; i++) {
+                array[i] = Integer.parseInt(arrayString[i]);
             }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("An error occurred " + e);
+          ii.put(key, array);
         }
-        log.info("done read file " + EDGE + ", total star: " + listE.size());
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      log.error("An error occurred " + e);
     }
+    log.info("done read file " + INVERTED);
 
-    private void loadInvertedKey() {
-        ii = new HashMap<>();
+  }
 
-        log.info("start read file " + INVERTED);
-        try {
-            File myObj = new File(INVERTED);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine().trim();
-                if (StringUtils.isNotEmpty(line)) {
-                    String[] temp = line.split(" = ");
-                    String key = temp[0];
-                    String[] arrayString = temp[1].substring(1, temp[1].length() - 1).split(",");
-                    Integer[] array = new Integer[arrayString.length];
-                    for (int i = 0; i < array.length; i++) array[i] = Integer.parseInt(arrayString[i]);
-                    ii.put(key, array);
-                }
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("An error occurred " + e);
+  private void loadName() {
+    listName = new HashMap<>();
+
+    log.info("start read file " + NAME);
+    try {
+      File myObj = new File(NAME);
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String line = myReader.nextLine().trim();
+        if (StringUtils.isNotEmpty(line)) {
+          String[] temp = line.split("::");
+          Integer key = Integer.parseInt(temp[0]);
+          String value = temp[1] + "::" + temp[2];
+          listName.put(key, value);
         }
-        log.info("done read file " + INVERTED);
-
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      log.error("An error occurred " + e);
     }
+    log.info("done read file " + NAME);
 
-    private void loadName() {
-        listName = new HashMap<>();
+  }
 
-        log.info("start read file " + NAME);
-        try {
-            File myObj = new File(NAME);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine().trim();
-                if (StringUtils.isNotEmpty(line)) {
-                    String[] temp = line.split("::");
-                    Integer key = Integer.parseInt(temp[0]);
-                    String value = temp[1] + "::" + temp[2];
-                    listName.put(key, value);
-                }
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("An error occurred " + e);
+  public void loadCongestion() {
+    LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.opsForHash()
+        .keys("CONGEST");
+    List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
+    listCongestions = new HashMap<>();
+    int i = 0;
+    for (String k : keySet) {
+      listCongestions.put(k, level.get(i));
+      i++;
+    }
+  }
+
+  private void loadVertexWithName() {
+    listVN = new LinkedHashMap<>();
+
+    log.info("start read file " + VERTEX_NAME);
+    try {
+      File myObj = new File(VERTEX_NAME);
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String line = myReader.nextLine().trim();
+        if (StringUtils.isNotEmpty(line)) {
+          String[] temp = line.split("::");
+          listVN.put(temp[0], temp[1]);
         }
-        log.info("done read file " + NAME);
-
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      log.error("An error occurred " + e);
     }
-
-    public void loadCongestion() {
-        LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.opsForHash()
-            .keys("CONGEST");
-        List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
-        listCongestions = new HashMap<>();
-        int i = 0;
-        for (String k : keySet) {
-            listCongestions.put(k, level.get(i));
-            i++;
-        }
-    }
-
-    private void loadVertexWithName() {
-        listVN = new LinkedHashMap<>();
-
-        log.info("start read file " + VERTEX_NAME);
-        try {
-            File myObj = new File(VERTEX_NAME);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine().trim();
-                if (StringUtils.isNotEmpty(line)) {
-                    String[] temp = line.split("::");
-                    listVN.put(temp[0], temp[1]);
-                }
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("An error occurred " + e);
-        }
-        log.info("done read file " + VERTEX_NAME + ", total V: " + listVN.size());
-    }
+    log.info("done read file " + VERTEX_NAME + ", total V: " + listVN.size());
+  }
 }

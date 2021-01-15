@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class GeoPoint {
-    private Double lat;
-    private Double lng;
+
+  private Double lat;
+  private Double lng;
 }

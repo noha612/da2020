@@ -11,19 +11,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class EstimateTimeScorer implements Scorer<Junction> {
 
-    @Autowired
-    AppConfig appConfig;
+  @Autowired
+  AppConfig appConfig;
 
-    private double x;
+  private double x;
 
-    public void setX(double x) {
-        this.x = x;
-    }
+  public void setX(double x) {
+    this.x = x;
+  }
 
-    @Override
-    public double computeCost(Junction from, Junction to) {
-        double spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
-        return CommonUtil.haversineFormula(from.getLat(), from.getLng(), to.getLat(), to.getLng()) * x
-            / spd;
-    }
+  @Override
+  public double computeCost(Junction from, Junction to) {
+    double spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
+    return CommonUtil.haversineFormula(from.getLat(), from.getLng(), to.getLat(), to.getLng()) * x
+        / spd;
+  }
 }

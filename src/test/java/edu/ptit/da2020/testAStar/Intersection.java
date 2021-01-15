@@ -11,5 +11,6 @@ import lombok.ToString;
 @ToString
 @Data
 public class Intersection implements GraphNode {
-    private String id;
+
+  private String id;
 }

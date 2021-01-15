@@ -21,25 +21,25 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AppConfig {
 
-    private double baseSpeed;
+  private double baseSpeed;
 
-    private Map<String, Double> trafficToSpeedMapping;
+  private Map<String, Double> trafficToSpeedMapping;
 
-    @PostConstruct
-    void initSpeed() {
-        trafficToSpeedMapping = new HashMap<>();
-        trafficToSpeedMapping.put(BaseConstant.SPEED_HEAVY, baseSpeed * 0.125);
-        trafficToSpeedMapping.put(BaseConstant.SPEED_MILD, baseSpeed * 0.375);
-        trafficToSpeedMapping.put(BaseConstant.SPEED_SMOOTH, baseSpeed * 0.625);
-        trafficToSpeedMapping.put(BaseConstant.SPEED_VERY_SMOOTH, baseSpeed);
-    }
+  @PostConstruct
+  void initSpeed() {
+    trafficToSpeedMapping = new HashMap<>();
+    trafficToSpeedMapping.put(BaseConstant.SPEED_HEAVY, baseSpeed * 0.125);
+    trafficToSpeedMapping.put(BaseConstant.SPEED_MILD, baseSpeed * 0.375);
+    trafficToSpeedMapping.put(BaseConstant.SPEED_SMOOTH, baseSpeed * 0.625);
+    trafficToSpeedMapping.put(BaseConstant.SPEED_VERY_SMOOTH, baseSpeed);
+  }
 
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
-        redisTemplate.setConnectionFactory(factory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        return redisTemplate;
-    }
+  @Bean
+  public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory factory) {
+    RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
+    redisTemplate.setConnectionFactory(factory);
+    redisTemplate.setKeySerializer(new StringRedisSerializer());
+    redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+    return redisTemplate;
+  }
 }

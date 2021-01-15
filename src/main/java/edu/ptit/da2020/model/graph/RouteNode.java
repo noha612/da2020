@@ -1,58 +1,59 @@
 package edu.ptit.da2020.model.graph;
 
 public class RouteNode<T extends GraphNode> implements Comparable<RouteNode> {
-    private final T current;
-    private T previous;
-    private double routeScore;
-    private double estimatedScore;
 
-    public RouteNode(T current) {
-        this(current, null, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-    }
+  private final T current;
+  private T previous;
+  private double routeScore;
+  private double estimatedScore;
 
-    public RouteNode(T current, T previous, double routeScore, double estimatedScore) {
-        this.current = current;
-        this.previous = previous;
-        this.routeScore = routeScore;
-        this.estimatedScore = estimatedScore;
-    }
+  public RouteNode(T current) {
+    this(current, null, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+  }
 
-    public T getCurrent() {
-        return current;
-    }
+  public RouteNode(T current, T previous, double routeScore, double estimatedScore) {
+    this.current = current;
+    this.previous = previous;
+    this.routeScore = routeScore;
+    this.estimatedScore = estimatedScore;
+  }
 
-    public T getPrevious() {
-        return previous;
-    }
+  public T getCurrent() {
+    return current;
+  }
 
-    public void setPrevious(T previous) {
-        this.previous = previous;
-    }
+  public T getPrevious() {
+    return previous;
+  }
 
-    public double getRouteScore() {
-        return routeScore;
-    }
+  public void setPrevious(T previous) {
+    this.previous = previous;
+  }
 
-    public void setRouteScore(double routeScore) {
-        this.routeScore = routeScore;
-    }
+  public double getRouteScore() {
+    return routeScore;
+  }
 
-    public double getEstimatedScore() {
-        return estimatedScore;
-    }
+  public void setRouteScore(double routeScore) {
+    this.routeScore = routeScore;
+  }
 
-    public void setEstimatedScore(double estimatedScore) {
-        this.estimatedScore = estimatedScore;
-    }
+  public double getEstimatedScore() {
+    return estimatedScore;
+  }
 
-    @Override
-    public int compareTo(RouteNode otherRouteNode) {
-        if (this.estimatedScore > otherRouteNode.estimatedScore) {
-            return 1;
-        } else if (this.estimatedScore < otherRouteNode.estimatedScore) {
-            return -1;
-        } else {
-            return 0;
-        }
+  public void setEstimatedScore(double estimatedScore) {
+    this.estimatedScore = estimatedScore;
+  }
+
+  @Override
+  public int compareTo(RouteNode otherRouteNode) {
+    if (this.estimatedScore > otherRouteNode.estimatedScore) {
+      return 1;
+    } else if (this.estimatedScore < otherRouteNode.estimatedScore) {
+      return -1;
+    } else {
+      return 0;
     }
+  }
 }

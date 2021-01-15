@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Location {
-    GeoPoint marker;
-    GeoPoint h;
-    Place place;
+
+  GeoPoint marker;
+  GeoPoint h;
+  Place place;
 }

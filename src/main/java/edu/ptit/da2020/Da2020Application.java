@@ -9,12 +9,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class Da2020Application implements CommandLineRunner {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Da2020Application.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(Da2020Application.class, args);
+  }
 
-    @Override
-    public void run(String... args) throws Exception {
+  @Override
+  public void run(String... args) throws Exception {
 
-    }
+  }
 }

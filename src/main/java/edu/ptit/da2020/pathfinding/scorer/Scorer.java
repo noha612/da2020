@@ -5,5 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface Scorer<T extends GraphNode> {
-    double computeCost(T from, T to);
+
+  double computeCost(T from, T to);
 }

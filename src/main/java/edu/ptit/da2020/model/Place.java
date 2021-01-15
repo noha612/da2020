@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Place extends GeoPoint {
-    private String name;
-    private String id;
 
-    public Place(String name, String id, Double lat, Double lng) {
-        super(lat, lng);
-        this.name = name;
-        this.id = id;
-    }
+  private String name;
+  private String id;
+
+  public Place(String name, String id, Double lat, Double lng) {
+    super(lat, lng);
+    this.name = name;
+    this.id = id;
+  }
 }
