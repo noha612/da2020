@@ -1,8 +1,10 @@
 package edu.ptit.da2020.service.impl;
 
 import edu.ptit.da2020.config.DataLoader;
+import edu.ptit.da2020.constant.BaseConstant;
 import edu.ptit.da2020.model.dto.AlertDTO;
 import edu.ptit.da2020.service.TrafficService;
+import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,58 +30,65 @@ public class TrafficServiceImpl implements TrafficService {
     return dataLoader.getListCongestions().get(id);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void update(AlertDTO alertDTO) {
 
     redisTemplate.opsForSet().add("OBSERVER", alertDTO.getRoadId());
 
     String key = alertDTO.getRoadId() + ":" + alertDTO.getMobileId();
-    redisTemplate.opsForValue()
-        .set(key, alertDTO.getTrafficLevel());
+    redisTemplate.opsForValue().set(key, alertDTO.getTrafficLevel());
     redisTemplate.expire(key, 10, TimeUnit.MINUTES);
 
     LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate
         .keys("*" + alertDTO.getRoadId() + "*");
-    List<Integer> level = redisTemplate.opsForValue().multiGet(keySet);
-    Map<String, Integer> elector = new HashMap<>();
+    List<String> level = redisTemplate.opsForValue().multiGet(keySet);
+    Map<String, String> elector = new HashMap<>();
     int i = 0;
     for (String k : keySet) {
-      log.info(k + " " + level.get(i));
       elector.put(k.split(":")[1], level.get(i));
       i++;
     }
-    log.info(vote(elector) + "");
+    String result = vote(elector);
+    if (!BaseConstant.UNDEFINED.equalsIgnoreCase(result)) {
+      for (Entry<String, String> entry : elector.entrySet()) {
+        Double score = (Double) redisTemplate.opsForValue().get(entry.getKey());
+        score += 0.25;
+        redisTemplate.opsForValue().set(entry.getKey(), score);
+        redisTemplate.opsForHash().put("CONGEST", alertDTO.getRoadId(), result);
+      }
+    }
   }
 
-  private Integer vote(Map<String, Integer> elector) {
+  private String vote(Map<String, String> elector) {
     double avg1 = 0;
     double avg2 = 0;
     double avg3 = 0;
-    for (Entry<String, Integer> entry : elector.entrySet()) {
+    for (Entry<String, String> entry : elector.entrySet()) {
       Double score = (Double) redisTemplate.opsForValue().get(entry.getKey());
       if (score == null) {
         score = 1.0;
       }
-      if (entry.getValue() == 1) {
+      if (BaseConstant.SPEED_SMOOTH.equalsIgnoreCase(entry.getValue())) {
         avg1 += score;
       }
-      if (entry.getValue() == 2) {
+      if (BaseConstant.SPEED_MILD.equalsIgnoreCase(entry.getValue())) {
         avg2 += score;
       }
-      if (entry.getValue() == 3) {
+      if (BaseConstant.SPEED_HEAVY.equalsIgnoreCase(entry.getValue())) {
         avg3 += score;
       }
     }
     if (avg3 > avg1 && avg3 > avg2 && avg3 >= 5) {
-      return 3;
+      return BaseConstant.SPEED_HEAVY;
     }
     if (avg2 > avg3 && avg2 > avg1 && avg2 >= 5) {
-      return 2;
+      return BaseConstant.SPEED_MILD;
     }
     if (avg1 > avg3 && avg1 > avg2 && avg1 >= 5) {
-      return 1;
+      return BaseConstant.SPEED_SMOOTH;
     }
-    return 0;
+    return BaseConstant.UNDEFINED;
   }
 
 }

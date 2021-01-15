@@ -8,4 +8,5 @@ public class BaseConstant {
   public static final String SPEED_MILD = "MILD";
   public static final String SPEED_SMOOTH = "SMOOTH";
   public static final String SPEED_VERY_SMOOTH = "VERY_SMOOTH";
+  public static final String UNDEFINED = "UNDEFINED";
 }

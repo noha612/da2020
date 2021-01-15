@@ -14,5 +14,5 @@ public class AlertDTO implements Serializable {
 
   String mobileId;
   String roadId;
-  Integer trafficLevel;
+  String trafficLevel;
 }

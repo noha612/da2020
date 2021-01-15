@@ -41,8 +41,7 @@ public class DataLoader {
 
   @PostConstruct
   private void initGraph() {
-    log.info("init graph...");
-
+    log.info("Loading data...");
     loadVertex();
     loadEdge();
     loadInvertedKey();
@@ -54,7 +53,7 @@ public class DataLoader {
   private void loadVertex() {
     listV = new LinkedHashMap<>();
 
-    log.info("start read file " + VERTEX);
+    log.info("Loading vertex...");
     try {
       File myObj = new File(VERTEX);
       Scanner myReader = new Scanner(myObj);
@@ -74,13 +73,11 @@ public class DataLoader {
     } catch (FileNotFoundException e) {
       log.error("An error occurred " + e);
     }
-    log.info("done read file " + VERTEX + ", total V: " + listV.size());
   }
 
   private void loadEdge() {
     listE = new HashMap<>();
-
-    log.info("start read file " + EDGE);
+    log.info("Loading edge...");
     try {
       File myObj = new File(EDGE);
       Scanner myReader = new Scanner(myObj);
@@ -95,13 +92,11 @@ public class DataLoader {
     } catch (FileNotFoundException e) {
       log.error("An error occurred " + e);
     }
-    log.info("done read file " + EDGE + ", total star: " + listE.size());
   }
 
   private void loadInvertedKey() {
     ii = new HashMap<>();
-
-    log.info("start read file " + INVERTED);
+    log.info("Loading inverted index");
     try {
       File myObj = new File(INVERTED);
       Scanner myReader = new Scanner(myObj);
@@ -122,14 +117,11 @@ public class DataLoader {
     } catch (FileNotFoundException e) {
       log.error("An error occurred " + e);
     }
-    log.info("done read file " + INVERTED);
-
   }
 
   private void loadName() {
     listName = new HashMap<>();
-
-    log.info("start read file " + NAME);
+    log.info("Loading list name...");
     try {
       File myObj = new File(NAME);
       Scanner myReader = new Scanner(myObj);
@@ -146,11 +138,11 @@ public class DataLoader {
     } catch (FileNotFoundException e) {
       log.error("An error occurred " + e);
     }
-    log.info("done read file " + NAME);
 
   }
 
   public void loadCongestion() {
+    log.info("Loading congestion...");
     LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.opsForHash()
         .keys("CONGEST");
     List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
@@ -164,8 +156,7 @@ public class DataLoader {
 
   private void loadVertexWithName() {
     listVN = new LinkedHashMap<>();
-
-    log.info("start read file " + VERTEX_NAME);
+    log.info("Loading name for vertex...");
     try {
       File myObj = new File(VERTEX_NAME);
       Scanner myReader = new Scanner(myObj);
@@ -180,6 +171,5 @@ public class DataLoader {
     } catch (FileNotFoundException e) {
       log.error("An error occurred " + e);
     }
-    log.info("done read file " + VERTEX_NAME + ", total V: " + listVN.size());
   }
 }

@@ -21,7 +21,7 @@ import org.springframework.core.annotation.Order;
 @Data
 @Slf4j
 @Order(2)
-public class MapBuilder {
+public class GraphBuilder {
 
   @Autowired
   DataLoader dataLoader;
@@ -36,7 +36,7 @@ public class MapBuilder {
   @SneakyThrows
   @PostConstruct
   public void init() {
-    log.info("init graph...");
+    log.info("Init graph...");
     initLinks();
     initNodes();
     graph = new Graph<>(nodes, neighbourhoods);
@@ -49,7 +49,7 @@ public class MapBuilder {
     for (Map.Entry<String, Double[]> entry : dataLoader.getListV().entrySet()) {
       nodes.add(new Junction(entry.getKey(), entry.getValue()[0], entry.getValue()[1]));
     }
-    log.info("total V: " + nodes.size());
+    log.info("Graph Vertex: " + nodes.size());
   }
 
 
@@ -65,6 +65,6 @@ public class MapBuilder {
         neighbourhoods.put(entry.getValue()[0], tempSet);
       }
     }
-    log.info("total star: " + neighbourhoods.size());
+    log.info("Graph Junctions: " + neighbourhoods.size());
   }
 }

@@ -3,6 +3,8 @@ package edu.ptit.da2020.util;
 import static edu.ptit.da2020.constant.BaseConstant.R;
 
 import edu.ptit.da2020.model.GeoPoint;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -129,9 +131,8 @@ public class CommonUtil {
     double lat1 = Math.toRadians(fromLat);
     double lat2 = Math.toRadians(toLat);
 
-    double a =
-        Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
-            * Math.cos(lat2);
+    double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
+        * Math.cos(lat2);
     double c = 2 * Math.asin(Math.sqrt(a));
     return R * c;
   }
@@ -147,6 +148,29 @@ public class CommonUtil {
       this.x = x;
       this.y = y;
     }
+  }
+
+  public static String getTime(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+
+    LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
+//
+//        long years = tempDateTime.until(toDateTime, ChronoUnit.YEARS);
+//        tempDateTime = tempDateTime.plusYears(years);
+//        long months = tempDateTime.until(toDateTime, ChronoUnit.MONTHS);
+//        tempDateTime = tempDateTime.plusMonths(months);
+//        long days = tempDateTime.until(toDateTime, ChronoUnit.DAYS);
+//        tempDateTime = tempDateTime.plusDays(days);
+//        long hours = tempDateTime.until(toDateTime, ChronoUnit.HOURS);
+//        tempDateTime = tempDateTime.plusHours(hours);
+//        long minutes = tempDateTime.until(toDateTime, ChronoUnit.MINUTES);
+//        tempDateTime = tempDateTime.plusMinutes(minutes);
+
+    long seconds = tempDateTime.until(toDateTime, ChronoUnit.SECONDS);
+    tempDateTime = tempDateTime.plusSeconds(seconds);
+
+    long milisecond = tempDateTime.until(toDateTime, ChronoUnit.MILLIS);
+
+    return seconds + "." + milisecond;
   }
 
   public static void main(String[] args) {

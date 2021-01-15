@@ -1,7 +1,7 @@
 package edu.ptit.da2020.service.impl;
 
 import edu.ptit.da2020.config.DataLoader;
-import edu.ptit.da2020.config.MapBuilder;
+import edu.ptit.da2020.config.GraphBuilder;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Junction;
 import edu.ptit.da2020.pathfinding.RouteFinder;
@@ -29,7 +29,7 @@ public class DirectionServiceImpl implements DirectionService {
   DataLoader dataLoader;
 
   @Autowired
-  MapBuilder mapBuilder;
+  GraphBuilder graphBuilder;
 
   @Autowired
   TimeScorer timeScorer;
@@ -52,13 +52,13 @@ public class DirectionServiceImpl implements DirectionService {
     } else {
       estimateTimeScorer.setX(1);
     }
-    mapBuilder
-        .setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estimateTimeScorer));
+    graphBuilder
+        .setRouteFinder(new RouteFinder<>(graphBuilder.getGraph(), timeScorer, estimateTimeScorer));
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
-    Callable<Object> task = () -> mapBuilder.getRouteFinder().findRoute(
-        mapBuilder.getGraph().getNode(fromId),
-        mapBuilder.getGraph().getNode(toId)
+    Callable<Object> task = () -> graphBuilder.getRouteFinder().findRoute(
+        graphBuilder.getGraph().getNode(fromId),
+        graphBuilder.getGraph().getNode(toId)
     );
     List<Junction> list = null;
     Future<Object> future = executor.submit(task);
@@ -66,9 +66,9 @@ public class DirectionServiceImpl implements DirectionService {
       list = (List<Junction>) future.get(6000, TimeUnit.SECONDS);
     } catch (TimeoutException ex) {
       log.info("Timeout, use back up route finder");
-      list = mapBuilder.getRouteFinder().findRouteBackUp(
-          mapBuilder.getGraph().getNode(fromId),
-          mapBuilder.getGraph().getNode(toId)
+      list = graphBuilder.getRouteFinder().findRouteBackUp(
+          graphBuilder.getGraph().getNode(fromId),
+          graphBuilder.getGraph().getNode(toId)
       );
     } catch (InterruptedException e) {
       e.printStackTrace();
@@ -85,12 +85,12 @@ public class DirectionServiceImpl implements DirectionService {
   @Override
   public List<Junction> findRouteExp(String fromId, String toId, double x) {
     estimateTimeScorer.setX(x);
-    mapBuilder
-        .setRouteFinder(new RouteFinder<>(mapBuilder.getGraph(), timeScorer, estimateTimeScorer));
+    graphBuilder
+        .setRouteFinder(new RouteFinder<>(graphBuilder.getGraph(), timeScorer, estimateTimeScorer));
 
-    return mapBuilder.getRouteFinder().findRoute(
-        mapBuilder.getGraph().getNode(fromId),
-        mapBuilder.getGraph().getNode(toId)
+    return graphBuilder.getRouteFinder().findRoute(
+        graphBuilder.getGraph().getNode(fromId),
+        graphBuilder.getGraph().getNode(toId)
     );
   }
 }

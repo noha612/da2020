@@ -1,7 +1,7 @@
 package edu.ptit.da2020.controller.impl;
 
 import edu.ptit.da2020.config.DataLoader;
-import edu.ptit.da2020.config.MapBuilder;
+import edu.ptit.da2020.config.GraphBuilder;
 import edu.ptit.da2020.controller.ApiInterface;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Junction;
@@ -15,7 +15,6 @@ import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
 import edu.ptit.da2020.util.CommonUtil;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ public class ApiController implements ApiInterface {
   DataLoader dataLoader;
 
   @Autowired
-  MapBuilder mapBuilder;
+  GraphBuilder graphBuilder;
 
   @Autowired
   RedisTemplate redisTemplate;
@@ -93,7 +92,7 @@ public class ApiController implements ApiInterface {
       log.info(direction.getJunctions().size() + "");
       log.info(direction.calLength() + "");
       log.info(direction.calTime() * 60 + "");
-      log.info("Process time: " + getTime(start, finish));
+      log.info("Process time: " + CommonUtil.getTime(start, finish));
       return direction;
     }
     return null;
@@ -161,6 +160,7 @@ public class ApiController implements ApiInterface {
     trafficService.update(alertDTO);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void test() {
 //        redisTemplate.opsForHash().put("CONGEST", "6610656034_5716482151", 2);
@@ -283,10 +283,10 @@ public class ApiController implements ApiInterface {
 //        }
 
     Map<String, Integer> v = new HashMap<>();
-      for (String i : dataLoader.getListV().keySet()) {
-          v.put(i, 0);
-      }
-    Map<String, Set<String>> e = mapBuilder.getNeighbourhoods();
+    for (String i : dataLoader.getListV().keySet()) {
+      v.put(i, 0);
+    }
+    Map<String, Set<String>> e = graphBuilder.getNeighbourhoods();
 //        v.put("1893253381", 1);
 //        int d = 1;
 //        boolean yet;
@@ -327,28 +327,5 @@ public class ApiController implements ApiInterface {
     System.out.println((normal + traff) / v1);
     System.out.println(kmMin + " " + v1);
     System.out.println(0.22759675442593622 * 60);
-  }
-
-  private String getTime(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
-
-    LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
-//
-//        long years = tempDateTime.until(toDateTime, ChronoUnit.YEARS);
-//        tempDateTime = tempDateTime.plusYears(years);
-//        long months = tempDateTime.until(toDateTime, ChronoUnit.MONTHS);
-//        tempDateTime = tempDateTime.plusMonths(months);
-//        long days = tempDateTime.until(toDateTime, ChronoUnit.DAYS);
-//        tempDateTime = tempDateTime.plusDays(days);
-//        long hours = tempDateTime.until(toDateTime, ChronoUnit.HOURS);
-//        tempDateTime = tempDateTime.plusHours(hours);
-//        long minutes = tempDateTime.until(toDateTime, ChronoUnit.MINUTES);
-//        tempDateTime = tempDateTime.plusMinutes(minutes);
-
-    long seconds = tempDateTime.until(toDateTime, ChronoUnit.SECONDS);
-    tempDateTime = tempDateTime.plusSeconds(seconds);
-
-    long milisecond = tempDateTime.until(toDateTime, ChronoUnit.MILLIS);
-
-    return seconds + "." + milisecond;
   }
 }
