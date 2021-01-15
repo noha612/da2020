@@ -27,7 +27,7 @@ public class FileGenerator {
 
   static LinkedHashSet<String> set;
 
-  public static void main(String[] args) {
+  public static void start() {
     genV();
     genE();
     filter();
