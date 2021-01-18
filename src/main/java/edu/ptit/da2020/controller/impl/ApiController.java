@@ -282,11 +282,11 @@ public class ApiController implements ApiInterface {
 //            i++;
 //        }
 
-    Map<String, Integer> v = new HashMap<>();
-    for (String i : dataLoader.getListV().keySet()) {
-      v.put(i, 0);
-    }
-    Map<String, Set<String>> e = graphBuilder.getNeighbourhoods();
+//    Map<String, Integer> v = new HashMap<>();
+//    for (String i : dataLoader.getListV().keySet()) {
+//      v.put(i, 0);
+//    }
+//    Map<String, Set<String>> e = graphBuilder.getNeighbourhoods();
 //        v.put("1893253381", 1);
 //        int d = 1;
 //        boolean yet;
@@ -308,11 +308,13 @@ public class ApiController implements ApiInterface {
 //            }
 //        } while (yet);
 //        System.out.println(d + "");
-    int d = 0;
-    for (String i : v.keySet()) {
-      d += e.get(i).size();
-    }
-    System.out.println(d);
+//    int d = 0;
+//    for (String i : v.keySet()) {
+//      d += e.get(i).size();
+//    }
+//    System.out.println(d);
+    redisTemplate.opsForValue().set("ae53d8ad120191f1", 100.0);
+
   }
 
   public static void main(String[] args) {

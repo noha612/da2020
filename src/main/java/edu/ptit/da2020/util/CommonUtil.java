@@ -3,156 +3,160 @@ package edu.ptit.da2020.util;
 import static edu.ptit.da2020.constant.BaseConstant.R;
 
 import edu.ptit.da2020.model.GeoPoint;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 public class CommonUtil {
 
-  public static String removeAccents(String input) {
-    if (input == null || input.length() < 1) {
-      return "";
+    public static String removeAccents(String input) {
+        if (input == null || input.length() < 1) {
+            return "";
+        }
+        return (StringUtils.replaceChars(
+                StringUtils.replaceChars(StringUtils.stripAccents(input), (char) 273, (char) 100),
+                (char) 272, (char) 68));
     }
-    return (StringUtils.replaceChars(
-        StringUtils.replaceChars(StringUtils.stripAccents(input), (char) 273, (char) 100),
-        (char) 272, (char) 68));
-  }
 
-  public static Integer[] intersectionArrays(List<Integer[]> list) {
-    Integer[] result = list.get(0);
-    if (list.size() < 2) {
-      return result;
+    public static Integer[] intersectionArrays(List<Integer[]> list) {
+        Integer[] result = list.get(0);
+        if (list.size() < 2) {
+            return result;
+        }
+        for (int i = 0; i < list.size() - 1; i++) {
+            Integer[] temp = intersectionArray(list.get(i), list.get(i + 1));
+            if (temp.length > 0) {
+                result = temp;
+            }
+        }
+        return result;
     }
-    for (int i = 0; i < list.size() - 1; i++) {
-      Integer[] temp = intersectionArray(list.get(i), list.get(i + 1));
-      if (temp.length > 0) {
-        result = temp;
-      }
+
+    public static Integer[] intersectionArray(Integer[] arr1, Integer[] arr2) {
+        List<Integer> temp = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < arr1.length && j < arr2.length) {
+            if (arr1[i] < arr2[j]) {
+                i++;
+            } else if (arr2[j] < arr1[i]) {
+                j++;
+            } else {
+                temp.add(arr2[j++]);
+                i++;
+            }
+        }
+        return temp.toArray(new Integer[0]);
     }
-    return result;
-  }
 
-  public static Integer[] intersectionArray(Integer[] arr1, Integer[] arr2) {
-    List<Integer> temp = new ArrayList<>();
-    int i = 0, j = 0;
-    while (i < arr1.length && j < arr2.length) {
-      if (arr1[i] < arr2[j]) {
-        i++;
-      } else if (arr2[j] < arr1[i]) {
-        j++;
-      } else {
-        temp.add(arr2[j++]);
-        i++;
-      }
+    public static double distance(double fromLat, double toLat, double fromLng, double toLng) {
+        double R = 6371; // km
+
+        double dLat = Math.toRadians(toLat - fromLat);
+        double dLon = Math.toRadians(toLng - fromLng);
+        double lat1 = Math.toRadians(fromLat);
+        double lat2 = Math.toRadians(toLat);
+
+        double a =
+                Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
+                        * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return R * c;
     }
-    return temp.toArray(new Integer[0]);
-  }
 
-  public static double distance(double fromLat, double toLat, double fromLng, double toLng) {
-    double R = 6371; // km
-
-    double dLat = Math.toRadians(toLat - fromLat);
-    double dLon = Math.toRadians(toLng - fromLng);
-    double lat1 = Math.toRadians(fromLat);
-    double lat2 = Math.toRadians(toLat);
-
-    double a =
-        Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
-            * Math.cos(lat2);
-    double c = 2 * Math.asin(Math.sqrt(a));
-    return R * c;
-  }
-
-  public static double getAreaByHeronFormula(double a, double b, double c) {
-    double p = (a + b + c) / 2;
-    return Math.sqrt(p * (p - a) * (p - b) * (p - c));
-  }
-
-  public static double getHeightOfTriangle(double a, double b, double c, double x) {
-    double S = getAreaByHeronFormula(a, b, c);
-    return 2 * S / x;
-  }
-
-  //Altitude of C
-  public static Coordinate getAltitudeCoordinateOfTriangle(
-      Coordinate A,
-      Coordinate B,
-      Coordinate C
-  ) {
-    projection(A, B, C);
-    double d = (B.y - A.y) / (B.x - A.x);
-    double x = (A.x * d * d + (C.y - A.y) * d + C.x) / (d * d + 1);
-    double y = C.y - (x - C.x) / d;
-    Coordinate H = new Coordinate(x, y);
-    inverse(H);
-    return H;
-  }
-
-
-  private static void projection(Coordinate A, Coordinate B, Coordinate C) {
-    Mercator.yAxisProjection(A.getX());
-    Mercator.yAxisProjection(B.getX());
-    Mercator.yAxisProjection(C.getX());
-    Mercator.xAxisProjection(A.getY());
-    Mercator.xAxisProjection(B.getY());
-    Mercator.xAxisProjection(C.getY());
-  }
-
-  private static void inverse(Coordinate H) {
-    Mercator.yAxisInverseProjection(H.getX());
-    Mercator.xAxisInverseProjection(H.getY());
-  }
-
-  public static double haversineFormula(GeoPoint from, GeoPoint to) {
-
-    double dLat = Math.toRadians(to.getLat() - from.getLat());
-    double dLon = Math.toRadians(to.getLng() - from.getLng());
-    double lat1 = Math.toRadians(from.getLat());
-    double lat2 = Math.toRadians(to.getLat());
-
-    double a =
-        Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
-            * Math.cos(lat2);
-    double c = 2 * Math.asin(Math.sqrt(a));
-    return R * c;
-  }
-
-  public static double haversineFormula(
-      double fromLat, double fromLng,
-      double toLat, double toLng
-  ) {
-
-    double dLat = Math.toRadians(toLat - fromLat);
-    double dLon = Math.toRadians(toLng - fromLng);
-    double lat1 = Math.toRadians(fromLat);
-    double lat2 = Math.toRadians(toLat);
-
-    double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
-        * Math.cos(lat2);
-    double c = 2 * Math.asin(Math.sqrt(a));
-    return R * c;
-  }
-
-  @Data
-  @NoArgsConstructor
-  public static class Coordinate {
-
-    private double x;
-    private double y;
-
-    public Coordinate(double x, double y) {
-      this.x = x;
-      this.y = y;
+    public static double getAreaByHeronFormula(double a, double b, double c) {
+        double p = (a + b + c) / 2;
+        return Math.sqrt(p * (p - a) * (p - b) * (p - c));
     }
-  }
 
-  public static String getTime(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+    public static double getHeightOfTriangle(double a, double b, double c, double x) {
+        double S = getAreaByHeronFormula(a, b, c);
+        return 2 * S / x;
+    }
 
-    LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
+    //Altitude of C
+    public static Coordinate getAltitudeCoordinateOfTriangle(
+            Coordinate A,
+            Coordinate B,
+            Coordinate C
+    ) {
+        projection(A, B, C);
+        double d = (B.y - A.y) / (B.x - A.x);
+        double x = (A.x * d * d + (C.y - A.y) * d + C.x) / (d * d + 1);
+        double y = C.y - (x - C.x) / d;
+        Coordinate H = new Coordinate(x, y);
+        inverse(H);
+        return H;
+    }
+
+
+    private static void projection(Coordinate A, Coordinate B, Coordinate C) {
+        Mercator.yAxisProjection(A.getX());
+        Mercator.yAxisProjection(B.getX());
+        Mercator.yAxisProjection(C.getX());
+        Mercator.xAxisProjection(A.getY());
+        Mercator.xAxisProjection(B.getY());
+        Mercator.xAxisProjection(C.getY());
+    }
+
+    private static void inverse(Coordinate H) {
+        Mercator.yAxisInverseProjection(H.getX());
+        Mercator.xAxisInverseProjection(H.getY());
+    }
+
+    public static double haversineFormula(GeoPoint from, GeoPoint to) {
+
+        double dLat = Math.toRadians(to.getLat() - from.getLat());
+        double dLon = Math.toRadians(to.getLng() - from.getLng());
+        double lat1 = Math.toRadians(from.getLat());
+        double lat2 = Math.toRadians(to.getLat());
+
+        double a =
+                Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
+                        * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return R * c;
+    }
+
+    public static double haversineFormula(
+            double fromLat, double fromLng,
+            double toLat, double toLng
+    ) {
+
+        double dLat = Math.toRadians(toLat - fromLat);
+        double dLon = Math.toRadians(toLng - fromLng);
+        double lat1 = Math.toRadians(fromLat);
+        double lat2 = Math.toRadians(toLat);
+
+        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1)
+                * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return R * c;
+    }
+
+    @Data
+    @NoArgsConstructor
+    public static class Coordinate {
+
+        private double x;
+        private double y;
+
+        public Coordinate(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public static String getTime(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+
+        LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
 //
 //        long years = tempDateTime.until(toDateTime, ChronoUnit.YEARS);
 //        tempDateTime = tempDateTime.plusYears(years);
@@ -165,25 +169,52 @@ public class CommonUtil {
 //        long minutes = tempDateTime.until(toDateTime, ChronoUnit.MINUTES);
 //        tempDateTime = tempDateTime.plusMinutes(minutes);
 
-    long seconds = tempDateTime.until(toDateTime, ChronoUnit.SECONDS);
-    tempDateTime = tempDateTime.plusSeconds(seconds);
+        long seconds = tempDateTime.until(toDateTime, ChronoUnit.SECONDS);
+        tempDateTime = tempDateTime.plusSeconds(seconds);
 
-    long milisecond = tempDateTime.until(toDateTime, ChronoUnit.MILLIS);
+        long milisecond = tempDateTime.until(toDateTime, ChronoUnit.MILLIS);
 
-    return seconds + "." + milisecond;
-  }
+        return seconds + "." + milisecond;
+    }
 
-  public static void main(String[] args) {
-    Coordinate A = new Coordinate(2.0, -1.0);
-    Coordinate B = new Coordinate(2.0, 5.0);
-    Coordinate C = new Coordinate(2.0, 3.0);
-    System.out.println(getAltitudeCoordinateOfTriangle(A, B, C));
+    static final Map<String, GeoPoint> districts = new HashMap<String, GeoPoint>() {{
+        put("Hoàn Kiếm", new GeoPoint(21.027266, 105.855453));
+        put("Đống Đa", new GeoPoint(21.027256, 105.832703));
+        put("Ba Đình", new GeoPoint(21.033781, 105.814054));
+        put("Hai Bà Trưng", new GeoPoint(21.00626, 105.85537));
+        put("Hoàng Mai", new GeoPoint(20.984068, 105.862511));
+        put("Long Biên", new GeoPoint(21.054863, 105.888497));
+        put("Nam Từ Liêm", new GeoPoint(21.003461, 105.770329));
+        put("Bắc Từ Liêm", new GeoPoint(21.073020, 105.770329));
+        put("Tây Hồ", new GeoPoint(21.081121, 105.818031));
+        put("Cầu Giấy", new GeoPoint(21.125097, 105.878849));
+        put("Hà Đông", new GeoPoint(20.9803940, 105.7863343));
+    }};
 
-    double latA = 21.9749816;
-    double lngA = 105.8651266;
-    System.out.println(distance(20.9450, 20.9450, 105.7420, 105.9110));
-    System.out.println(distance(20.9450, 21.0980, 105.7420, 105.7420));
-    System.out.println(17.555203956249414 *
-        17.017630413377333);
-  }
+    public static String getDistrict(GeoPoint gp) {
+        double d = Double.MAX_VALUE;
+        String district = "";
+        for (Map.Entry<String, GeoPoint> entry : districts.entrySet()) {
+            double temp = haversineFormula(gp, entry.getValue());
+            if (temp < d) {
+                district = entry.getKey();
+                d = temp;
+            }
+        }
+        return district;
+    }
+
+    public static void main(String[] args) {
+        Coordinate A = new Coordinate(2.0, -1.0);
+        Coordinate B = new Coordinate(2.0, 5.0);
+        Coordinate C = new Coordinate(2.0, 3.0);
+        System.out.println(getAltitudeCoordinateOfTriangle(A, B, C));
+
+        double latA = 21.9749816;
+        double lngA = 105.8651266;
+        System.out.println(distance(20.9450, 20.9450, 105.7420, 105.9110));
+        System.out.println(distance(20.9450, 21.0980, 105.7420, 105.7420));
+        System.out.println(17.555203956249414 *
+                17.017630413377333);
+    }
 }
