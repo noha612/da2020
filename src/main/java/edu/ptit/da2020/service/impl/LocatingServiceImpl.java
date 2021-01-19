@@ -66,7 +66,7 @@ public class LocatingServiceImpl implements LocatingService {
                 }
                 return 0;
             });
-            result = result.size() > 10 ? result.subList(0, 10) : result;
+            result = result.size() > 8 ? result.subList(0, 8) : result;
             for (int i = 0; i < result.size(); i++) {
                 Place p = result.get(i);
                 Double[] coor = dataLoader.getListV().get(p.getId());

@@ -178,17 +178,18 @@ public class CommonUtil {
     }
 
     static final Map<String, GeoPoint> districts = new HashMap<String, GeoPoint>() {{
-        put("Hoàn Kiếm", new GeoPoint(21.027266, 105.855453));
-        put("Đống Đa", new GeoPoint(21.027256, 105.832703));
-        put("Ba Đình", new GeoPoint(21.033781, 105.814054));
-        put("Hai Bà Trưng", new GeoPoint(21.00626, 105.85537));
-        put("Hoàng Mai", new GeoPoint(20.984068, 105.862511));
-        put("Long Biên", new GeoPoint(21.054863, 105.888497));
-        put("Nam Từ Liêm", new GeoPoint(21.003461, 105.770329));
-        put("Bắc Từ Liêm", new GeoPoint(21.073020, 105.770329));
-        put("Tây Hồ", new GeoPoint(21.081121, 105.818031));
-        put("Cầu Giấy", new GeoPoint(21.125097, 105.878849));
+        put("Hoàn Kiếm", new GeoPoint(21.0304301,105.8374124));
+        put("Đống Đa", new GeoPoint(21.015433,105.8269173));
+        put("Ba Đình", new GeoPoint(21.034442,105.8193753));
+        put("Hai Bà Trưng", new GeoPoint(21.006418,105.8560463));
+        put("Hoàng Mai", new GeoPoint(20.9750239,105.8407938));
+        put("Long Biên", new GeoPoint(21.042236,105.8989553));
+        put("Nam Từ Liêm", new GeoPoint(21.012973,105.7590583));
+        put("Bắc Từ Liêm", new GeoPoint(21.072438,105.7593943));
+        put("Tây Hồ", new GeoPoint(21.0459951,105.8235086));
+        put("Cầu Giấy", new GeoPoint(21.030203,105.7894973));
         put("Hà Đông", new GeoPoint(20.9803940, 105.7863343));
+        put("Thanh Xuân", new GeoPoint(20.9956131,105.8037895));
     }};
 
     public static String getDistrict(GeoPoint gp) {

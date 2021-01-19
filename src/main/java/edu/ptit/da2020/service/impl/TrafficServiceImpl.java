@@ -57,7 +57,7 @@ public class TrafficServiceImpl implements TrafficService {
                 score += 0.25;
                 redisTemplate.opsForValue().set(entry.getKey(), score);
                 redisTemplate.opsForHash().put("CONGEST", alertDTO.getRoadId(), result);
-                redisTemplate.opsForHash().put("OBSERVER", alertDTO.getRoadId(), LocalDateTime.now().plusMinutes(1));
+                redisTemplate.opsForHash().put("OBSERVER", alertDTO.getRoadId(), LocalDateTime.now().plusMinutes(60));
             }
             for (String k : keySet) redisTemplate.delete(k);
         }
