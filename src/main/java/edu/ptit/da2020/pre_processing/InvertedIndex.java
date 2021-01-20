@@ -32,7 +32,7 @@ public class InvertedIndex {
         String line = myReader.nextLine().trim();
         if (StringUtils.isNotEmpty(line)) {
           String[] temp = line.split("::");
-          for (String i : temp[1].split("\\s+")) {
+          for (String i : temp[1].split("~")[0].trim().split("\\s+")) {
             i = CommonUtil.removeAccents(i);
             i = i.toLowerCase();
             String arrayValue = map.get(i) == null ? temp[0] : map.get(i) + "," + temp[0];

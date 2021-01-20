@@ -6,6 +6,7 @@ import static edu.ptit.da2020.constant.FileConstant.RAW;
 import static edu.ptit.da2020.constant.FileConstant.VERTEX;
 import static edu.ptit.da2020.constant.FileConstant.VERTEX_NAME;
 
+import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.util.CommonUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,6 +44,9 @@ public class NameFilter {
     String name = "";
     String number = "";
     String street = "";
+    String district = "";
+    String subDistrict = "";
+    String subName = "";
 
     try {
       log.info("start read file " + MAP_FILE);
@@ -70,28 +74,37 @@ public class NameFilter {
               line = line.replace("<tag k=\"addr:street\" v=\"", "");
               line = line.replace("\"/>", "");
               street = line;
+            } else if (line.startsWith("<tag k=\"addr:subdistrict\" ")) {
+              line = line.replace("<tag k=\"addr:subdistrict\" v=\"", "");
+              line = line.replace("\"/>", "");
+              subDistrict = line;
+            } else if (line.startsWith("<tag k=\"addr:district\" ")) {
+              line = line.replace("<tag k=\"addr:district\" v=\"", "");
+              line = line.replace("\"/>", "");
+              district = line;
             }
             line = myReader.nextLine().trim();
           }
+//          if (StringUtils.isNotEmpty(subDistrict) && StringUtils.isNotEmpty(district)) {
+//            subName = subDistrict + ", " + district;
+//          } else {
+//            subName = subDistrict + district;
+//          }
           if (StringUtils.isNotEmpty(name)) {
             map.put(name, node);
           }
           if (StringUtils.isNotEmpty(street)) {
             if (StringUtils.isNotEmpty(number)) {
-                if (number.toLowerCase().startsWith("so") || number.toLowerCase()
-                    .startsWith("số")) {
-                    map.put(number + " " + street, node);
-                } else {
-                    map.put("Số " + number + " " + street, node);
-                }
+              if (number.toLowerCase().startsWith("so") || number.toLowerCase()
+                  .startsWith("số")) {
+                map.put(number + " " + street, node);
+              } else {
+                map.put("Số " + number + " " + street, node);
+              }
             } else {
               map.put(street, node);
             }
           }
-          node = "";
-          name = "";
-          number = "";
-          street = "";
         }
 
         if (way.startsWith("<way")) {
@@ -106,13 +119,34 @@ public class NameFilter {
             if (line.startsWith("<tag k=\"name\" v=\"")) {
               line = line.replace("<tag k=\"name\" v=\"", "");
               line = line.replace("\"/>", "");
-                if (!map.containsKey(line)) {
-                    map.put(line, nodeInWay.get(nodeInWay.size() / 2));
-                }
+              name = line;
+            } else if (line.startsWith("<tag k=\"addr:subdistrict\" ")) {
+              line = line.replace("<tag k=\"addr:subdistrict\" v=\"", "");
+              line = line.replace("\"/>", "");
+              subDistrict = line;
+            } else if (line.startsWith("<tag k=\"addr:district\" ")) {
+              line = line.replace("<tag k=\"addr:district\" v=\"", "");
+              line = line.replace("\"/>", "");
+              district = line;
             }
             line = myReader.nextLine().trim();
           }
+//          if (StringUtils.isNotEmpty(subDistrict) && StringUtils.isNotEmpty(district)) {
+//            subName = subDistrict + ", " + district;
+//          } else {
+//            subName = subDistrict + district;
+//          }
+          if (!map.containsKey(name)) {
+            map.put(name, nodeInWay.get(nodeInWay.size() / 2));
+          }
         }
+        node = "";
+        name = "";
+        number = "";
+        street = "";
+        subDistrict = "";
+        district = "";
+        subName = "";
       }
       myReader.close();
 
@@ -171,6 +205,10 @@ public class NameFilter {
     String name = "";
     String number = "";
     String street = "";
+    String district = "";
+    String subDistrict = "";
+    String subName = "";
+    int cC = 0;
 
     try {
       log.info("start read file " + MAP_FILE);
@@ -198,28 +236,55 @@ public class NameFilter {
               line = line.replace("<tag k=\"addr:street\" v=\"", "");
               line = line.replace("\"/>", "");
               street = line;
+            } else if (line.startsWith("<tag k=\"addr:subdistrict\" ")) {
+              line = line.replace("<tag k=\"addr:subdistrict\" v=\"", "");
+              line = line.replace("\"/>", "");
+              subDistrict = line;
+            } else if (line.startsWith("<tag k=\"addr:district\" ")) {
+              line = line.replace("<tag k=\"addr:district\" v=\"", "");
+              line = line.replace("\"/>", "");
+              district = line;
             }
             line = myReader.nextLine().trim();
           }
+
+          if (StringUtils.isNotEmpty(subDistrict) && StringUtils.isNotEmpty(district)) {
+            subName = subDistrict + ", " + district;
+          } else if (StringUtils.isNotEmpty(district)) {
+            subName = district;
+          } else {
+            subName = CommonUtil
+                .getDistrict(
+                    new GeoPoint(listR.get(node)[0], listR.get(node)[1]));
+          }
+
           if (StringUtils.isNotEmpty(name)) {
-            map.put(name, node);
+            if (StringUtils.isBlank(subName)) {
+              cC++;
+            }
+            map.put(name + " ~ " + subName, node);
           }
           if (StringUtils.isNotEmpty(street)) {
             if (StringUtils.isNotEmpty(number)) {
-                if (number.toLowerCase().startsWith("so") || number.toLowerCase()
-                    .startsWith("số")) {
-                    map.put(number + " " + street, node);
-                } else {
-                    map.put("Số " + number + " " + street, node);
+              if (number.toLowerCase().startsWith("so") || number.toLowerCase()
+                  .startsWith("số")) {
+                if (StringUtils.isBlank(subName)) {
+                  cC++;
                 }
+                map.put(number + " " + street + " ~ " + subName, node);
+              } else {
+                if (StringUtils.isBlank(subName)) {
+                  cC++;
+                }
+                map.put("Số " + number + " " + street + " ~ " + subName, node);
+              }
             } else {
-              map.put(street, node);
+              if (StringUtils.isBlank(subName)) {
+                cC++;
+              }
+              map.put(street + " ~ " + subName, node);
             }
           }
-          node = "";
-          name = "";
-          number = "";
-          street = "";
         }
 
         if (way.startsWith("<way")) {
@@ -234,13 +299,45 @@ public class NameFilter {
             if (line.startsWith("<tag k=\"name\" v=\"")) {
               line = line.replace("<tag k=\"name\" v=\"", "");
               line = line.replace("\"/>", "");
-                if (!map.containsKey(line)) {
-                    map.put(line, nodeInWay.get(nodeInWay.size() / 2));
-                }
+              name = line;
+            } else if (line.startsWith("<tag k=\"addr:subdistrict\" ")) {
+              line = line.replace("<tag k=\"addr:subdistrict\" v=\"", "");
+              line = line.replace("\"/>", "");
+              subDistrict = line;
+            } else if (line.startsWith("<tag k=\"addr:district\" ")) {
+              line = line.replace("<tag k=\"addr:district\" v=\"", "");
+              line = line.replace("\"/>", "");
+              district = line;
             }
             line = myReader.nextLine().trim();
           }
+
+          if (StringUtils.isNotEmpty(subDistrict) && StringUtils.isNotEmpty(district)) {
+            subName = subDistrict + ", " + district;
+          } else if (StringUtils.isNotEmpty(district)) {
+            subName = district;
+          } else {
+            subName = CommonUtil
+                .getDistrict(
+                    new GeoPoint(listR.get(nodeInWay.get(nodeInWay.size() / 2))[0],
+                        listR.get(nodeInWay.get(nodeInWay.size() / 2))[1]));
+          }
+
+          if (!map.containsKey(name + " ~ " + subName)) {
+            if (StringUtils.isBlank(subName)) {
+              cC++;
+            }
+            map.put(name + " ~ " + subName, nodeInWay.get(nodeInWay.size() / 2));
+          }
         }
+
+        node = "";
+        name = "";
+        number = "";
+        street = "";
+        subDistrict = "";
+        district = "";
+        subName = "";
       }
       myReader.close();
 
@@ -274,8 +371,10 @@ public class NameFilter {
       log.info("begin insert E, size: " + map.size());
       int count = 0;
       for (Map.Entry<String, String> entry : map.entrySet()) {
-        fw.write(count + "::" + entry.getKey() + "::" + entry.getValue() + "\n");
-        count++;
+        if (StringUtils.isNotBlank(entry.getKey())) {
+          fw.write(count + "::" + entry.getKey() + "::" + entry.getValue() + "\n");
+          count++;
+        }
       }
       log.info("done");
     } catch (IOException e) {
@@ -299,9 +398,9 @@ public class NameFilter {
           String[] temp = line.split(" ");
           String key = temp[0];
           Double[] array = new Double[2];
-            for (int i = 0; i < array.length; i++) {
-                array[i] = Double.parseDouble(temp[i + 1]);
-            }
+          for (int i = 0; i < array.length; i++) {
+            array[i] = Double.parseDouble(temp[i + 1]);
+          }
           listV.put(key, array);
         }
       }
@@ -325,9 +424,9 @@ public class NameFilter {
           String[] temp = line.split(" ");
           String key = temp[0];
           Double[] array = new Double[2];
-            for (int i = 0; i < array.length; i++) {
-                array[i] = Double.parseDouble(temp[i + 1]);
-            }
+          for (int i = 0; i < array.length; i++) {
+            array[i] = Double.parseDouble(temp[i + 1]);
+          }
           listR.put(key, array);
         }
       }
@@ -343,7 +442,8 @@ public class NameFilter {
     String id = "blabla";
 
     for (Map.Entry<String, Double[]> entry : listV.entrySet()) {
-      double temp = CommonUtil.haversineFormula(lat, lng, entry.getValue()[0], entry.getValue()[1]);
+      double temp = CommonUtil
+          .haversineFormula(lat, lng, entry.getValue()[0], entry.getValue()[1]);
       if (temp < d) {
         d = temp;
         id = entry.getKey();

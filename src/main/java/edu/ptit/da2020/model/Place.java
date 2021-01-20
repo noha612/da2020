@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class Place extends GeoPoint {
 
   private String name;
-  private String district;
+  private String subName;
   private String id;
 
   public Place(String name, String id, Double lat, Double lng) {
