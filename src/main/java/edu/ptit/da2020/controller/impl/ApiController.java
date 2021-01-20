@@ -179,15 +179,15 @@ public class ApiController implements ApiInterface {
 //        redisTemplate.opsForHash().put("CONGEST", "1897734810_6628713645", "SMOOTH");
 //        redisTemplate.opsForHash().put("CONGEST", "6621426601_1314185658", "SMOOTH");
 // 72 2
-//        redisTemplate.opsForHash().put("CONGEST", "6666466359_4106979199", "HEAVY");
-//        redisTemplate.opsForHash().put("CONGEST", "5707271702_6666466361", "MILD");
-//        redisTemplate.opsForHash().put("CONGEST", "6684837045_4106979203", "MILD");
-//        redisTemplate.opsForHash().put("CONGEST", "6610656034_5716482151", "MILD");
-//        redisTemplate.opsForHash().put("CONGEST", "1692612449_1692612448", "MILD");
-//        redisTemplate.opsForHash().put("CONGEST", "1692612450_5709923611", "MILD");
-//        redisTemplate.opsForHash().put("CONGEST", "4539674879_6621426595", "MILD");
-//        redisTemplate.opsForHash().put("CONGEST", "1314191436_6621426601", "HEAVY");
-//        redisTemplate.opsForHash().put("CONGEST", "1897734810_6628713645", "MILD");
+        redisTemplate.opsForHash().put("CONGEST", "6666466359_4106979199", "HEAVY");
+        redisTemplate.opsForHash().put("CONGEST", "5707271702_6666466361", "MILD");
+        redisTemplate.opsForHash().put("CONGEST", "6684837045_4106979203", "MILD");
+        redisTemplate.opsForHash().put("CONGEST", "6610656034_5716482151", "MILD");
+        redisTemplate.opsForHash().put("CONGEST", "1692612449_1692612448", "MILD");
+        redisTemplate.opsForHash().put("CONGEST", "1692612450_5709923611", "MILD");
+        redisTemplate.opsForHash().put("CONGEST", "4539674879_6621426595", "MILD");
+        redisTemplate.opsForHash().put("CONGEST", "1314191436_6621426601", "HEAVY");
+        redisTemplate.opsForHash().put("CONGEST", "1897734810_6628713645", "MILD");
 //long bien 1
 //        redisTemplate.opsForHash().put("CONGEST", "5721494367_4870728332", "SMOOTH");
 //        redisTemplate.opsForHash().put("CONGEST", "81920098_5721494366", "SMOOTH");
@@ -313,7 +313,7 @@ public class ApiController implements ApiInterface {
 //      d += e.get(i).size();
 //    }
 //    System.out.println(d);
-    redisTemplate.opsForValue().set("ae53d8ad120191f1", 100.0);
+//    redisTemplate.opsForValue().set("ae53d8ad120191f1", 100.0);
 
   }
 

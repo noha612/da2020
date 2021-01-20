@@ -96,7 +96,7 @@ public class DataLoader {
 
   private void loadInvertedKey() {
     ii = new HashMap<>();
-    log.info("Loading inverted index");
+    log.info("Loading inverted index...");
     try {
       File myObj = new File(INVERTED);
       Scanner myReader = new Scanner(myObj);
