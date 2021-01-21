@@ -344,7 +344,7 @@ public class CommonUtil {
     boolean isStreak = false;
     for (String s : splitName) {
       if (str.contains(s)) {
-        str = str.substring(str.indexOf(s) + splitName.length);
+        str = str.substring(str.indexOf(s) + s.length());
         if (isStreak)
           v += 2;
         else

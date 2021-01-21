@@ -7,12 +7,18 @@ import edu.ptit.da2020.model.dto.Location;
 import edu.ptit.da2020.model.dto.Road;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.util.CommonUtil;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +28,10 @@ public class LocatingServiceImpl implements LocatingService {
     @Autowired
     DataLoader dataLoader;
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @SuppressWarnings("unchecked")
     @Override
     public List<Place> findIdByName(String name) {
         name = CommonUtil.removeAccents(name);
@@ -44,9 +54,20 @@ public class LocatingServiceImpl implements LocatingService {
                 }
             }
         }
-        if (list.size() > 0) {
-            List<Place> result = new ArrayList<>();
+        if (!list.isEmpty()) {
+            List<Integer[]> subList = list.subList(0, list.size() - 1);
+            String key = toKey(list);
+            String cache = (String) redisTemplate.opsForValue().get(toKey(subList));
+            if(StringUtils.isNotBlank(cache)){
+                log.info("hehe");
+                list = list.subList(list.size() - 1, list.size());
+                list.add(fromValue(cache));
+            }
             Integer[] li = CommonUtil.intersectionArrays(list);
+            redisTemplate.opsForValue().set(key, toValue(li));
+            redisTemplate.expire(key, 10, TimeUnit.SECONDS);
+
+            List<Place> result = new ArrayList<>();
             for (Integer i : li) {
                 Place p = new Place();
                 String[] strArr = dataLoader.getListName().get(i).split("::");
@@ -223,12 +244,40 @@ public class LocatingServiceImpl implements LocatingService {
                 if (tempDis < 0.01 && tempDis < d) {
                     log.info(tempDis + "");
                     d = tempDis;
-                    road = new Road(idA + "_" + idB, new GeoPoint(latA, lngA), new GeoPoint(latB, lngB));
+                    road = new Road(idA + "_" + idB, new GeoPoint(latA, lngA),
+                        new GeoPoint(latB, lngB));
                 }
             }
         }
         log.info(road.toString());
         return road;
+    }
+
+    private String toValue(Integer[] li) {
+        StringBuilder s = new StringBuilder();
+        for (Integer i : li) {
+            s.append(i).append(" ");
+        }
+        return s.toString().trim();
+    }
+
+    private Integer[] fromValue(String li) {
+        List<Integer> r = new ArrayList<>();
+        for(String i : li.split(" ")){
+            r.add(Integer.parseInt(i));
+        }
+        return r.toArray(new Integer[0]);
+    }
+
+    @SneakyThrows
+    private String toKey(List<Integer[]> list) {
+        StringBuilder s = new StringBuilder();
+        for (Integer[] i : list) {
+            s.append(toValue(i)).append(" ");
+        }
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        messageDigest.update(s.toString().getBytes());
+        return Base64.getEncoder().encodeToString((messageDigest.digest()));
     }
 
     public static void main(String[] args) {
