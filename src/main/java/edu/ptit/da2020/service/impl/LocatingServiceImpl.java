@@ -7,12 +7,9 @@ import edu.ptit.da2020.model.dto.Location;
 import edu.ptit.da2020.model.dto.Road;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.util.CommonUtil;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +61,12 @@ public class LocatingServiceImpl implements LocatingService {
                 name1 = name1.toLowerCase();
                 String name2 = CommonUtil.removeAccents(p2.getName());
                 name2 = name2.toLowerCase();
-                if (CommonUtil.longestCommonSubsequenceLength(name1, finalName) > CommonUtil
-                        .longestCommonSubsequenceLength(name2, finalName)) {
+                if (CommonUtil.getSimilarValue(name1, finalName) > CommonUtil
+                    .getSimilarValue(name2, finalName)) {
                     return -1;
                 }
-                if (CommonUtil.longestCommonSubsequenceLength(name1, finalName) < CommonUtil
-                        .longestCommonSubsequenceLength(name2, finalName)) {
+                if (CommonUtil.getSimilarValue(name1, finalName) < CommonUtil
+                    .getSimilarValue(name2, finalName)) {
                     return 1;
                 }
                 return Integer.compare(name1.length(), name2.length());

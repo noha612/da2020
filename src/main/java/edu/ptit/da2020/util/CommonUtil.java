@@ -342,14 +342,16 @@ public class CommonUtil {
     String[] splitName = ss.split("\\s+");
     int v = 0;
     boolean isStreak = false;
-    for (int i = 0; i < splitName.length; i++) {
-      if (str.contains(splitName[i])) {
-        str = str.substring(str.indexOf(splitName[i]) + splitName.length);
-        if(isStreak)v+=2;
-        else v+=1;
+    for (String s : splitName) {
+      if (str.contains(s)) {
+        str = str.substring(str.indexOf(s) + splitName.length);
+        if (isStreak)
+          v += 2;
+        else
+          v += 1;
         isStreak = true;
-      }
-      else isStreak = false;
+      } else
+        isStreak = false;
     }
     return v;
   }
