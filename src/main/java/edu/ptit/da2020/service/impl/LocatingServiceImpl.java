@@ -10,6 +10,7 @@ import edu.ptit.da2020.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +72,7 @@ public class LocatingServiceImpl implements LocatingService {
                         .longestCommonSubsequenceLength(name2, finalName)) {
                     return 1;
                 }
-                return Integer.compare(name2.length(), name1.length());
+                return Integer.compare(name1.length(), name2.length());
             });
             result = result.size() > 8 ? result.subList(0, 8) : result;
             for (int i = 0; i < result.size(); i++) {
