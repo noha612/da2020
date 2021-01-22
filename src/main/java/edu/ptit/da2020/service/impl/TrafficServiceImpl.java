@@ -29,7 +29,7 @@ public class TrafficServiceImpl implements TrafficService {
     @Autowired
     RedisTemplate redisTemplate;
 
-    public Integer getTrafficStatusByRoadId(String id) {
+    public String getTrafficStatusByRoadId(String id) {
         return dataLoader.getListCongestions().get(id);
     }
 
@@ -57,6 +57,7 @@ public class TrafficServiceImpl implements TrafficService {
                 score += 0.25;
                 redisTemplate.opsForValue().set(entry.getKey(), score);
                 redisTemplate.opsForHash().put("CONGEST", alertDTO.getRoadId(), result);
+                dataLoader.getListCongestions().put(alertDTO.getRoadId(), result);
                 redisTemplate.opsForHash().put("OBSERVER", alertDTO.getRoadId(), LocalDateTime.now().plusMinutes(60));
             }
             for (String k : keySet) redisTemplate.delete(k);

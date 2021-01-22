@@ -33,7 +33,7 @@ public class DataLoader {
   private Map<String, String[]> listE;
   private Map<String, Integer[]> ii;
   private Map<Integer, String> listName;
-  private Map<String, Integer> listCongestions;
+  private Map<String, String> listCongestions;
   private Map<String, String> listVN;
 
   @Autowired
@@ -145,7 +145,7 @@ public class DataLoader {
     log.info("Loading congestion...");
     LinkedHashSet<String> keySet = (LinkedHashSet<String>) redisTemplate.opsForHash()
         .keys("CONGEST");
-    List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
+    List<String> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
     listCongestions = new HashMap<>();
     int i = 0;
     for (String k : keySet) {

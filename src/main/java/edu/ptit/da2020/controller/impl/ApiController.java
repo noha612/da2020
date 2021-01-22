@@ -1,7 +1,9 @@
 package edu.ptit.da2020.controller.impl;
 
+import edu.ptit.da2020.config.AppConfig;
 import edu.ptit.da2020.config.DataLoader;
 import edu.ptit.da2020.config.GraphBuilder;
+import edu.ptit.da2020.constant.BaseConstant;
 import edu.ptit.da2020.controller.ApiInterface;
 import edu.ptit.da2020.model.GeoPoint;
 import edu.ptit.da2020.model.Junction;
@@ -14,12 +16,14 @@ import edu.ptit.da2020.service.DirectionService;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.service.TrafficService;
 import edu.ptit.da2020.util.CommonUtil;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,75 +34,80 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiController implements ApiInterface {
 
-  @Autowired
-  DirectionService directionService;
+    @Autowired
+    DirectionService directionService;
 
-  @Autowired
-  LocatingService locatingService;
+    @Autowired
+    LocatingService locatingService;
 
-  @Autowired
-  TrafficService trafficService;
+    @Autowired
+    TrafficService trafficService;
 
-  @Autowired
-  DataLoader dataLoader;
+    @Autowired
+    DataLoader dataLoader;
 
-  @Autowired
-  GraphBuilder graphBuilder;
+    @Autowired
+    GraphBuilder graphBuilder;
 
-  @Autowired
-  RedisTemplate redisTemplate;
+    @Autowired
+    RedisTemplate redisTemplate;
 
-  @Override
-  public List<Place> getListPlaceByName(String name) {
-    return locatingService.findIdByName(name);
-  }
+    @Autowired
+    AppConfig appConfig;
 
-  @Override
-  public Location getLocationByPoint(double lat, double lng) {
-    Location l = locatingService.findLocationByPoint(lat, lng);
-    if (!l.getH().getLng().equals(l.getMarker().getLng()) && !l.getH().getLat()
-        .equals(l.getMarker().getLat())) {
-      l.getPlace().setName("gần " + l.getPlace().getName());
+    @Override
+    public List<Place> getListPlaceByName(String name) {
+        return locatingService.findIdByName(name);
     }
-    return l;
-  }
 
-  @Override
-  public Road getRoadByPoint(double lat, double lng) {
-    return locatingService.findRoadByPoint(lat, lng);
-  }
-
-  @Override
-  public Direction getDirection(String fromId, String toId) {
-    if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
-      Direction direction = new Direction();
-      LocalDateTime start = LocalDateTime.now();
-      List<Junction> lsIts = directionService.findRoute(fromId, toId);
-      LocalDateTime finish = LocalDateTime.now();
-      direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
-      direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(),
-          lsIts.get(lsIts.size() - 1).getLng()));
-      direction.setJunctions(lsIts);
-      Map<String, Integer> traffics = new LinkedHashMap<>();
-      for (int i = 0; i < lsIts.size() - 1; i++) {
-        traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(),
-            dataLoader.getListCongestions()
-                .get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
-      }
-      direction.setTraffics(traffics);
-      direction.setLength(direction.calLength());
-      direction.setTime(direction.calTime());
-      log.info(direction.toString());
-      log.info(direction.getJunctions().size() + "");
-      log.info(direction.calLength() + "");
-      log.info(direction.calTime() * 60 + "");
-      log.info("Process time: " + CommonUtil.getTime(start, finish));
-      return direction;
+    @Override
+    public Location getLocationByPoint(double lat, double lng) {
+        Location l = locatingService.findLocationByPoint(lat, lng);
+        if (!l.getH().getLng().equals(l.getMarker().getLng()) && !l.getH().getLat()
+                .equals(l.getMarker().getLat())) {
+            l.getPlace().setName("gần " + l.getPlace().getName());
+        }
+        log.info(l.toString());
+        return l;
     }
-    return null;
-  }
 
-  //For Testing
+    @Override
+    public Road getRoadByPoint(double lat, double lng) {
+        return locatingService.findRoadByPoint(lat, lng);
+    }
+
+    @Override
+    public Direction getDirection(String fromId, String toId) {
+        if (fromId.equalsIgnoreCase(toId)) return null;
+        if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
+            Direction direction = new Direction();
+            LocalDateTime start = LocalDateTime.now();
+            List<Junction> lsIts = directionService.findRoute(fromId, toId);
+            LocalDateTime finish = LocalDateTime.now();
+            direction.setFrom(new GeoPoint(lsIts.get(0).getLat(), lsIts.get(0).getLng()));
+            direction.setTo(new GeoPoint(lsIts.get(lsIts.size() - 1).getLat(),
+                    lsIts.get(lsIts.size() - 1).getLng()));
+            direction.setJunctions(lsIts);
+            Map<String, String> traffics = new LinkedHashMap<>();
+            for (int i = 0; i < lsIts.size() - 1; i++) {
+                traffics.put(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId(),
+                        dataLoader.getListCongestions()
+                                .get(lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId()));
+            }
+            direction.setTraffics(traffics);
+            direction.setLength(direction.calLength());
+            direction.setTime(calTime(lsIts, traffics));
+            log.info(direction.toString());
+            log.info(direction.getJunctions().size() + "");
+            log.info(direction.calLength() + "");
+            log.info(calTime(lsIts, traffics) * 60 + "");
+            log.info(CommonUtil.getTime(start, finish));
+            return direction;
+        }
+        return null;
+    }
+
+    //For Testing
 //    @Override
 //    public Direction getDirection(String fromId, String toId) {
 //        Direction direction = new Direction();
@@ -136,33 +145,33 @@ public class ApiController implements ApiInterface {
 //        return null;
 //    }
 
-  @Override
-  public Integer getTraffic(String id) {
-    return trafficService.getTrafficStatusByRoadId(id);
-  }
-
-  @Override
-  public double getDistance(String fromId, String toId, Double fromLat, Double fromLng,
-      Double toLat, Double toLng) {
-    if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
-      GeoPoint from = new GeoPoint(dataLoader.getListV().get(fromId)[0],
-          dataLoader.getListV().get(fromId)[1]);
-      GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0],
-          dataLoader.getListV().get(toId)[1]);
-      return CommonUtil.haversineFormula(from, to);
-    } else {
-      return CommonUtil.haversineFormula(fromLat, fromLng, toLat, toLng);
+    @Override
+    public String getTraffic(String id) {
+        return trafficService.getTrafficStatusByRoadId(id);
     }
-  }
 
-  @Override
-  public void updateCongestion(AlertDTO alertDTO) {
-    trafficService.update(alertDTO);
-  }
+    @Override
+    public double getDistance(String fromId, String toId, Double fromLat, Double fromLng,
+                              Double toLat, Double toLng) {
+        if (StringUtils.isNotEmpty(fromId) && StringUtils.isNotEmpty(toId)) {
+            GeoPoint from = new GeoPoint(dataLoader.getListV().get(fromId)[0],
+                    dataLoader.getListV().get(fromId)[1]);
+            GeoPoint to = new GeoPoint(dataLoader.getListV().get(toId)[0],
+                    dataLoader.getListV().get(toId)[1]);
+            return CommonUtil.haversineFormula(from, to);
+        } else {
+            return CommonUtil.haversineFormula(fromLat, fromLng, toLat, toLng);
+        }
+    }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public void test() {
+    @Override
+    public void updateCongestion(AlertDTO alertDTO) {
+        trafficService.update(alertDTO);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void test() {
 //        redisTemplate.opsForHash().put("CONGEST", "6610656034_5716482151", "SMOOTH");
 //        redisTemplate.opsForHash().put("CONGEST", "5707271700_5707271694", "SMOOTH");
 //        redisTemplate.opsForHash().put("CONGEST", "6684837024_6666466358", "SMOOTH");
@@ -194,7 +203,7 @@ public class ApiController implements ApiInterface {
 //        redisTemplate.opsForHash().put("CONGEST", "84796874_4491335810", "SMOOTH");
 //        redisTemplate.opsForHash().put("CONGEST", "84796877_4491335809", "SMOOTH");
 //        redisTemplate.opsForHash().put("CONGEST", "5716537694_6677561266", "SMOOTH");
-    //long bien 2
+        //long bien 2
 //        redisTemplate.opsForHash().put("CONGEST", "5831399049_6661708577", "MILD");
 //        redisTemplate.opsForHash().put("CONGEST", "4538405061_4538404998", "MILD");
 //        redisTemplate.opsForHash().put("CONGEST", "444394806_5716537703", "MILD");
@@ -315,19 +324,52 @@ public class ApiController implements ApiInterface {
 //    System.out.println(d);
 //    redisTemplate.opsForValue().set("ae53d8ad120191f1", 100.0);
 
-  }
+    }
 
-  public static void main(String[] args) {
-    double kmMin = 6D / 13D;
-    double v1 = 27.69 / 60;
-    double v2 = 10.38 / 60;
-    double v3 = 3.46 / 60;
-    double normal =
-        5.749232431302711 - 0.1155258337341999 - 0.07173869631117338 - 0.1389920990389998;
-    double traff = 0.1155258337341999 + 0.07173869631117338 + 0.1389920990389998;
-    System.out.println(normal / v1 + traff / v2);
-    System.out.println((normal + traff) / v1);
-    System.out.println(kmMin + " " + v1);
-    System.out.println(0.22759675442593622 * 60);
-  }
+
+    public double calTime(List<Junction> junctions, Map<String, String> traffics) {
+        double time = 0;
+        for (int i = 0; i < junctions.size() - 1; i++) {
+            GeoPoint from = new GeoPoint(junctions.get(i).getLat(), junctions.get(i).getLng());
+            GeoPoint to = new GeoPoint(junctions.get(i + 1).getLat(),
+                    junctions.get(i + 1).getLng());
+            String trafficLevel = traffics.get(junctions.get(i).getId() + "_" + junctions.get(i + 1).getId());
+            double spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
+            if (trafficLevel != null) {
+                switch (trafficLevel) {
+                    case BaseConstant.SPEED_VERY_SMOOTH:
+                        spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
+                        break;
+                    case BaseConstant.SPEED_SMOOTH:
+                        spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_SMOOTH);
+                        break;
+                    case BaseConstant.SPEED_MILD:
+                        spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_MILD);
+                        break;
+                    case BaseConstant.SPEED_HEAVY:
+                        spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_HEAVY);
+                        break;
+                    default:
+                        spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
+                        break;
+                }
+            }
+            time += CommonUtil.haversineFormula(from, to) / spd;
+        }
+        return time;
+    }
+
+    public static void main(String[] args) {
+        double kmMin = 6D / 13D;
+        double v1 = 27.69 / 60;
+        double v2 = 10.38 / 60;
+        double v3 = 3.46 / 60;
+        double normal =
+                5.749232431302711 - 0.1155258337341999 - 0.07173869631117338 - 0.1389920990389998;
+        double traff = 0.1155258337341999 + 0.07173869631117338 + 0.1389920990389998;
+        System.out.println(normal / v1 + traff / v2);
+        System.out.println((normal + traff) / v1);
+        System.out.println(kmMin + " " + v1);
+        System.out.println(0.22759675442593622 * 60);
+    }
 }

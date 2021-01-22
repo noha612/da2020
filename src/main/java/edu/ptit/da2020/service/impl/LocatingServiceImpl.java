@@ -7,12 +7,14 @@ import edu.ptit.da2020.model.dto.Location;
 import edu.ptit.da2020.model.dto.Road;
 import edu.ptit.da2020.service.LocatingService;
 import edu.ptit.da2020.util.CommonUtil;
+
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -58,7 +60,7 @@ public class LocatingServiceImpl implements LocatingService {
             List<Integer[]> subList = list.subList(0, list.size() - 1);
             String key = toKey(list);
             String cache = (String) redisTemplate.opsForValue().get(toKey(subList));
-            if(StringUtils.isNotBlank(cache)){
+            if (StringUtils.isNotBlank(cache)) {
                 log.info("hehe");
                 list = list.subList(list.size() - 1, list.size());
                 list.add(fromValue(cache));
@@ -83,11 +85,11 @@ public class LocatingServiceImpl implements LocatingService {
                 String name2 = CommonUtil.removeAccents(p2.getName());
                 name2 = name2.toLowerCase();
                 if (CommonUtil.getSimilarValue(name1, finalName) > CommonUtil
-                    .getSimilarValue(name2, finalName)) {
+                        .getSimilarValue(name2, finalName)) {
                     return -1;
                 }
                 if (CommonUtil.getSimilarValue(name1, finalName) < CommonUtil
-                    .getSimilarValue(name2, finalName)) {
+                        .getSimilarValue(name2, finalName)) {
                     return 1;
                 }
                 return Integer.compare(name1.length(), name2.length());
@@ -100,6 +102,7 @@ public class LocatingServiceImpl implements LocatingService {
                 p.setLng(coor[1]);
                 result.set(i, p);
             }
+            log.info(result.toString());
             return result;
         }
         return null;
@@ -245,7 +248,7 @@ public class LocatingServiceImpl implements LocatingService {
                     log.info(tempDis + "");
                     d = tempDis;
                     road = new Road(idA + "_" + idB, new GeoPoint(latA, lngA),
-                        new GeoPoint(latB, lngB));
+                            new GeoPoint(latB, lngB));
                 }
             }
         }
@@ -263,7 +266,7 @@ public class LocatingServiceImpl implements LocatingService {
 
     private Integer[] fromValue(String li) {
         List<Integer> r = new ArrayList<>();
-        for(String i : li.split(" ")){
+        for (String i : li.split(" ")) {
             r.add(Integer.parseInt(i));
         }
         return r.toArray(new Integer[0]);

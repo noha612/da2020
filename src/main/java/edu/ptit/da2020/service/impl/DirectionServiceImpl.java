@@ -63,7 +63,7 @@ public class DirectionServiceImpl implements DirectionService {
     List<Junction> list = null;
     Future<Object> future = executor.submit(task);
     try {
-      list = (List<Junction>) future.get(60, TimeUnit.SECONDS);
+      list = (List<Junction>) future.get(8, TimeUnit.SECONDS);
     } catch (TimeoutException ex) {
 //      log.info("Timeout, use back up route finder");
       list = graphBuilder.getRouteFinder().findRouteBackUp(

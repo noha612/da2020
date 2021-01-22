@@ -39,7 +39,7 @@ public class CongestionJob {
 
         keySet = (LinkedHashSet<String>) redisTemplate.opsForHash()
                 .keys("CONGEST");
-        List<Integer> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
+        List<String> level = redisTemplate.opsForHash().multiGet("CONGEST", keySet);
         i = 0;
         for (String k : keySet) {
             dataLoader.getListCongestions().put(k, level.get(i));

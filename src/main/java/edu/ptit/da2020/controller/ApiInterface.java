@@ -33,7 +33,7 @@ public interface ApiInterface {
   );
 
   @GetMapping(value = "/traffics")
-  Integer getTraffic(@RequestParam(name = "road-id") String id);
+  String getTraffic(@RequestParam(name = "road-id") String id);
 
   @GetMapping(value = "/distance")
   double getDistance(

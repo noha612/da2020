@@ -25,28 +25,25 @@ public class TimeScorer implements Scorer<Junction> {
 
     String roadId = from.getId() + "_" + to.getId();
     String roadId2 = to.getId() + "_" + from.getId();
-    int trafficLevel = 1;
+    String trafficLevel = BaseConstant.SPEED_VERY_SMOOTH;
     if (dataLoader.getListCongestions().containsKey(roadId)) {
       trafficLevel = dataLoader.getListCongestions().get(roadId);
     }
     if (dataLoader.getListCongestions().containsKey(roadId2)) {
       trafficLevel = dataLoader.getListCongestions().get(roadId2);
     }
-    if (trafficLevel != 1) {
-      log.info("oho");
-    }
     double spd;
     switch (trafficLevel) {
-      case 1:
+      case BaseConstant.SPEED_VERY_SMOOTH:
         spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_VERY_SMOOTH);
         break;
-      case 2:
+      case BaseConstant.SPEED_SMOOTH:
         spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_SMOOTH);
         break;
-      case 3:
+      case BaseConstant.SPEED_MILD:
         spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_MILD);
         break;
-      case 4:
+      case BaseConstant.SPEED_HEAVY:
         spd = appConfig.getTrafficToSpeedMapping().get(BaseConstant.SPEED_HEAVY);
         break;
       default:
