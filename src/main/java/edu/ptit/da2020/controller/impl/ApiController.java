@@ -92,7 +92,7 @@ public class ApiController implements ApiInterface {
             for (int i = 0; i < lsIts.size() - 1; i++) {
                 String roadId = lsIts.get(i).getId() + "_" + lsIts.get(i + 1).getId();
                 String roadId2 = lsIts.get(i + 1).getId() + "_" + lsIts.get(i).getId();
-                String trafficLevel = BaseConstant.SPEED_VERY_SMOOTH;
+                String trafficLevel = null;
                 if (dataLoader.getListCongestions().containsKey(roadId)) {
                     trafficLevel = dataLoader.getListCongestions().get(roadId);
                 }
