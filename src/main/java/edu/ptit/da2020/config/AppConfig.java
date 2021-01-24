@@ -26,7 +26,7 @@ public class AppConfig {
   private Map<String, Double> trafficToSpeedMapping;
 
   @PostConstruct
-  void initSpeed() {
+  public void initSpeed() {
     trafficToSpeedMapping = new HashMap<>();
     trafficToSpeedMapping.put(BaseConstant.SPEED_HEAVY, baseSpeed * 0.125);
     trafficToSpeedMapping.put(BaseConstant.SPEED_MILD, baseSpeed * 0.375);

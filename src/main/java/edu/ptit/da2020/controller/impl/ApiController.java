@@ -329,10 +329,37 @@ public class ApiController implements ApiInterface {
 //      d += e.get(i).size();
 //    }
 //    System.out.println(d);
-        redisTemplate.opsForValue().set("61302ad40af136f5", 100.0);
+//        redisTemplate.opsForValue().set("61302ad40af136f5", 100.0);
 
+//        for (Map.Entry<String, Double[]> entry : dataLoader.getListV().entrySet()) {
+//            redisTemplate.opsForHash().put("VERTEX", entry.getKey(), entry.getValue()[0] + "," + entry.getValue()[1]);
+//        }
+//
+//        for (Map.Entry<String, String[]> entry : dataLoader.getListE().entrySet()) {
+//            redisTemplate.opsForHash().put("EDGE", entry.getKey(), entry.getValue()[0] + "," + entry.getValue()[1]);
+//        }
+//
+//        for (Map.Entry<String, Integer[]> entry : dataLoader.getIi().entrySet()) {
+//            String value = "";
+//            for (Integer i : entry.getValue()) value = value + "," + i;
+//            value = value.replaceFirst(",", "");
+//            redisTemplate.opsForHash().put("INDEX", entry.getKey(), value);
+//        }
+//
+//        for (Map.Entry<Integer, String> entry : dataLoader.getListName().entrySet()) {
+//            redisTemplate.opsForHash().put("NAME", entry.getKey()+"", entry.getValue());
+//        }
+//
+//        for (Map.Entry<String, String> entry : dataLoader.getListVN().entrySet()) {
+//            redisTemplate.opsForHash().put("VERTEX_NAME", entry.getKey(), entry.getValue());
+//        }
     }
 
+    @Override
+    public void changeSpeed(Double speed) {
+        appConfig.setBaseSpeed(speed);
+        appConfig.initSpeed();
+    }
 
     public double calTime(List<Junction> junctions, Map<String, String> traffics) {
         double time = 0;

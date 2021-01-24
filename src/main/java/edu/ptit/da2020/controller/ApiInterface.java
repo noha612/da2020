@@ -50,4 +50,7 @@ public interface ApiInterface {
 
   @PostMapping(value = "/test")
   void test();
+
+  @PostMapping(value = "/speed")
+  void changeSpeed(@RequestBody Double speed);
 }
